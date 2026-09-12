@@ -71,6 +71,7 @@
   .diagrama-container { overflow-x: auto; margin: 20px 0; }
   .diagrama-tabla { border-collapse: collapse; font-size: 12.5px; min-width: 900px; }
   .diagrama-tabla th { background: #2E75B6; color: white; padding: 8px 10px; }
+  .highlight-solucion, .highlight-rango-fo, .highlight-shadow, .highlight-rango-rhs, .highlight-slack, .highlight-basis, .highlight-reduced { color: #111 !important; }
   .diagrama-tabla td { padding: 7px 10px; border: 1px solid #ccc; }
   .diagrama-tabla tr.data-row td { background: #fafafa; }
   .diagrama-tabla tr.data-row:nth-child(even) td { background: #eef3fb; }
@@ -329,13 +330,13 @@
     <tr>
       <th>#</th>
       <th>Variable</th>
-      <th class="highlight-solucion">Solution Value<br><small style="font-weight:normal">← CUÁNTO PRODUCIR</small></th>
-      <th class="highlight-solucion">Unit Profit c(j)</th>
-      <th class="highlight-solucion">Total Contribution</th>
-      <th class="highlight-reduced">Reduced Cost<br><small style="font-weight:normal">← SI ≠ 0, no entra</small></th>
-      <th class="highlight-basis">Basis Status<br><small style="font-weight:normal">← basic / no</small></th>
-      <th class="highlight-rango-fo">Allowable Min c(j)<br><small style="font-weight:normal">← RANGO FO MÍNIMO</small></th>
-      <th class="highlight-rango-fo">Allowable Max c(j)<br><small style="font-weight:normal">← RANGO FO MÁXIMO</small></th>
+      <th class="highlight-solucion" style="color:#111">Solution Value<br><small style="font-weight:normal">← CUÁNTO PRODUCIR</small></th>
+      <th class="highlight-solucion" style="color:#111">Unit Profit c(j)</th>
+      <th class="highlight-solucion" style="color:#111">Total Contribution</th>
+      <th class="highlight-reduced" style="color:#111">Reduced Cost<br><small style="font-weight:normal">← SI ≠ 0, no entra</small></th>
+      <th class="highlight-basis" style="color:#111">Basis Status<br><small style="font-weight:normal">← basic / no</small></th>
+      <th class="highlight-rango-fo" style="color:#111">Allowable Min c(j)<br><small style="font-weight:normal">← RANGO FO MÍNIMO</small></th>
+      <th class="highlight-rango-fo" style="color:#111">Allowable Max c(j)<br><small style="font-weight:normal">← RANGO FO MÁXIMO</small></th>
     </tr>
     <tr class="data-row">
       <td>1</td><td>Q1 (Gouda)</td>
@@ -448,10 +449,10 @@
       <th>Left Hand Side</th>
       <th>Direction</th>
       <th>Right Hand Side</th>
-      <th class="highlight-slack">Slack/Surplus<br><small>← HOLGURA</small></th>
-      <th class="highlight-shadow">Shadow Price<br><small>← PRECIO REC.</small></th>
-      <th class="highlight-rango-rhs">Allowable Min RHS<br><small>← RANGO MÍN</small></th>
-      <th class="highlight-rango-rhs">Allowable Max RHS<br><small>← RANGO MÁX</small></th>
+      <th class="highlight-slack" style="color:#111">Slack/Surplus<br><small>← HOLGURA</small></th>
+      <th class="highlight-shadow" style="color:#111">Shadow Price<br><small>← PRECIO REC.</small></th>
+      <th class="highlight-rango-rhs" style="color:#111">Allowable Min RHS<br><small>← RANGO MÍN</small></th>
+      <th class="highlight-rango-rhs" style="color:#111">Allowable Max RHS<br><small>← RANGO MÁX</small></th>
     </tr>
     <tr class="data-row">
       <td>1</td><td>Pasteurización</td>
