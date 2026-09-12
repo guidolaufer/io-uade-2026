@@ -315,8 +315,8 @@
 
   <div class="leyenda">
     <div class="ley-item"><div class="ley-color" style="background:#fff9c4; border-color:#c8a000; border-width:3px"></div> <strong>Amarillo</strong> — Solution Value, ganancia y contribución (la solución)</div>
-    <div class="ley-item"><div class="ley-color" style="background:#fef3cd; border-color:#e6a817; border-width:2px"></div> <strong>Naranja pálido</strong> — Reduced Cost (= 0 si está en solución)</div>
-    <div class="ley-item"><div class="ley-color" style="background:#e8eaf6; border-color:#3949ab; border-width:3px"></div> <strong>Azul índigo</strong> — Basis Status ("basic" = produce, "at lower bound" = no produce)</div>
+    <div class="ley-item"><div class="ley-color" style="background:#fef3cd; border-color:#e6a817; border-width:2px"></div> <strong style="color:#7a4f00">Naranja pálido</strong> — Reduced Cost (= 0 si está en solución; ≠ 0 → no se produce)</div>
+    <div class="ley-item"><div class="ley-color" style="background:#e8eaf6; border-color:#3949ab; border-width:3px"></div> <strong style="color:#3949ab">Azul índigo</strong> — Basis Status ("basic" = en la solución; "at lower bound" = no produce)</div>
     <div class="ley-item"><div class="ley-color" style="background:#e8f5e9; border-color:#27ae60; border-width:3px"></div> <strong>Verde</strong> — Rangos del coef. FO: [Allowable Min c(j), Allowable Max c(j)]</div>
     <div class="ley-item"><div class="ley-color" style="background:#f3e5f5; border-color:#7b1fa2; border-width:3px"></div> <strong>Violeta</strong> — Slack/Surplus: holgura del recurso (= 0 → restricción activa)</div>
     <div class="ley-item"><div class="ley-color" style="background:#fce4d6; border-color:#c55a11; border-width:3px"></div> <strong>Naranja</strong> — Shadow Price: cuánto sube Z si el RHS sube 1 unidad</div>
@@ -398,16 +398,16 @@
     <text x="100" y="114" text-anchor="middle" font-size="11" fill="#555">Ej: Q1=150, Q3=700</text>
     <text x="100" y="130" text-anchor="middle" font-size="10" fill="#888">Si es 0 → no se produce</text>
 
-    <!-- Bloque 2: Reduced Cost -->
-    <rect x="210" y="60" width="180" height="80" fill="#f3e5f5" stroke="#7b1fa2" stroke-width="2" rx="5"/>
-    <text x="300" y="82" text-anchor="middle" font-size="12" font-weight="bold" fill="#7b1fa2">Reduced Cost</text>
-    <text x="300" y="98" text-anchor="middle" font-size="11" fill="#333">= 0 si es básica</text>
+    <!-- Bloque 2: Reduced Cost — color naranja pálido igual al cuadro -->
+    <rect x="210" y="60" width="180" height="80" fill="#fef3cd" stroke="#e6a817" stroke-width="2" rx="5"/>
+    <text x="300" y="82" text-anchor="middle" font-size="12" font-weight="bold" fill="#7a4f00">Reduced Cost</text>
+    <text x="300" y="98" text-anchor="middle" font-size="11" fill="#333">= 0 si está en solución</text>
     <text x="300" y="114" text-anchor="middle" font-size="11" fill="#555">Si ≠ 0: cuánto debe</text>
     <text x="300" y="130" text-anchor="middle" font-size="11" fill="#555">mejorar c(j) para entrar</text>
 
-    <!-- Bloque 3: Basis Status -->
-    <rect x="410" y="60" width="180" height="80" fill="#e3f2fd" stroke="#1976d2" stroke-width="2" rx="5"/>
-    <text x="500" y="82" text-anchor="middle" font-size="12" font-weight="bold" fill="#1976d2">Basis Status</text>
+    <!-- Bloque 3: Basis Status — color índigo igual al cuadro -->
+    <rect x="410" y="60" width="180" height="80" fill="#e8eaf6" stroke="#3949ab" stroke-width="2" rx="5"/>
+    <text x="500" y="82" text-anchor="middle" font-size="12" font-weight="bold" fill="#3949ab">Basis Status</text>
     <text x="500" y="98" text-anchor="middle" font-size="11" fill="#333">"basic" → en la solución</text>
     <text x="500" y="114" text-anchor="middle" font-size="11" fill="#555">"at lower bound" → NO</text>
     <text x="500" y="130" text-anchor="middle" font-size="11" fill="#555">se produce (vale 0)</text>
@@ -421,13 +421,13 @@
 
     <!-- Flechas conectoras -->
     <line x1="100" y1="140" x2="100" y2="158" stroke="#c8a000" stroke-width="1.5" marker-end="url(#a1)"/>
-    <line x1="300" y1="140" x2="300" y2="158" stroke="#7b1fa2" stroke-width="1.5" marker-end="url(#a2)"/>
-    <line x1="500" y1="140" x2="500" y2="158" stroke="#1976d2" stroke-width="1.5" marker-end="url(#a3)"/>
+    <line x1="300" y1="140" x2="300" y2="158" stroke="#e6a817" stroke-width="1.5" marker-end="url(#a2)"/>
+    <line x1="500" y1="140" x2="500" y2="158" stroke="#3949ab" stroke-width="1.5" marker-end="url(#a3)"/>
     <line x1="700" y1="140" x2="700" y2="158" stroke="#27ae60" stroke-width="1.5" marker-end="url(#a4)"/>
     <defs>
       <marker id="a1" markerWidth="6" markerHeight="6" refX="3" refY="3" orient="auto"><polygon points="0,0 6,3 0,6" fill="#c8a000"/></marker>
-      <marker id="a2" markerWidth="6" markerHeight="6" refX="3" refY="3" orient="auto"><polygon points="0,0 6,3 0,6" fill="#7b1fa2"/></marker>
-      <marker id="a3" markerWidth="6" markerHeight="6" refX="3" refY="3" orient="auto"><polygon points="0,0 6,3 0,6" fill="#1976d2"/></marker>
+      <marker id="a2" markerWidth="6" markerHeight="6" refX="3" refY="3" orient="auto"><polygon points="0,0 6,3 0,6" fill="#e6a817"/></marker>
+      <marker id="a3" markerWidth="6" markerHeight="6" refX="3" refY="3" orient="auto"><polygon points="0,0 6,3 0,6" fill="#3949ab"/></marker>
       <marker id="a4" markerWidth="6" markerHeight="6" refX="3" refY="3" orient="auto"><polygon points="0,0 6,3 0,6" fill="#27ae60"/></marker>
     </defs>
     <text x="100" y="175" text-anchor="middle" font-size="10" fill="#888">¿Qué producir?</text>
