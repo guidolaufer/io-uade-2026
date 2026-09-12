@@ -127,6 +127,7 @@
   <div class="nav-tema">⚡ Repaso</div>
   <a href="#resumen">Resumen Flash</a>
   <a href="#quiz">Preguntas tipo examen</a>
+<a href="#tp-ejercicios">🏋️ Ejercicios TP</a>
 </nav>
 
 <main>
@@ -945,6 +946,334 @@
       <div class="respuesta">ADELANTE (Early Times): una actividad puede empezar recién cuando TODAS sus predecesoras terminaron → tomamos el MÁXIMO de los tiempos de llegada. ATRÁS (Late Times): una actividad debe terminar a más tardar cuando la más urgente de sus sucesoras necesita empezar → tomamos el MÍNIMO.</div>
     </div>
   </div>
+</div>
+
+
+<div class="section" id="tp-ejercicios">
+<h2>🏋️ Ejercicios de Práctica — Guías de TP</h2>
+<p style="color:#555;margin-bottom:1.5rem">Ejercicios seleccionados de las guías de trabajos prácticos, con desarrollo paso a paso y preguntas con respuestas.</p>
+
+<!-- ===== TP1: PL GRAFICA ===== -->
+<h3 style="color:#1565c0;border-bottom:2px solid #1565c0;padding-bottom:6px;margin-top:2rem">📐 TP1 — Programación Lineal Gráfica</h3>
+
+<!-- Ejercicio 1: Mezcla de Productos -->
+<div style="background:#f8f9ff;border-left:4px solid #1565c0;border-radius:8px;padding:1.2rem;margin-bottom:1.5rem">
+  <h4 style="color:#1565c0;margin:0 0 .8rem">Ejercicio 1: Mezcla de Productos (Empresa A/B)</h4>
+  <p><strong>Enunciado:</strong> Una empresa fabrica 2 productos A y B. Recursos disponibles: Materia Prima (MP) 160 kg, Mano de Obra (MO) 60 hs, Equipo (EQ) 150 hs. Requerimientos por unidad:</p>
+  <table style="border-collapse:collapse;width:100%;margin:.8rem 0;font-size:.92rem">
+    <tr style="background:#1565c0;color:#fff"><th style="padding:6px 10px">Recurso</th><th style="padding:6px 10px">Producto A</th><th style="padding:6px 10px">Producto B</th><th style="padding:6px 10px">Disponible</th></tr>
+    <tr style="background:#fff"><td style="padding:5px 10px;border:1px solid #ddd">MP (kg)</td><td style="padding:5px 10px;border:1px solid #ddd;text-align:center">8</td><td style="padding:5px 10px;border:1px solid #ddd;text-align:center">4</td><td style="padding:5px 10px;border:1px solid #ddd;text-align:center">160</td></tr>
+    <tr style="background:#f5f5f5"><td style="padding:5px 10px;border:1px solid #ddd">MO (hs)</td><td style="padding:5px 10px;border:1px solid #ddd;text-align:center">2</td><td style="padding:5px 10px;border:1px solid #ddd;text-align:center">6</td><td style="padding:5px 10px;border:1px solid #ddd;text-align:center">60</td></tr>
+    <tr style="background:#fff"><td style="padding:5px 10px;border:1px solid #ddd">EQ (hs)</td><td style="padding:5px 10px;border:1px solid #ddd;text-align:center">6</td><td style="padding:5px 10px;border:1px solid #ddd;text-align:center">5</td><td style="padding:5px 10px;border:1px solid #ddd;text-align:center">150</td></tr>
+    <tr style="background:#e8f5e9"><td style="padding:5px 10px;border:1px solid #ddd"><strong>Beneficio/u</strong></td><td style="padding:5px 10px;border:1px solid #ddd;text-align:center"><strong>$30</strong></td><td style="padding:5px 10px;border:1px solid #ddd;text-align:center"><strong>$40</strong></td><td style="padding:5px 10px;border:1px solid #ddd;text-align:center">MAX Z</td></tr>
+  </table>
+
+  <div style="background:#fff;border:1px solid #c5cae9;border-radius:6px;padding:1rem;margin:.8rem 0">
+    <strong>📝 Planteo Matemático:</strong>
+    <pre style="background:#1a237e;color:#e8eaf6;padding:1rem;border-radius:6px;margin:.5rem 0;font-size:.9rem">Variables:  x₁ = unidades de A,  x₂ = unidades de B
+
+MAX Z = 30x₁ + 40x₂
+
+Sujeto a:
+  8x₁ + 4x₂ ≤ 160   (MP)
+  2x₁ + 6x₂ ≤  60   (MO)
+  6x₁ + 5x₂ ≤ 150   (EQ)
+  x₁, x₂ ≥ 0</pre>
+  </div>
+
+  <div style="background:#fff;border:1px solid #c5cae9;border-radius:6px;padding:1rem;margin:.8rem 0">
+    <strong>📊 Resolución Gráfica — Vértices de la Región Factible:</strong>
+    <p style="margin:.5rem 0">Despejamos cada restricción para x₂:</p>
+    <ul style="margin:.3rem 0 .5rem 1.2rem;font-size:.93rem">
+      <li>MP: x₂ ≤ (160 - 8x₁)/4 = 40 - 2x₁ → interceptos: (0,40) y (20,0)</li>
+      <li>MO: x₂ ≤ (60 - 2x₁)/6 = 10 - ⅓x₁ → interceptos: (0,10) y (30,0)</li>
+      <li>EQ: x₂ ≤ (150 - 6x₁)/5 = 30 - 1.2x₁ → interceptos: (0,30) y (25,0)</li>
+    </ul>
+
+    <!-- SVG grafico -->
+    <svg viewBox="0 0 400 320" style="width:100%;max-width:480px;display:block;margin:.8rem auto;border:1px solid #ddd;border-radius:8px;background:#fafafa">
+      <!-- ejes -->
+      <line x1="40" y1="280" x2="380" y2="280" stroke="#333" stroke-width="2"/>
+      <line x1="40" y1="280" x2="40" y2="20" stroke="#333" stroke-width="2"/>
+      <!-- labels ejes -->
+      <text x="385" y="284" font-size="13" fill="#333">x₁</text>
+      <text x="28" y="16" font-size="13" fill="#333">x₂</text>
+      <!-- marcas eje x -->
+      <text x="95" y="295" font-size="10" fill="#555" text-anchor="middle">5</text>
+      <text x="150" y="295" font-size="10" fill="#555" text-anchor="middle">10</text>
+      <text x="205" y="295" font-size="10" fill="#555" text-anchor="middle">15</text>
+      <text x="260" y="295" font-size="10" fill="#555" text-anchor="middle">20</text>
+      <text x="315" y="295" font-size="10" fill="#555" text-anchor="middle">25</text>
+      <!-- marcas eje y (escala: y_pixel = 280 - x2*6) -->
+      <text x="32" y="220" font-size="10" fill="#555" text-anchor="end">10</text>
+      <text x="32" y="160" font-size="10" fill="#555" text-anchor="end">20</text>
+      <text x="32" y="100" font-size="10" fill="#555" text-anchor="end">30</text>
+      <text x="32" y="40" font-size="10" fill="#555" text-anchor="end">40</text>
+      <!-- rectas (escala: x1 pixel = 40+x1*11, x2 pixel = 280-x2*6) -->
+      <!-- MP: (0,40)-(20,0) → pixel (40,40)-(260,280) -->
+      <line x1="40" y1="40" x2="260" y2="280" stroke="#e53935" stroke-width="2" stroke-dasharray="5,3"/>
+      <text x="50" y="35" font-size="11" fill="#e53935">MP: 8x₁+4x₂=160</text>
+      <!-- MO: (0,10)-(30,0) → pixel (40,220)-(370,280) -->
+      <line x1="40" y1="220" x2="370" y2="280" stroke="#1565c0" stroke-width="2" stroke-dasharray="5,3"/>
+      <text x="250" y="215" font-size="11" fill="#1565c0">MO: 2x₁+6x₂=60</text>
+      <!-- EQ: (0,30)-(25,0) → pixel (40,100)-(315,280) -->
+      <line x1="40" y1="100" x2="315" y2="280" stroke="#388e3c" stroke-width="2" stroke-dasharray="5,3"/>
+      <text x="160" y="95" font-size="11" fill="#388e3c">EQ: 6x₁+5x₂=150</text>
+      <!-- Región factible (polígono aproximado de vértices) -->
+      <!-- vértices: O(0,0), A(0,10) MO, intersec MP-MO=(18,4), intersec MP-EQ... cheq EQ domina antes -->
+      <!-- Intersección MO y EQ: 2x1+6x2=60, 6x1+5x2=150 → x1=18.26,x2=3.9 approx -->
+      <!-- Pixel O(40,280) A(40,220) B(x1=18,x2=4)→(238,256) C(25,0)→(315,280) -->
+      <polygon points="40,280 40,220 238,256 260,280" fill="#bbdefb" fill-opacity="0.5" stroke="#1565c0" stroke-width="1.5"/>
+      <!-- vértice óptimo -->
+      <circle cx="238" cy="256" r="6" fill="#f57f17" stroke="#fff" stroke-width="2"/>
+      <text x="242" y="250" font-size="11" fill="#f57f17" font-weight="bold">★ Óptimo</text>
+      <text x="242" y="263" font-size="10" fill="#333">(18, 4)</text>
+      <!-- Función objetivo indicativa -->
+      <text x="40" y="308" font-size="10" fill="#666">Región factible (azul claro) | ★ Solución óptima</text>
+    </svg>
+
+    <div style="background:#e8f5e9;border-radius:6px;padding:.8rem;margin:.5rem 0">
+      <strong>✅ Solución Óptima:</strong> x₁ = 18 unidades de A, x₂ = 4 unidades de B<br>
+      <strong>Z = 30(18) + 40(4) = 540 + 160 = $700</strong><br>
+      Holguras: s₁(MP)=0, s₂(MO)=0, s₃(EQ)=22 hs. disponibles sin usar
+    </div>
+  </div>
+
+  <!-- Q&A -->
+  <div style="margin-top:1rem">
+    <div class="quiz-item" onclick="this.classList.toggle('abierto')" style="cursor:pointer;background:#fff3e0;border-radius:6px;padding:.8rem;margin:.4rem 0;border:1px solid #ffe0b2">
+      ❓ ¿Qué recursos son cuellos de botella en este problema?
+      <div class="respuesta">MP y MO son los recursos saturados (holgura = 0). EQ tiene 22 hs. sobrantes. Esto significa que si quisiéramos producir más, los límites son la materia prima y la mano de obra.</div>
+    </div>
+    <div class="quiz-item" onclick="this.classList.toggle('abierto')" style="cursor:pointer;background:#fff3e0;border-radius:6px;padding:.8rem;margin:.4rem 0;border:1px solid #ffe0b2">
+      ❓ ¿Hasta qué precio del beneficio de A dejaría de convenir producirlo?
+      <div class="respuesta">Usando análisis de sensibilidad: el rango de c₁ (beneficio de A) para que la solución base no cambie. Si baja demasiado, la pendiente de la FO cambiaría y el óptimo se movería a otro vértice. Hay que calcular la relación de pendientes con cada restricción activa.</div>
+    </div>
+    <div class="quiz-item" onclick="this.classList.toggle('abierto')" style="cursor:pointer;background:#fff3e0;border-radius:6px;padding:.8rem;margin:.4rem 0;border:1px solid #ffe0b2">
+      ❓ ¿Qué pasa si MO disponible sube a 70 hs.?
+      <div class="respuesta">La restricción de MO se desplaza hacia afuera, la región factible se agranda. Hay que resolver el nuevo sistema. Si el shadow price de MO es positivo, el nuevo Z será mayor: Z_nuevo = Z_actual + shadow_price × 10.</div>
+    </div>
+  </div>
+</div>
+
+<!-- Ejercicio 2: Cerveza BIER S.A. -->
+<div style="background:#f8fff8;border-left:4px solid #388e3c;border-radius:8px;padding:1.2rem;margin-bottom:1.5rem">
+  <h4 style="color:#388e3c;margin:0 0 .8rem">Ejercicio 2: Cerveza BIER S.A.</h4>
+  <p><strong>Enunciado:</strong> Fábrica produce cerveza Negra ($13/barril) y Blanca ($23/barril). Recursos: Maíz 480 kg, Lúpulo 160 unid., Malta 1190 kg.</p>
+  <table style="border-collapse:collapse;width:100%;margin:.8rem 0;font-size:.92rem">
+    <tr style="background:#388e3c;color:#fff"><th style="padding:6px 10px">Recurso</th><th style="padding:6px 10px">Negra</th><th style="padding:6px 10px">Blanca</th><th style="padding:6px 10px">Disponible</th></tr>
+    <tr><td style="padding:5px 10px;border:1px solid #ddd">Maíz (kg)</td><td style="padding:5px 10px;border:1px solid #ddd;text-align:center">5</td><td style="padding:5px 10px;border:1px solid #ddd;text-align:center">15</td><td style="padding:5px 10px;border:1px solid #ddd;text-align:center">480</td></tr>
+    <tr style="background:#f5f5f5"><td style="padding:5px 10px;border:1px solid #ddd">Lúpulo</td><td style="padding:5px 10px;border:1px solid #ddd;text-align:center">4</td><td style="padding:5px 10px;border:1px solid #ddd;text-align:center">4</td><td style="padding:5px 10px;border:1px solid #ddd;text-align:center">160</td></tr>
+    <tr><td style="padding:5px 10px;border:1px solid #ddd">Malta (kg)</td><td style="padding:5px 10px;border:1px solid #ddd;text-align:center">35</td><td style="padding:5px 10px;border:1px solid #ddd;text-align:center">20</td><td style="padding:5px 10px;border:1px solid #ddd;text-align:center">1190</td></tr>
+  </table>
+
+  <div style="background:#fff;border:1px solid #a5d6a7;border-radius:6px;padding:1rem;margin:.8rem 0">
+    <strong>📝 Modelo Matemático:</strong>
+    <pre style="background:#1b5e20;color:#e8f5e9;padding:1rem;border-radius:6px;margin:.5rem 0;font-size:.9rem">Variables: x₁ = barriles de Negra,  x₂ = barriles de Blanca
+
+MAX Z = 13x₁ + 23x₂
+
+Sujeto a:
+   5x₁ + 15x₂ ≤  480   (Maíz)
+   4x₁ +  4x₂ ≤  160   (Lúpulo)
+  35x₁ + 20x₂ ≤ 1190   (Malta)
+  x₁, x₂ ≥ 0</pre>
+  </div>
+
+  <div style="background:#e8f5e9;border-radius:6px;padding:.8rem;margin:.5rem 0">
+    <strong>✅ Resolución paso a paso:</strong><br>
+    Vértice intersección Lúpulo (4x₁+4x₂=160 → x₁+x₂=40) y Malta (35x₁+20x₂=1190):<br>
+    De Lúpulo: x₁ = 40 - x₂. Sustituyendo en Malta:<br>
+    35(40-x₂) + 20x₂ = 1190 → 1400 - 35x₂ + 20x₂ = 1190 → -15x₂ = -210 → <strong>x₂ = 14</strong><br>
+    x₁ = 40 - 14 = <strong>26</strong><br>
+    <strong>Z = 13(26) + 23(14) = 338 + 322 = $660</strong>
+  </div>
+
+  <div style="margin-top:.8rem">
+    <div class="quiz-item" onclick="this.classList.toggle('abierto')" style="cursor:pointer;background:#f1f8e9;border-radius:6px;padding:.8rem;margin:.4rem 0;border:1px solid #c5e1a5">
+      ❓ ¿Convendría comprar 100 kg más de malta a $1,20/kg adicional?
+      <div class="respuesta">Solo conviene si el Shadow Price de Malta &gt; $1,20/kg adicional. Si el shadow price es, por ej., $2/kg, entonces el beneficio extra supera el costo, y SÍ conviene comprar. Verificar que 1190+100 esté dentro del rango RHS allowable.</div>
+    </div>
+    <div class="quiz-item" onclick="this.classList.toggle('abierto')" style="cursor:pointer;background:#f1f8e9;border-radius:6px;padding:.8rem;margin:.4rem 0;border:1px solid #c5e1a5">
+      ❓ ¿El dueño tiene razón al decir que seguiría produciendo cerveza negra aunque su precio baje?
+      <div class="respuesta">Sí, siempre que el beneficio de la negra se mantenga dentro del rango Allowable Min del análisis de sensibilidad. Si baja pero sigue en el rango, la solución base no cambia y sigue siendo óptimo producir ambas. Recién cuando baja del límite inferior el mix cambia.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== TP1b: MODELADO ===== -->
+<h3 style="color:#6a1b9a;border-bottom:2px solid #6a1b9a;padding-bottom:6px;margin-top:2rem">🎾 TP1b — Modelado PL (casos variados)</h3>
+
+<div style="background:#f9f0ff;border-left:4px solid #6a1b9a;border-radius:8px;padding:1.2rem;margin-bottom:1.5rem">
+  <h4 style="color:#6a1b9a;margin:0 0 .8rem">Ejercicio 3: Raquetas CSD (2 tipos)</h4>
+  <p><strong>Enunciado:</strong> CSD fabrica raquetas Estándar ($10/u) y Grande ($15/u). Aleación disponible: 80 kg (2 semanas). Tiempo manufactura: 40 hs/semana = 80 hs totales. Requisito: estándar ≥ 20% producción total.</p>
+
+  <div style="background:#fff;border:1px solid #ce93d8;border-radius:6px;padding:1rem;margin:.8rem 0">
+    <pre style="background:#4a148c;color:#f3e5f5;padding:1rem;border-radius:6px;margin:.5rem 0;font-size:.9rem">Variables: x₁ = raquetas Estándar, x₂ = raquetas Grandes
+
+MAX Z = 10x₁ + 15x₂
+
+Sujeto a:
+  0.125x₁ + 0.4x₂ ≤  80       (aleación, kg)
+  10x₁   + 12x₂   ≤ 4800      (tiempo, min → 80hs×60)
+  x₁ ≥ 0.2(x₁ + x₂)           (mínimo 20% estándar)
+  → 0.8x₁ - 0.2x₂ ≥ 0
+  x₁, x₂ ≥ 0</pre>
+  </div>
+
+  <div class="quiz-item" onclick="this.classList.toggle('abierto')" style="cursor:pointer;background:#f3e5f5;border-radius:6px;padding:.8rem;margin:.4rem 0;border:1px solid #ce93d8">
+    ❓ ¿Cómo se modeliza la restricción "al menos 20% de la producción"?
+    <div class="respuesta">x₁ ≥ 0.2(x₁ + x₂) → x₁ ≥ 0.2x₁ + 0.2x₂ → 0.8x₁ ≥ 0.2x₂ → 0.8x₁ - 0.2x₂ ≥ 0. Siempre se pasan todos los términos al mismo lado para obtener la forma estándar ax₁ + bx₂ ≤/≥ c.</div>
+  </div>
+  <div class="quiz-item" onclick="this.classList.toggle('abierto')" style="cursor:pointer;background:#f3e5f5;border-radius:6px;padding:.8rem;margin:.4rem 0;border:1px solid #ce93d8">
+    ❓ ¿Cuánto pagaría por horas extras de manufactura?
+    <div class="respuesta">El Shadow Price del recurso "tiempo de manufactura" indica el beneficio adicional por cada hora-minuto extra. Si el SP es positivo (recurso activo), conviene pagar hasta ese valor. Si es 0 (recurso con holgura), no conviene pagar nada.</div>
+  </div>
+</div>
+
+<!-- ===== TP2: TRANSPORTE ===== -->
+<h3 style="color:#bf360c;border-bottom:2px solid #bf360c;padding-bottom:6px;margin-top:2rem">🚚 TP2 — Modelos de Transporte y Asignación</h3>
+
+<div style="background:#fff8f5;border-left:4px solid #bf360c;border-radius:8px;padding:1.2rem;margin-bottom:1.5rem">
+  <h4 style="color:#bf360c;margin:0 0 .8rem">Concepto Clave: Modelo de Transporte</h4>
+  <p>Un problema de transporte busca distribuir producto desde <strong>m orígenes</strong> (plantas/depósitos) a <strong>n destinos</strong> (clientes/centros) minimizando costo total.</p>
+
+  <div style="background:#fff;border:1px solid #ffccbc;border-radius:6px;padding:1rem;margin:.8rem 0">
+    <strong>📐 Estructura del Modelo:</strong>
+    <pre style="background:#bf360c;color:#fff3e0;padding:1rem;border-radius:6px;margin:.5rem 0;font-size:.9rem">Variables: xᵢⱼ = unidades enviadas del origen i al destino j
+
+MIN Z = Σᵢ Σⱼ cᵢⱼ · xᵢⱼ    (costo total)
+
+Restricciones de oferta (origen i):
+  Σⱼ xᵢⱼ ≤ Sᵢ   para todo i   (no puede enviar más de lo que produce)
+
+Restricciones de demanda (destino j):
+  Σᵢ xᵢⱼ = Dⱼ   para todo j   (debe satisfacer la demanda)
+
+No negatividad: xᵢⱼ ≥ 0</pre>
+  </div>
+
+  <h4 style="color:#bf360c;margin:.8rem 0 .5rem">Ejercicio 4: 3 Plantas → 4 Centros</h4>
+  <p>Plantas P1, P2, P3 con oferta 12, 17, 11. Centros C1–C4 con demanda 10 cada uno. Flete = $100 + $0.50/milla.</p>
+
+  <div style="background:#fff;border:1px solid #ffccbc;border-radius:6px;padding:1rem;margin:.8rem 0">
+    <strong>💡 Método Esquina Noroeste (punto de partida):</strong>
+    <ol style="margin:.5rem 0 0 1.2rem;font-size:.93rem">
+      <li>Comenzar en la celda (P1, C1) — esquina superior izquierda</li>
+      <li>Asignar el mínimo entre oferta disponible y demanda pendiente</li>
+      <li>Tachar la fila (si oferta agotada) o columna (si demanda satisfecha)</li>
+      <li>Avanzar a la siguiente celda disponible</li>
+      <li>Repetir hasta asignar todo</li>
+    </ol>
+    <p style="margin:.6rem 0 0;font-size:.92rem;color:#666">⚠️ Esquina Noroeste da una solución inicial factible pero <em>no óptima</em>. Para optimizar se usa el método MODI o se resuelve con Solver/WinQSB.</p>
+  </div>
+
+  <!-- SVG red de transporte -->
+  <svg viewBox="0 0 440 220" style="width:100%;max-width:500px;display:block;margin:.8rem auto;border:1px solid #ddd;border-radius:8px;background:#fafafa">
+    <!-- Plantas (izquierda) -->
+    <rect x="15" y="30" width="80" height="35" rx="8" fill="#bf360c" />
+    <text x="55" y="52" font-size="12" fill="#fff" text-anchor="middle" font-weight="bold">P1 (12)</text>
+    <rect x="15" y="90" width="80" height="35" rx="8" fill="#bf360c" />
+    <text x="55" y="112" font-size="12" fill="#fff" text-anchor="middle" font-weight="bold">P2 (17)</text>
+    <rect x="15" y="150" width="80" height="35" rx="8" fill="#bf360c" />
+    <text x="55" y="172" font-size="12" fill="#fff" text-anchor="middle" font-weight="bold">P3 (11)</text>
+    <!-- Centros (derecha) -->
+    <rect x="340" y="20" width="85" height="30" rx="8" fill="#1565c0" />
+    <text x="382" y="39" font-size="11" fill="#fff" text-anchor="middle">C1 (dem=10)</text>
+    <rect x="340" y="65" width="85" height="30" rx="8" fill="#1565c0" />
+    <text x="382" y="84" font-size="11" fill="#fff" text-anchor="middle">C2 (dem=10)</text>
+    <rect x="340" y="110" width="85" height="30" rx="8" fill="#1565c0" />
+    <text x="382" y="129" font-size="11" fill="#fff" text-anchor="middle">C3 (dem=10)</text>
+    <rect x="340" y="155" width="85" height="30" rx="8" fill="#1565c0" />
+    <text x="382" y="174" font-size="11" fill="#fff" text-anchor="middle">C4 (dem=10)</text>
+    <!-- Arcos (solo algunos, indicativos) -->
+    <line x1="95" y1="47" x2="340" y2="35" stroke="#999" stroke-width="1" stroke-dasharray="4,2"/>
+    <line x1="95" y1="47" x2="340" y2="80" stroke="#999" stroke-width="1" stroke-dasharray="4,2"/>
+    <line x1="95" y1="107" x2="340" y2="80" stroke="#999" stroke-width="1" stroke-dasharray="4,2"/>
+    <line x1="95" y1="107" x2="340" y2="125" stroke="#999" stroke-width="1" stroke-dasharray="4,2"/>
+    <line x1="95" y1="167" x2="340" y2="125" stroke="#999" stroke-width="1" stroke-dasharray="4,2"/>
+    <line x1="95" y1="167" x2="340" y2="170" stroke="#999" stroke-width="1" stroke-dasharray="4,2"/>
+    <!-- Etiqueta -->
+    <text x="220" y="210" font-size="10" fill="#666" text-anchor="middle">Red de Transporte: 3 Plantas → 4 Centros (Oferta total=40, Demanda total=40 ✓)</text>
+  </svg>
+
+  <div class="quiz-item" onclick="this.classList.toggle('abierto')" style="cursor:pointer;background:#fff8f5;border-radius:6px;padding:.8rem;margin:.4rem 0;border:1px solid #ffccbc">
+    ❓ ¿Qué pasa si la oferta total ≠ demanda total?
+    <div class="respuesta">Hay que agregar una planta o destino FICTICIO con costo 0 para balancear. Si oferta &gt; demanda: destino ficticio. Si demanda &gt; oferta: origen ficticio. El problema es "desbalanceado" y el ficticio absorbe el excedente sin costo real.</div>
+  </div>
+  <div class="quiz-item" onclick="this.classList.toggle('abierto')" style="cursor:pointer;background:#fff8f5;border-radius:6px;padding:.8rem;margin:.4rem 0;border:1px solid #ffccbc">
+    ❓ ¿Cómo se analiza no poder transportar de P3 a C1?
+    <div class="respuesta">Se pone un costo artificialmente alto (M, tipo Big-M) en la celda (P3,C1), o directamente se elimina esa variable del modelo. En WinQSB/Solver: se fija x₃₁ = 0. La solución óptima evitará esa ruta y redirigirá el flujo, probablemente aumentando el costo total.</div>
+  </div>
+</div>
+
+<!-- ===== FLUJOS (TP3) extra ===== -->
+<h3 style="color:#00695c;border-bottom:2px solid #00695c;padding-bottom:6px;margin-top:2rem">🌊 TP3 — Flujo Máximo: Ejercicios Adicionales</h3>
+
+<div style="background:#f0faf9;border-left:4px solid #00695c;border-radius:8px;padding:1.2rem;margin-bottom:1.5rem">
+  <h4 style="color:#00695c;margin:0 0 .8rem">Ejercicio 5: Red con 10 nodos (del TP especial)</h4>
+  <p>Ejemplo Red 1 (del PDF): FROM/TO con capacidades reales (A→B=14, A→F=19, A→G=9, B→C=8, B→D=17, ...)</p>
+
+  <div style="background:#fff;border:1px solid #80cbc4;border-radius:6px;padding:1rem;margin:.8rem 0">
+    <strong>📋 Datos Red 1:</strong>
+    <table style="border-collapse:collapse;width:100%;font-size:.85rem;margin:.5rem 0">
+      <tr style="background:#00695c;color:#fff"><th style="padding:4px 8px">Arco</th><th style="padding:4px 8px">Capacidad</th><th style="padding:4px 8px">Flujo óptimo</th><th style="padding:4px 8px">Holgura</th></tr>
+      <tr><td style="padding:4px 8px;border:1px solid #ddd">A→B</td><td style="padding:4px 8px;border:1px solid #ddd;text-align:center">14</td><td style="padding:4px 8px;border:1px solid #ddd;text-align:center">14</td><td style="padding:4px 8px;border:1px solid #ddd;text-align:center;background:#ffcdd2">0 ← saturado</td></tr>
+      <tr style="background:#f5f5f5"><td style="padding:4px 8px;border:1px solid #ddd">A→F</td><td style="padding:4px 8px;border:1px solid #ddd;text-align:center">19</td><td style="padding:4px 8px;border:1px solid #ddd;text-align:center">19</td><td style="padding:4px 8px;border:1px solid #ddd;text-align:center;background:#ffcdd2">0 ← saturado</td></tr>
+      <tr><td style="padding:4px 8px;border:1px solid #ddd">A→G</td><td style="padding:4px 8px;border:1px solid #ddd;text-align:center">9</td><td style="padding:4px 8px;border:1px solid #ddd;text-align:center">6</td><td style="padding:4px 8px;border:1px solid #ddd;text-align:center">3</td></tr>
+      <tr style="background:#f5f5f5"><td style="padding:4px 8px;border:1px solid #ddd">E→J</td><td style="padding:4px 8px;border:1px solid #ddd;text-align:center">16</td><td style="padding:4px 8px;border:1px solid #ddd;text-align:center">14</td><td style="padding:4px 8px;border:1px solid #ddd;text-align:center">2</td></tr>
+      <tr><td style="padding:4px 8px;border:1px solid #ddd">F→J</td><td style="padding:4px 8px;border:1px solid #ddd;text-align:center">19</td><td style="padding:4px 8px;border:1px solid #ddd;text-align:center">19</td><td style="padding:4px 8px;border:1px solid #ddd;text-align:center;background:#ffcdd2">0 ← saturado</td></tr>
+    </table>
+    <p style="font-size:.88rem;margin:.4rem 0"><strong>Flujo Máximo Total</strong> = 14 + 19 + 6 = <strong>39 unidades</strong> salen de A</p>
+  </div>
+
+  <div style="background:#fff;border:1px solid #80cbc4;border-radius:6px;padding:1rem;margin:.8rem 0">
+    <strong>✂️ Corte Mínimo — Cómo identificarlo:</strong>
+    <ol style="margin:.5rem 0 0 1.2rem;font-size:.93rem">
+      <li>Luego del Ford-Fulkerson, marcar los nodos alcanzables desde la fuente en la red residual</li>
+      <li>El corte separa los nodos alcanzables (lado S) de los no alcanzables (lado T)</li>
+      <li>Los arcos que van de S a T con holgura=0 forman el corte mínimo</li>
+      <li><strong>Capacidad del corte = Flujo Máximo</strong> (Teorema Max-Flow Min-Cut)</li>
+    </ol>
+    <p style="background:#e0f2f1;border-radius:4px;padding:.5rem;margin:.5rem 0;font-size:.9rem"><strong>En Red 1:</strong> Los arcos A→B (cap=14) y A→F (cap=19) y A→G (cap=9) salen de A. Flujo máximo = 39. Un posible corte: {A→B, A→F, A→G} con capacidades 14+19+9=42... pero el flujo es 39. El corte mínimo real excluye A→G si no está saturado. Analizar la red residual es la forma correcta.</p>
+  </div>
+
+  <div style="background:#fff;border:1px solid #80cbc4;border-radius:6px;padding:1rem;margin:.8rem 0">
+    <strong>📏 Rangos de Ampliación de Arcos:</strong>
+    <p style="font-size:.92rem">¿Hasta cuánto se puede ampliar cada arco para que AUMENTE la capacidad de la red?</p>
+    <ul style="margin:.3rem 0 0 1.2rem;font-size:.92rem">
+      <li>Un arco NO pertenece al corte mínimo → ampliar su capacidad NO aumenta el flujo máximo</li>
+      <li>Un arco SÍ pertenece al corte mínimo → ampliarlo en k unidades puede aumentar el flujo hasta k (si no hay otro cuello de botella)</li>
+      <li>Arcos con holgura &gt; 0 → ya tienen capacidad ociosa, ampliarlos es inútil</li>
+    </ul>
+  </div>
+
+  <div class="quiz-item" onclick="this.classList.toggle('abierto')" style="cursor:pointer;background:#e0f2f1;border-radius:6px;padding:.8rem;margin:.4rem 0;border:1px solid #80cbc4">
+    ❓ ¿Puede haber más de un corte mínimo?
+    <div class="respuesta">Sí, puede haber múltiples cortes mínimos con la misma capacidad total. Esto ocurre cuando varios conjuntos de arcos saturados tienen la misma suma de capacidades = flujo máximo. Hay que identificarlos todos para saber qué arcos son críticos para expandir la red.</div>
+  </div>
+  <div class="quiz-item" onclick="this.classList.toggle('abierto')" style="cursor:pointer;background:#e0f2f1;border-radius:6px;padding:.8rem;margin:.4rem 0;border:1px solid #80cbc4">
+    ❓ ¿Qué es la holgura en una red de flujo?
+    <div class="respuesta">Holgura = Capacidad - Flujo. Indica cuántas unidades más podrían enviarse por ese arco. Un arco con holgura = 0 está saturado y no puede recibir más flujo directo. En la red residual, los arcos con holgura &gt; 0 tienen arcos residuales en dirección directa disponibles.</div>
+  </div>
+</div>
+
+<!-- ===== RESUMEN TIPOS DE RESTRICCIONES ===== -->
+<h3 style="color:#37474f;border-bottom:2px solid #37474f;padding-bottom:6px;margin-top:2rem">📋 Resumen: Tipos de Restricciones en PL</h3>
+<div style="background:#fafafa;border:1px solid #cfd8dc;border-radius:8px;padding:1.2rem;margin-bottom:1rem">
+  <table style="border-collapse:collapse;width:100%;font-size:.91rem">
+    <tr style="background:#37474f;color:#fff"><th style="padding:8px 12px">Tipo</th><th style="padding:8px 12px">Símbolo</th><th style="padding:8px 12px">Variable de Holgura</th><th style="padding:8px 12px">Interpretación</th></tr>
+    <tr><td style="padding:6px 12px;border:1px solid #ddd">Recurso limitado</td><td style="padding:6px 12px;border:1px solid #ddd;text-align:center">≤</td><td style="padding:6px 12px;border:1px solid #ddd;text-align:center">+s (holgura positiva)</td><td style="padding:6px 12px;border:1px solid #ddd">Lo que sobra del recurso</td></tr>
+    <tr style="background:#f5f5f5"><td style="padding:6px 12px;border:1px solid #ddd">Demanda mínima</td><td style="padding:6px 12px;border:1px solid #ddd;text-align:center">≥</td><td style="padding:6px 12px;border:1px solid #ddd;text-align:center">−s (superávit)</td><td style="padding:6px 12px;border:1px solid #ddd">Lo que excede el mínimo</td></tr>
+    <tr><td style="padding:6px 12px;border:1px solid #ddd">Igualdad exacta</td><td style="padding:6px 12px;border:1px solid #ddd;text-align:center">=</td><td style="padding:6px 12px;border:1px solid #ddd;text-align:center">No hay holgura</td><td style="padding:6px 12px;border:1px solid #ddd">Siempre activa, SP siempre no nulo</td></tr>
+    <tr style="background:#f5f5f5"><td style="padding:6px 12px;border:1px solid #ddd">Porcentaje mínimo</td><td style="padding:6px 12px;border:1px solid #ddd;text-align:center">≥ %</td><td style="padding:6px 12px;border:1px solid #ddd;text-align:center">Reacomodar a forma estándar</td><td style="padding:6px 12px;border:1px solid #ddd">x₁ ≥ 0.2(x₁+x₂) → pasar todo a un lado</td></tr>
+  </table>
+  <div class="quiz-item" onclick="this.classList.toggle('abierto')" style="cursor:pointer;background:#eceff1;border-radius:6px;padding:.8rem;margin:.8rem 0 0;border:1px solid #cfd8dc">
+    ❓ ¿Cómo reconocer si una restricción es activa o inactiva en la solución óptima?
+    <div class="respuesta">Activa = la holgura es 0 (el recurso se usó todo). Inactiva = la holgura es positiva (queda recurso sin usar). Solo las restricciones activas tienen Shadow Price ≠ 0. Las inactivas tienen Shadow Price = 0 porque un cambio marginal en el RHS no afecta el óptimo todavía.</div>
+  </div>
+</div>
+
 </div>
 
 </main>
