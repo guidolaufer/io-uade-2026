@@ -79,6 +79,8 @@
   .highlight-shadow { background: #fce4d6 !important; outline: 3px solid #c55a11; }
   .highlight-rango-rhs { background: #e3f2fd !important; outline: 3px solid #1976d2; }
   .highlight-slack { background: #f3e5f5 !important; outline: 3px solid #7b1fa2; }
+  .highlight-basis { background: #e8eaf6 !important; outline: 3px solid #3949ab; }
+  .highlight-reduced { background: #fafafa !important; outline: 2px solid #aaa; }
 
   /* LEYENDA DIAGRAMA */
   .leyenda { display: flex; flex-wrap: wrap; gap: 10px; margin: 12px 0; }
@@ -312,11 +314,13 @@
   <p>A continuación está el cuadro real del parcial (Lácteos del Valle) con cada columna marcada con color para que sepas exactamente qué leer y para qué sirve.</p>
 
   <div class="leyenda">
-    <div class="ley-item"><div class="ley-color" style="background:#fff9c4; border-color:#c8a000"></div> Solución óptima (lo que se produce)</div>
-    <div class="ley-item"><div class="ley-color" style="background:#e8f5e9; border-color:#27ae60"></div> Rango válido del coeficiente FO</div>
-    <div class="ley-item"><div class="ley-color" style="background:#fce4d6; border-color:#c55a11"></div> Shadow Price (precio de cada recurso)</div>
-    <div class="ley-item"><div class="ley-color" style="background:#e3f2fd; border-color:#1976d2"></div> Rango válido del RHS</div>
-    <div class="ley-item"><div class="ley-color" style="background:#f3e5f5; border-color:#7b1fa2"></div> Holgura (Slack/Surplus)</div>
+    <div class="ley-item"><div class="ley-color" style="background:#fff9c4; border-color:#c8a000"></div> <strong>Sección 1:</strong> Solución óptima (cuánto producir)</div>
+    <div class="ley-item"><div class="ley-color" style="background:#fafafa; border-color:#aaa"></div> Reduced Cost (si =0, está en solución)</div>
+    <div class="ley-item"><div class="ley-color" style="background:#e8eaf6; border-color:#3949ab"></div> Basis Status (basic = en solución)</div>
+    <div class="ley-item"><div class="ley-color" style="background:#e8f5e9; border-color:#27ae60"></div> Rango válido del coeficiente FO [Min, Max c(j)]</div>
+    <div class="ley-item"><div class="ley-color" style="background:#f3e5f5; border-color:#7b1fa2"></div> <strong>Sección 2:</strong> Slack/Surplus (holgura)</div>
+    <div class="ley-item"><div class="ley-color" style="background:#fce4d6; border-color:#c55a11"></div> Shadow Price (valor del recurso)</div>
+    <div class="ley-item"><div class="ley-color" style="background:#e3f2fd; border-color:#1976d2"></div> Rango válido del RHS [Min, Max RHS]</div>
   </div>
 
   <div class="diagrama-container">
@@ -328,8 +332,8 @@
       <th class="highlight-solucion">Solution Value<br><small style="font-weight:normal">← CUÁNTO PRODUCIR</small></th>
       <th>Unit Profit c(j)</th>
       <th>Total Contribution</th>
-      <th>Reduced Cost</th>
-      <th>Basis Status</th>
+      <th class="highlight-reduced">Reduced Cost<br><small style="font-weight:normal">← SI ≠ 0, no entra</small></th>
+      <th class="highlight-basis">Basis Status<br><small style="font-weight:normal">← basic / no</small></th>
       <th class="highlight-rango-fo">Allowable Min c(j)<br><small style="font-weight:normal">← RANGO FO MÍNIMO</small></th>
       <th class="highlight-rango-fo">Allowable Max c(j)<br><small style="font-weight:normal">← RANGO FO MÁXIMO</small></th>
     </tr>
@@ -338,8 +342,8 @@
       <td class="highlight-solucion"><strong>150,00</strong></td>
       <td class="highlight-solucion">25,00</td>
       <td class="highlight-solucion">3.750,00</td>
-      <td class="highlight-slack">0,00</td>
-      <td class="highlight-slack">basic</td>
+      <td class="highlight-reduced">0,00</td>
+      <td class="highlight-basis">basic</td>
       <td class="highlight-rango-fo">-M (−∞)</td>
       <td class="highlight-rango-fo"><strong>30,40</strong></td>
     </tr>
@@ -348,8 +352,8 @@
       <td class="highlight-solucion"><strong>318,67</strong></td>
       <td class="highlight-solucion">35,00</td>
       <td class="highlight-solucion">11.153,33</td>
-      <td class="highlight-slack">0,00</td>
-      <td class="highlight-slack">basic</td>
+      <td class="highlight-reduced">0,00</td>
+      <td class="highlight-basis">basic</td>
       <td class="highlight-rango-fo"><strong>0,00</strong></td>
       <td class="highlight-rango-fo"><strong>37,50</strong></td>
     </tr>
@@ -358,8 +362,8 @@
       <td class="highlight-solucion"><strong>700,00</strong></td>
       <td class="highlight-solucion">60,00</td>
       <td class="highlight-solucion">42.000,00</td>
-      <td class="highlight-slack">0,00</td>
-      <td class="highlight-slack">basic</td>
+      <td class="highlight-reduced">0,00</td>
+      <td class="highlight-basis">basic</td>
       <td class="highlight-rango-fo"><strong>15,27</strong></td>
       <td class="highlight-rango-fo">M (+∞)</td>
     </tr>
@@ -368,8 +372,8 @@
       <td class="highlight-solucion"><strong>1.440,00</strong></td>
       <td class="highlight-solucion">45,00</td>
       <td class="highlight-solucion">64.800,00</td>
-      <td class="highlight-slack">0,00</td>
-      <td class="highlight-slack">basic</td>
+      <td class="highlight-reduced">0,00</td>
+      <td class="highlight-basis">basic</td>
       <td class="highlight-rango-fo"><strong>42,00</strong></td>
       <td class="highlight-rango-fo"><strong>82,29</strong></td>
     </tr>
@@ -451,48 +455,48 @@
     </tr>
     <tr class="data-row">
       <td>1</td><td>Pasteurización</td>
-      <td class="highlight-slack">36.000</td><td>≤</td>
-      <td class="highlight-slack">36.000</td>
+      <td>36.000</td><td>≤</td>
+      <td>36.000</td>
       <td class="highlight-slack"><strong>0 ← ACTIVA</strong></td>
       <td class="highlight-shadow"><strong>2,33</strong></td>
       <td class="highlight-rango-rhs">31.220</td><td class="highlight-rango-rhs">40.220</td>
     </tr>
     <tr class="data-row">
       <td>2</td><td>Coagulación</td>
-      <td class="highlight-slack">24.000</td><td>≤</td>
-      <td class="highlight-slack">24.000</td>
+      <td>24.000</td><td>≤</td>
+      <td>24.000</td>
       <td class="highlight-slack"><strong>0 ← ACTIVA</strong></td>
       <td class="highlight-shadow"><strong>0,30</strong></td>
       <td class="highlight-rango-rhs">21.655</td><td class="highlight-rango-rhs">24.600</td>
     </tr>
     <tr class="data-row">
       <td>3</td><td>Maduración</td>
-      <td class="highlight-slack">29.962</td><td>≤</td>
-      <td class="highlight-slack">45.000</td>
+      <td>29.962</td><td>≤</td>
+      <td>45.000</td>
       <td class="highlight-slack"><strong>15.038 ← HOLGURA</strong></td>
       <td class="highlight-shadow" style="background:#ffe0cc!important; color:#a00"><strong>0,00 ← NO escaso</strong></td>
       <td class="highlight-rango-rhs">29.962</td><td class="highlight-rango-rhs">M (+∞)</td>
     </tr>
     <tr class="data-row">
       <td>4</td><td>Demanda max Q1</td>
-      <td class="highlight-slack">150</td><td>≤</td>
-      <td class="highlight-slack">800</td>
+      <td>150</td><td>≤</td>
+      <td>800</td>
       <td class="highlight-slack">650 ← HOLGURA</td>
       <td class="highlight-shadow" style="background:#ffe0cc!important; color:#a00"><strong>0,00 ← NO escaso</strong></td>
       <td class="highlight-rango-rhs">150</td><td class="highlight-rango-rhs">M (+∞)</td>
     </tr>
     <tr class="data-row">
       <td>6</td><td>Demanda max Q3</td>
-      <td class="highlight-slack">700</td><td>≤</td>
-      <td class="highlight-slack">700</td>
+      <td>700</td><td>≤</td>
+      <td>700</td>
       <td class="highlight-slack"><strong>0 ← ACTIVA</strong></td>
       <td class="highlight-shadow"><strong>44,73</strong></td>
       <td class="highlight-rango-rhs">650</td><td class="highlight-rango-rhs">954,22</td>
     </tr>
     <tr class="data-row">
       <td>8</td><td>Demanda min Q1</td>
-      <td class="highlight-slack">150</td><td>≥</td>
-      <td class="highlight-slack">150</td>
+      <td>150</td><td>≥</td>
+      <td>150</td>
       <td class="highlight-slack"><strong>0 ← ACTIVA</strong></td>
       <td class="highlight-shadow" style="color:#c00">−5,40 ← negativo</td>
       <td class="highlight-rango-rhs">75</td><td class="highlight-rango-rhs">800</td>
