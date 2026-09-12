@@ -118,6 +118,7 @@
   <div class="nav-tema">📊 Análisis</div>
   <a href="#tema2">Tema 2 — Sensibilidad</a>
   <a href="#t2-cuadro">El Cuadro Anotado</a>
+  <a href="#t2-calculos">🧮 Cómo calcular</a>
   <a href="#t2-reglas">Las 4 Reglas</a>
   <a href="#t2-ejemplo">Ejemplo (Lácteos)</a>
   <div class="nav-tema">🌐 Redes</div>
@@ -550,6 +551,111 @@
     </text>
   </svg>
   </div>
+
+  <!-- ══════════════════════════════════════════
+       CÓMO CALCULAR — SECCIÓN NUEVA
+       ══════════════════════════════════════════ -->
+  <h2 id="t2-calculos">🧮 Cómo calcular los nuevos valores — paso a paso</h2>
+
+  <div class="caja caja-azul">
+    <strong>Idea general:</strong> En el Análisis de Sensibilidad siempre hay un parámetro que cambia (una ganancia, una capacidad). El objetivo es saber <em>qué impacto tiene ese cambio</em> sin resolver el problema de nuevo. Siempre seguís el mismo protocolo de 3 pasos.
+  </div>
+
+  <!-- PROTOCOLO GENERAL -->
+  <h3>El protocolo de 3 pasos (sirve para CUALQUIER pregunta)</h3>
+  <table>
+    <tr><th>Paso</th><th>Qué hacer</th><th>Qué dato usar del reporte</th></tr>
+    <tr><td><strong>1. Identificar qué cambió</strong></td><td>¿Cambió un coeficiente de la FO c(j)? ¿O cambió un RHS (disponibilidad de un recurso)?</td><td>—</td></tr>
+    <tr><td><strong>2. Verificar el rango</strong></td><td>¿El nuevo valor cae dentro del rango permitido?</td><td>Si cambió c(j) → mirar [Allowable Min c(j), Allowable Max c(j)]<br>Si cambió RHS → mirar [Allowable Min RHS, Allowable Max RHS]</td></tr>
+    <tr><td><strong>3a. Si está dentro del rango</strong></td><td>La base NO cambia. Calcular nuevo Z con la fórmula.</td><td>Usar Shadow Price o los valores actuales de x</td></tr>
+    <tr><td><strong>3b. Si está FUERA del rango</strong></td><td>La base CAMBIA → el plan de producción es diferente → no podés calcular directamente.</td><td>Decir "la base cambia" y no aplicar las fórmulas.</td></tr>
+  </table>
+
+  <!-- CASO 1 -->
+  <h3 style="color:#c8a000; margin-top:24px">📌 CASO 1 — Cambió la ganancia unitaria de un producto (coef. FO)</h3>
+  <div class="caja caja-amarillo">
+    <p><strong>Ejemplo:</strong> La ganancia de Q1 sube de $25 a $30/kg (un +20%). ¿Qué pasa?</p>
+
+    <p style="margin-top:10px"><strong>Paso 1 — ¿Qué cambió?</strong> El coeficiente c(Q1) de la función objetivo.</p>
+
+    <p><strong>Paso 2 — Verificar el rango:</strong> Del reporte, Allowable Min c(Q1) = −∞ y Allowable Max c(Q1) = <strong>30,40</strong>.<br>
+    El nuevo valor es $30. ¿30 está en [−∞, 30,40]? <strong>SÍ ✅</strong></p>
+
+    <p><strong>Paso 3 — La base NO cambia.</strong> Las cantidades producidas son las mismas: Q1=150, Q2=318,67, Q3=700, Q4=1440.<br>
+    Solo cambia el Z. Lo calculás así:</p>
+    <div style="background:#fff; border-radius:6px; padding:10px; font-family:Courier New; font-size:14px; margin:8px 0;">
+      Nuevo Z = Z_anterior − (c_viejo × x) + (c_nuevo × x)<br>
+      Nuevo Z = 121.703,33 − (25 × 150) + (30 × 150)<br>
+      Nuevo Z = 121.703,33 − 3.750 + 4.500<br>
+      <strong>Nuevo Z = $122.453,33</strong>
+    </div>
+    <p><strong>Regla práctica:</strong> solo recalculás la contribución de la variable que cambió. El resto se mantiene igual.</p>
+  </div>
+
+  <!-- CASO 2 -->
+  <h3 style="color:#c55a11; margin-top:24px">📌 CASO 2 — Cambió la disponibilidad de un recurso (RHS)</h3>
+  <div class="caja caja-naranja">
+    <p><strong>Ejemplo:</strong> La capacidad de Pasteurización sube de 36.000 a 40.000 min/mes. ¿Qué pasa?</p>
+
+    <p style="margin-top:10px"><strong>Paso 1 — ¿Qué cambió?</strong> El RHS de la restricción Pasteurización.</p>
+
+    <p><strong>Paso 2 — Verificar el rango:</strong> Del reporte, Allowable Min RHS = 31.220 y Allowable Max RHS = <strong>40.220</strong>.<br>
+    El nuevo valor es 40.000. ¿40.000 está en [31.220, 40.220]? <strong>SÍ ✅</strong></p>
+
+    <p><strong>Paso 3 — Calcular nuevo Z con Shadow Price:</strong></p>
+    <div style="background:#fff; border-radius:6px; padding:10px; font-family:Courier New; font-size:14px; margin:8px 0;">
+      Δ RHS = RHS_nuevo − RHS_actual = 40.000 − 36.000 = +4.000<br>
+      Shadow Price de Pasteurización = 2,33<br>
+      ΔZ = Shadow Price × Δ RHS = 2,33 × 4.000 = +9.320<br>
+      <strong>Nuevo Z = 121.703,33 + 9.320 = $131.023,33</strong>
+    </div>
+    <p><strong>Interpretación:</strong> Por cada minuto adicional de Pasteurización (dentro del rango), la ganancia sube $2,33.</p>
+  </div>
+
+  <!-- CASO 3 - FUERA DEL RANGO -->
+  <h3 style="color:#c00000; margin-top:24px">📌 CASO 3 — El cambio está FUERA del rango</h3>
+  <div class="caja caja-rojo">
+    <p><strong>Ejemplo:</strong> La ganancia de Q2 sube de $35 a $45/kg. ¿Qué pasa?</p>
+
+    <p style="margin-top:10px"><strong>Paso 1 — ¿Qué cambió?</strong> El coeficiente c(Q2).</p>
+
+    <p><strong>Paso 2 — Verificar el rango:</strong> Allowable Max c(Q2) = <strong>37,50</strong>.<br>
+    El nuevo valor es $45. ¿45 está en [0, 37,50]? <strong>NO ❌</strong></p>
+
+    <p><strong>Paso 3 — La base CAMBIA.</strong> No podés aplicar las fórmulas.<br>
+    Respuesta correcta: <em>"El nuevo valor está fuera del rango permitido [0; 37,50], por lo tanto la base óptima cambia y el plan de producción se modifica. Habría que resolver nuevamente el problema con c(Q2) = 45."</em></p>
+    <p><strong>Interpretación económica:</strong> Q2 se vuelve tan rentable que conviene producir más de él, reasignando recursos de otros productos.</p>
+  </div>
+
+  <!-- CASO 4 - CONVENIENCIA INVERSIÓN -->
+  <h3 style="color:#375623; margin-top:24px">📌 CASO 4 — ¿Conviene invertir en más capacidad?</h3>
+  <div class="caja caja-verde">
+    <p><strong>Ejemplo:</strong> Podemos ampliar Pasteurización a 50.000 min/mes a un costo de $1,80/min. ¿Conviene?</p>
+
+    <p style="margin-top:10px"><strong>Paso 1 — Identificar el delta pedido:</strong> Δ = 50.000 − 36.000 = +14.000 min.</p>
+
+    <p><strong>Paso 2 — Verificar el rango:</strong> Allowable Max RHS Pasteurización = <strong>40.220</strong>.<br>
+    ¿50.000 ≤ 40.220? <strong>NO ❌</strong> — el delta supera el rango.</p>
+
+    <p><strong>Paso 3 — Analizás solo el tramo válido:</strong></p>
+    <div style="background:#fff; border-radius:6px; padding:10px; font-family:Courier New; font-size:14px; margin:8px 0;">
+      Delta válido (hasta donde aplica Shadow Price) = 40.220 − 36.000 = 4.220 min<br>
+      Ganancia adicional = 4.220 × $2,33 = $9.832,60<br><br>
+      Costo total de la inversión = 14.000 × $1,80 = $25.200<br><br>
+      <strong>¿Conviene? NO: $9.832,60 &lt; $25.200</strong>
+    </div>
+    <p><strong>Importante:</strong> el costo se calcula sobre el total de minutos que ampliás (14.000), pero la ganancia solo se puede estimar con certeza hasta el límite del rango (4.220 min). Comparás lo máximo que podés ganar contra lo que cuesta → si el costo gana, no conviene.</p>
+  </div>
+
+  <!-- TABLA RESUMEN -->
+  <h3 style="margin-top:24px">📋 Resumen: ¿Qué dato tomar de qué columna?</h3>
+  <table>
+    <tr><th>Situación</th><th>Dato que cambia</th><th>Rango a verificar</th><th>Fórmula si está dentro</th><th>Si está fuera</th></tr>
+    <tr><td>Ganancia sube/baja</td><td>c(j) nuevo</td><td>[Allowable Min c(j), Allowable Max c(j)]</td><td>Nuevo Z = Z − (c_viejo × x) + (c_nuevo × x)</td><td>Base cambia → resolver de nuevo</td></tr>
+    <tr><td>Disponibilidad de recurso sube/baja</td><td>RHS nuevo</td><td>[Allowable Min RHS, Allowable Max RHS]</td><td>Nuevo Z = Z + Shadow Price × ΔRHS</td><td>Base cambia → resolver de nuevo</td></tr>
+    <tr><td>Inversión en más capacidad</td><td>ΔRHS y costo/unidad</td><td>[Min RHS, Max RHS]</td><td>Ganancia = SP × delta válido; comparar con costo</td><td>Solo estimás hasta el límite del rango</td></tr>
+    <tr><td>Nueva restricción (mínimo de demanda)</td><td>Nueva restricción</td><td>¿La solución actual ya la cumple?</td><td>Si ya se cumple → no cambia nada</td><td>Si no se cumple → base cambia</td></tr>
+  </table>
 
   <h2 id="t2-reglas">Las 4 Reglas de Oro del Análisis de Sensibilidad</h2>
 
