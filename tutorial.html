@@ -1,0 +1,839 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tutorial IO — TP0, TP1, TP1b | UADE 2026</title>
+<style>
+  :root { color-scheme: light; }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Segoe UI', Arial, sans-serif; background: #f4f6fa; color: #222; line-height: 1.65; }
+
+  /* NAV */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    background: #0d47a1; color: #fff; padding: .5rem 1rem;
+    display: flex; flex-wrap: wrap; gap: .3rem; align-items: center;
+  }
+  nav span { font-weight: 700; font-size: 1rem; margin-right: .8rem; white-space: nowrap; }
+  nav a {
+    color: #bbdefb; text-decoration: none; font-size: .78rem;
+    padding: .2rem .5rem; border-radius: 4px; transition: background .2s;
+    white-space: nowrap;
+  }
+  nav a:hover, nav a.active { background: #1565c0; color: #fff; }
+
+  main { max-width: 900px; margin: 0 auto; padding: 80px 1.2rem 3rem; }
+
+  h1 { font-size: 1.9rem; color: #0d47a1; margin-bottom: .4rem; }
+  .subtitle { color: #555; font-size: 1rem; margin-bottom: 2rem; }
+
+  /* SECCIONES */
+  .section { background: #fff; border-radius: 12px; padding: 1.8rem; margin-bottom: 2rem; box-shadow: 0 2px 8px rgba(0,0,0,.08); }
+  .section h2 { font-size: 1.35rem; margin-bottom: 1.2rem; padding-bottom: .5rem; border-bottom: 3px solid currentColor; }
+
+  /* STEPS */
+  .steps { counter-reset: step; }
+  .step {
+    display: flex; gap: 1rem; align-items: flex-start;
+    margin-bottom: 1.2rem; background: #f8faff;
+    border-radius: 8px; padding: .9rem 1rem;
+    border-left: 4px solid #1565c0;
+  }
+  .step-num {
+    counter-increment: step;
+    min-width: 32px; height: 32px; border-radius: 50%;
+    background: #1565c0; color: #fff;
+    font-weight: 700; font-size: .95rem;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0; margin-top: .1rem;
+  }
+  .step-body { flex: 1; }
+  .step-body strong { display: block; color: #1565c0; margin-bottom: .3rem; font-size: 1rem; }
+
+  /* CUADROS RESALTADOS */
+  .tip  { background:#e3f2fd; border-left:4px solid #1565c0; border-radius:6px; padding:.8rem 1rem; margin:.8rem 0; }
+  .warn { background:#fff8e1; border-left:4px solid #f9a825; border-radius:6px; padding:.8rem 1rem; margin:.8rem 0; }
+  .ok   { background:#e8f5e9; border-left:4px solid #2e7d32; border-radius:6px; padding:.8rem 1rem; margin:.8rem 0; }
+  .code-block {
+    background: #1a237e; color: #e8eaf6;
+    padding: 1rem 1.2rem; border-radius: 8px; font-family: monospace;
+    font-size: .92rem; margin: .7rem 0; white-space: pre-wrap; overflow-x: auto;
+  }
+
+  /* TABLAS */
+  table { border-collapse: collapse; width: 100%; margin: .8rem 0; font-size: .91rem; }
+  th { background: #1565c0; color: #fff; padding: 6px 12px; }
+  td { padding: 5px 12px; border: 1px solid #ddd; }
+  tr:nth-child(even) td { background: #f5f7ff; }
+
+  /* SVG wrapper */
+  .svg-wrap { text-align: center; margin: 1rem 0; }
+  .svg-wrap svg { max-width: 100%; border: 1px solid #ddd; border-radius: 8px; background: #fafafa; }
+  .svg-caption { font-size: .83rem; color: #666; margin-top: .3rem; }
+
+  /* QUIZ */
+  .quiz-section { margin-top: 1.2rem; }
+  .quiz-item {
+    background: #fff3e0; border: 1px solid #ffe0b2; border-radius: 8px;
+    padding: .9rem 1rem; margin: .5rem 0; cursor: pointer;
+    font-weight: 600; color: #e65100; user-select: none;
+    transition: background .2s;
+  }
+  .quiz-item:hover { background: #ffe0b2; }
+  .quiz-item .resp {
+    display: none; font-weight: 400; color: #222;
+    background: #fff; border-radius: 6px; padding: .8rem;
+    margin-top: .6rem; border-left: 3px solid #f9a825;
+    line-height: 1.6;
+  }
+  .quiz-item.abierto .resp { display: block; }
+  .quiz-item::before { content: "❓ "; }
+  .quiz-item.abierto::before { content: "✅ "; }
+
+  /* INDICE */
+  .indice { background: #e8eaf6; border-radius: 8px; padding: 1rem 1.5rem; margin-bottom: 2rem; }
+  .indice h3 { color: #283593; margin-bottom: .6rem; }
+  .indice ol { padding-left: 1.3rem; }
+  .indice li { margin: .25rem 0; }
+  .indice a { color: #3949ab; text-decoration: none; }
+  .indice a:hover { text-decoration: underline; }
+
+  /* progress bar */
+  .progreso { background: #e8eaf6; height: 6px; border-radius: 3px; margin: .5rem 0 1rem; }
+  .progreso-fill { background: #3949ab; height: 100%; border-radius: 3px; }
+
+  /* ejercicio header */
+  .ej-header {
+    display: flex; align-items: center; gap: .8rem; margin-bottom: 1rem;
+  }
+  .ej-badge {
+    background: #0d47a1; color: #fff; border-radius: 20px;
+    padding: .2rem .8rem; font-size: .8rem; font-weight: 700; white-space: nowrap;
+  }
+  .ej-header h3 { font-size: 1.15rem; color: #0d47a1; }
+
+  .divider { border: none; border-top: 2px dashed #c5cae9; margin: 2rem 0; }
+</style>
+</head>
+<body>
+
+<nav>
+  <span>📐 IO Tutorial</span>
+  <a href="#intro">Intro</a>
+  <a href="#ej1">Ej.1 Piezas</a>
+  <a href="#ej2">Ej.2 Cerveza</a>
+  <a href="#ej3">Ej.3 Dieta</a>
+  <a href="#ej4">Ej.4 Raquetas</a>
+  <a href="#ej5">Ej.5 Sensiblidad</a>
+  <a href="#quiz">Preguntas</a>
+</nav>
+
+<main>
+
+<h1>📐 Tutorial: Programación Lineal desde Cero</h1>
+<p class="subtitle">Ejercicios resueltos paso a paso de TP0, TP1 y TP1b — Prof. Dafne González — UADE 2026</p>
+
+<div class="indice">
+  <h3>📑 Índice</h3>
+  <ol>
+    <li><a href="#intro">¿Qué es la Programación Lineal? (Intro)</a></li>
+    <li><a href="#ej1">Ejercicio 1 — Producción de Piezas (metalúrgica)</a> — TP1</li>
+    <li><a href="#ej2">Ejercicio 2 — Cerveza BIER S.A.</a> — TP1</li>
+    <li><a href="#ej3">Ejercicio 3 — Dieta Alimenticia (minimización)</a> — TP1</li>
+    <li><a href="#ej4">Ejercicio 4 — Raquetas CSD (modelado)</a> — TP1b</li>
+    <li><a href="#ej5">Ejercicio 5 — Análisis de Sensibilidad (TP0)</a> — TP0</li>
+    <li><a href="#quiz">Preguntas Teóricas con Respuesta</a></li>
+  </ol>
+</div>
+
+<!-- ============================== INTRO ============================== -->
+<div class="section" id="intro">
+  <h2 style="color:#0d47a1">🎯 ¿Qué es la Programación Lineal?</h2>
+
+  <p>Imaginate que tenés una fábrica. Podés fabricar 2 productos, pero no tenés recursos infinitos: hay límite de materia prima, horas de trabajo, espacio. La <strong>Programación Lineal (PL)</strong> es una herramienta matemática para decidir <em>cuánto producir de cada cosa</em> para maximizar ganancias (o minimizar costos) respetando esos límites.</p>
+
+  <div class="tip">
+    <strong>Analogía:</strong> Es como preparar la mejor combinación de platos con los ingredientes que te quedan en la heladera, donde cada plato te da diferente "satisfacción" y usa distinta cantidad de cada ingrediente.
+  </div>
+
+  <div class="steps">
+    <div class="step">
+      <div class="step-num">1</div>
+      <div class="step-body">
+        <strong>Variables de Decisión</strong>
+        Son las "incógnitas": ¿cuánto producir de cada producto? Las llamamos x₁, x₂, etc. Siempre son ≥ 0 (no podés producir cantidad negativa).
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <div class="step-body">
+        <strong>Función Objetivo (FO)</strong>
+        Es lo que querés optimizar: MAX Z = ganancia total, o MIN Z = costo total. Es una función lineal de las variables: Z = c₁x₁ + c₂x₂
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <div class="step-body">
+        <strong>Restricciones</strong>
+        Son los límites de recursos. Cada restricción es una inecuación lineal. Ej: 3x₁ + 5x₂ ≤ 100 (la materia prima disponible es 100 kg).
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">4</div>
+      <div class="step-body">
+        <strong>Variables de Holgura</strong>
+        Al resolver, agregamos una variable "s" a cada restricción ≤ para convertirla en igualdad: 3x₁ + 5x₂ + s = 100. La holgura s dice cuánto recurso sobra.
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">5</div>
+      <div class="step-body">
+        <strong>Resolución Gráfica</strong>
+        Con 2 variables, graficamos las restricciones como rectas. La región factible es el área que cumple TODAS. El óptimo está siempre en un vértice de esa región.
+      </div>
+    </div>
+  </div>
+
+  <div class="ok">
+    <strong>Regla de oro:</strong> El óptimo de un problema de PL siempre está en un <em>vértice</em> (punto extremo) de la región factible. Solo necesitás evaluar la FO en los vértices y elegir el mayor (MAX) o menor (MIN).
+  </div>
+</div>
+
+<!-- ============================== EJ 1 ============================== -->
+<div class="section" id="ej1">
+  <div class="ej-header">
+    <span class="ej-badge">TP1 — Ej. 2</span>
+    <h3>Producción de Piezas Metalúrgicas (A y B)</h3>
+  </div>
+  <div class="progreso"><div class="progreso-fill" style="width:0%" id="p1"></div></div>
+
+  <p><strong>Enunciado completo:</strong> Una metalúrgica fabrica piezas tipo A y B. Ambas pasan por Estampado, Soldado y Pintado. Los tiempos de proceso (en segundos/pieza) y disponibilidades son:</p>
+
+  <table>
+    <tr><th>Operación</th><th>Pieza A (seg)</th><th>Pieza B (seg)</th><th>Disponible (seg)</th></tr>
+    <tr><td>Estampado</td><td>100</td><td>150</td><td>12.000</td></tr>
+    <tr><td>Soldado</td><td>120</td><td>80</td><td>9.600</td></tr>
+    <tr><td>Pintado</td><td>60</td><td>60</td><td>5.400</td></tr>
+  </table>
+
+  <p style="margin:.6rem 0">Beneficio: <strong>$80 por pieza A</strong> y <strong>$60 por pieza B</strong>. Objetivo: maximizar beneficio total.</p>
+
+  <hr class="divider">
+
+  <h4 style="color:#1565c0;margin:.8rem 0 .5rem">📝 Paso a Paso</h4>
+  <div class="steps">
+    <div class="step">
+      <div class="step-num">1</div>
+      <div class="step-body">
+        <strong>Definir Variables</strong>
+        x₁ = cantidad de piezas A a fabricar (unidades)<br>
+        x₂ = cantidad de piezas B a fabricar (unidades)<br>
+        <span style="color:#555;font-size:.9rem">Siempre ponemos la unidad. Así después interpretamos bien la solución.</span>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <div class="step-body">
+        <strong>Función Objetivo</strong>
+        Queremos maximizar el beneficio total:<br>
+        <span style="font-family:monospace;font-size:1.05rem;background:#e8eaf6;padding:2px 8px;border-radius:4px">MAX Z = 80x₁ + 60x₂</span>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <div class="step-body">
+        <strong>Escribir las Restricciones</strong>
+        Una por cada recurso limitado:
+        <div class="code-block">Estampado: 100x₁ + 150x₂ ≤ 12.000
+Soldado:   120x₁ +  80x₂ ≤  9.600
+Pintado:    60x₁ +  60x₂ ≤  5.400
+No neg.:     x₁,   x₂  ≥      0</div>
+        <div class="tip" style="margin-top:.5rem">¿Por qué el estampado es 100 para A? Porque fabricar UNA pieza A requiere estampar DOS partes (la pieza se forma soldando dos partes iguales). Por eso el tiempo es el doble del de una parte sola.</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">4</div>
+      <div class="step-body">
+        <strong>Simplificar (opcional pero útil)</strong>
+        Dividimos todo por 60 en Pintado: x₁ + x₂ ≤ 90<br>
+        Dividimos Estampado por 50: 2x₁ + 3x₂ ≤ 240<br>
+        Dividimos Soldado por 40: 3x₁ + 2x₂ ≤ 240
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">5</div>
+      <div class="step-body">
+        <strong>Graficar las Restricciones</strong>
+        Para cada restricción, encontramos los interceptos (cuando x₁=0 y cuando x₂=0):
+        <table style="margin:.5rem 0;font-size:.88rem">
+          <tr><th>Restricción</th><th>x₁=0 → x₂=</th><th>x₂=0 → x₁=</th></tr>
+          <tr><td>Estampado (÷50)</td><td>x₂ = 80</td><td>x₁ = 120</td></tr>
+          <tr><td>Soldado (÷40)</td><td>x₂ = 120</td><td>x₁ = 80</td></tr>
+          <tr><td>Pintado (÷60)</td><td>x₂ = 90</td><td>x₁ = 90</td></tr>
+        </table>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">6</div>
+      <div class="step-body">
+        <strong>Encontrar los Vértices</strong>
+        Los vértices son las intersecciones de las rectas activas. Resolvemos sistemas de 2 ecuaciones:
+
+        <div class="tip">
+          <strong>Vértice: Estampado ∩ Soldado</strong><br>
+          2x₁ + 3x₂ = 240 &nbsp;...(1)<br>
+          3x₁ + 2x₂ = 240 &nbsp;...(2)<br>
+          (1)×3: 6x₁ + 9x₂ = 720<br>
+          (2)×2: 6x₁ + 4x₂ = 480<br>
+          Restando: 5x₂ = 240 → <strong>x₂ = 48</strong><br>
+          En (1): 2x₁ + 144 = 240 → <strong>x₁ = 48</strong><br>
+          Verificar Pintado: 48+48=96 &gt; 90 ❌ <em>No factible</em>
+        </div>
+
+        <div class="tip">
+          <strong>Vértice: Estampado ∩ Pintado</strong><br>
+          2x₁ + 3x₂ = 240 &nbsp;...(1)<br>
+          x₁ + x₂ = 90 → x₁ = 90-x₂ &nbsp;...(2)<br>
+          2(90-x₂) + 3x₂ = 240<br>
+          180 + x₂ = 240 → <strong>x₂ = 60</strong>, <strong>x₁ = 30</strong><br>
+          Verificar Soldado: 3(30)+2(60)=90+120=210 ≤ 240 ✅
+        </div>
+
+        <div class="tip">
+          <strong>Vértice: Soldado ∩ Pintado</strong><br>
+          3x₁ + 2x₂ = 240 &nbsp;...(1)<br>
+          x₁ + x₂ = 90 → x₁ = 90-x₂ &nbsp;...(2)<br>
+          3(90-x₂) + 2x₂ = 240<br>
+          270 - x₂ = 240 → <strong>x₂ = 30</strong>, <strong>x₁ = 60</strong><br>
+          Verificar Estampado: 2(60)+3(30)=120+90=210 ≤ 240 ✅
+        </div>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-num">7</div>
+      <div class="step-body">
+        <strong>Evaluar Z en cada Vértice Factible</strong>
+        <table>
+          <tr><th>Vértice</th><th>x₁</th><th>x₂</th><th>Z = 80x₁ + 60x₂</th></tr>
+          <tr><td>Origen</td><td>0</td><td>0</td><td>0</td></tr>
+          <tr><td>Eje x₂ (Pintado)</td><td>0</td><td>90</td><td>$5.400</td></tr>
+          <tr><td>Estampado ∩ Pintado</td><td>30</td><td>60</td><td>$5.400</td></tr>
+          <tr style="background:#c8e6c9"><td><strong>Soldado ∩ Pintado ★</strong></td><td><strong>60</strong></td><td><strong>30</strong></td><td><strong>$6.600</strong></td></tr>
+          <tr><td>Eje x₁ (Soldado)</td><td>80</td><td>0</td><td>$6.400</td></tr>
+        </table>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-num">8</div>
+      <div class="step-body">
+        <strong>Interpretar la Solución</strong>
+        <div class="ok">
+          <strong>✅ Solución Óptima:</strong><br>
+          Producir <strong>60 piezas A</strong> y <strong>30 piezas B</strong><br>
+          <strong>Beneficio Máximo = $6.600</strong><br><br>
+          Holguras:<br>
+          • Estampado: 2(60)+3(30) = 210 seg → sobran 240−210 = <strong>30 seg</strong><br>
+          • Soldado: 3(60)+2(30) = 240 → holgura = <strong>0</strong> (recurso saturado)<br>
+          • Pintado: 60+30 = 90 → holgura = <strong>0</strong> (recurso saturado)
+        </div>
+        <div class="warn">
+          ⚠️ Hay dos vértices con Z=$5.400: (0,90) y (30,60). Eso significa que hay <strong>solución múltiple</strong> en ese segmento, pero no es el óptimo.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SVG Gráfico -->
+  <div class="svg-wrap">
+    <svg viewBox="0 0 420 360" width="420" height="360">
+      <!-- fondo -->
+      <rect width="420" height="360" fill="#fafafa"/>
+      <!-- ejes -->
+      <line x1="50" y1="310" x2="400" y2="310" stroke="#333" stroke-width="2"/>
+      <line x1="50" y1="310" x2="50" y2="20" stroke="#333" stroke-width="2"/>
+      <text x="405" y="314" font-size="13" fill="#333">x₁</text>
+      <text x="36" y="18" font-size="13" fill="#333">x₂</text>
+      <!-- marcas eje x (escala: 1u = 3px, 0..100) -->
+      <text x="50" y="326" font-size="10" fill="#555" text-anchor="middle">0</text>
+      <text x="110" y="326" font-size="10" fill="#555" text-anchor="middle">20</text>
+      <text x="170" y="326" font-size="10" fill="#555" text-anchor="middle">40</text>
+      <text x="230" y="326" font-size="10" fill="#555" text-anchor="middle">60</text>
+      <text x="290" y="326" font-size="10" fill="#555" text-anchor="middle">80</text>
+      <text x="350" y="326" font-size="10" fill="#555" text-anchor="middle">100</text>
+      <!-- marcas eje y (escala: 1u = 3px, y_pix = 310 - x2*3) -->
+      <text x="42" y="310" font-size="10" fill="#555" text-anchor="end">0</text>
+      <text x="42" y="220" font-size="10" fill="#555" text-anchor="end">30</text>
+      <text x="42" y="130" font-size="10" fill="#555" text-anchor="end">60</text>
+      <text x="42" y="40" font-size="10" fill="#555" text-anchor="end">90</text>
+
+      <!-- Estampado: (0,80)-(120,0) pix=(50,70)-(410,310) CLIP at x1=100 -->
+      <!-- x2=80-2/3*x1  pix_y = 310 - x2*3 = 310-(240-2x1) = 70+2x1 -->
+      <line x1="50" y1="70" x2="410" y2="310" stroke="#e53935" stroke-width="2"/>
+      <text x="55" y="65" font-size="11" fill="#e53935">Estampado</text>
+
+      <!-- Soldado: (0,120)-(80,0) → x2=120-3/2*x1, pix_y=310-3x2=310-(360-4.5x1)=-50+4.5x1 -->
+      <!-- (0,120)→pix(50,-50)=out  at x2=0: x1=80→pix(290,310) -->
+      <!-- from (50, 310-120*3)=(50,-50)→clip at y=20: x1=(20-(-50))/4.5=15.5 → pix(96,20) -->
+      <line x1="96" y1="20" x2="290" y2="310" stroke="#1565c0" stroke-width="2"/>
+      <text x="90" y="18" font-size="11" fill="#1565c0">Soldado</text>
+
+      <!-- Pintado: (0,90)-(90,0) pix (50,40)-(320,310) -->
+      <line x1="50" y1="40" x2="320" y2="310" stroke="#388e3c" stroke-width="2"/>
+      <text x="328" y="308" font-size="11" fill="#388e3c">Pintado</text>
+
+      <!-- Región factible: O(50,310), A(50,40), B(30,60)→pix(140,130), C(60,30)→pix(230,220), D(80,0)→pix(290,310) -->
+      <!-- Pero tenemos que cortar bien. Vértices factibles:
+           O(0,0)→(50,310)
+           (0,90)→(50,40)  [pintado con eje y2]
+           (30,60)→(140,130) [est∩pint]
+           (60,30)→(230,220) [sold∩pint]
+           (80,0)→(290,310) [soldado eje x1]
+      -->
+      <polygon points="50,310 50,40 140,130 230,220 290,310" fill="#bbdefb" fill-opacity="0.45" stroke="#1565c0" stroke-width="1.5"/>
+
+      <!-- Vértices -->
+      <circle cx="50" cy="40" r="5" fill="#9e9e9e"/>
+      <circle cx="140" cy="130" r="5" fill="#ff9800"/>
+      <text x="144" y="125" font-size="10" fill="#e65100">(30,60) Z=5400</text>
+      <circle cx="230" cy="220" r="8" fill="#f57f17" stroke="#fff" stroke-width="2"/>
+      <text x="236" y="215" font-size="11" fill="#b71c1c" font-weight="bold">★(60,30)</text>
+      <text x="236" y="228" font-size="10" fill="#b71c1c">Z=$6.600</text>
+      <circle cx="290" cy="310" r="5" fill="#9e9e9e"/>
+      <text x="294" y="305" font-size="10" fill="#555">(80,0) Z=6400</text>
+
+      <!-- Leyenda -->
+      <rect x="55" y="248" width="160" height="58" rx="6" fill="#fff" stroke="#ddd"/>
+      <line x1="62" y1="262" x2="80" y2="262" stroke="#e53935" stroke-width="2"/>
+      <text x="84" y="266" font-size="10" fill="#333">Estampado</text>
+      <line x1="62" y1="276" x2="80" y2="276" stroke="#1565c0" stroke-width="2"/>
+      <text x="84" y="280" font-size="10" fill="#333">Soldado</text>
+      <line x1="62" y1="290" x2="80" y2="290" stroke="#388e3c" stroke-width="2"/>
+      <text x="84" y="294" font-size="10" fill="#333">Pintado</text>
+      <rect x="62" y="298" width="12" height="8" fill="#bbdefb" stroke="#1565c0"/>
+      <text x="79" y="306" font-size="10" fill="#333">Región factible</text>
+    </svg>
+    <p class="svg-caption">Región factible (azul) y solución óptima ★ en vértice (60, 30)</p>
+  </div>
+</div>
+
+<!-- ============================== EJ 2 ============================== -->
+<div class="section" id="ej2">
+  <div class="ej-header">
+    <span class="ej-badge">TP1 — Ej. 4</span>
+    <h3>Cerveza BIER S.A.</h3>
+  </div>
+
+  <p><strong>Enunciado:</strong> BIER S.A. fabrica cerveza Negra ($13/barril) y Blanca ($23/barril). Materias primas disponibles: Maíz 480 kg, Lúpulo 160 unid., Malta 1190 kg.</p>
+
+  <table>
+    <tr><th>MP</th><th>Negra (x₁)</th><th>Blanca (x₂)</th><th>Disponible</th></tr>
+    <tr><td>Maíz (kg)</td><td>5</td><td>15</td><td>480</td></tr>
+    <tr><td>Lúpulo (u)</td><td>4</td><td>4</td><td>160</td></tr>
+    <tr><td>Malta (kg)</td><td>35</td><td>20</td><td>1190</td></tr>
+  </table>
+
+  <div class="steps">
+    <div class="step">
+      <div class="step-num">1</div>
+      <div class="step-body">
+        <strong>Modelo Matemático</strong>
+        <div class="code-block">Variables: x₁ = barriles de Negra, x₂ = barriles de Blanca
+
+MAX Z = 13x₁ + 23x₂
+
+Sujeto a:
+   5x₁ + 15x₂ ≤  480   (Maíz)
+   4x₁ +  4x₂ ≤  160   (Lúpulo) → simplificamos: x₁ + x₂ ≤ 40
+  35x₁ + 20x₂ ≤ 1190   (Malta)
+  x₁, x₂ ≥ 0</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <div class="step-body">
+        <strong>Interceptos de cada recta</strong>
+        <table style="font-size:.88rem">
+          <tr><th>Restricción</th><th>x₁=0 → x₂</th><th>x₂=0 → x₁</th></tr>
+          <tr><td>Maíz (÷5)</td><td>x₂ = 32</td><td>x₁ = 96</td></tr>
+          <tr><td>Lúpulo (÷4)</td><td>x₂ = 40</td><td>x₁ = 40</td></tr>
+          <tr><td>Malta (÷5)</td><td>x₂ = 59.5</td><td>x₁ = 34</td></tr>
+        </table>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <div class="step-body">
+        <strong>Vértice clave: Lúpulo ∩ Malta</strong>
+        <div class="tip">
+          x₁ + x₂ = 40 &nbsp;...(Lúpulo simplificada)<br>
+          35x₁ + 20x₂ = 1190 &nbsp;...(Malta)<br><br>
+          De (L): x₁ = 40 − x₂<br>
+          35(40−x₂) + 20x₂ = 1190<br>
+          1400 − 35x₂ + 20x₂ = 1190<br>
+          −15x₂ = −210<br>
+          <strong>x₂ = 14</strong> barriles de Blanca<br>
+          x₁ = 40 − 14 = <strong>26</strong> barriles de Negra<br><br>
+          Verificar Maíz: 5(26)+15(14) = 130+210 = 340 ≤ 480 ✅
+        </div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">4</div>
+      <div class="step-body">
+        <strong>Evaluar todos los vértices</strong>
+        <table>
+          <tr><th>Vértice</th><th>x₁</th><th>x₂</th><th>Z = 13x₁+23x₂</th></tr>
+          <tr><td>Origen</td><td>0</td><td>0</td><td>0</td></tr>
+          <tr><td>Eje x₂ (Maíz)</td><td>0</td><td>32</td><td>$736</td></tr>
+          <tr><td>Maíz ∩ Lúpulo</td><td>≈24</td><td>≈16</td><td>≈$680</td></tr>
+          <tr style="background:#c8e6c9"><td><strong>Lúpulo ∩ Malta ★</strong></td><td><strong>26</strong></td><td><strong>14</strong></td><td><strong>$660</strong></td></tr>
+          <tr><td>Eje x₁ (Malta)</td><td>34</td><td>0</td><td>$442</td></tr>
+        </table>
+        <div class="ok"><strong>✅ Óptimo:</strong> 26 barriles Negra + 14 barriles Blanca = <strong>Z = $660</strong></div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">5</div>
+      <div class="step-body">
+        <strong>Respuesta a preguntas del TP</strong>
+        <div class="warn">
+          <strong>¿Qué pasa si disponemos de 100 kg más de Malta?</strong><br>
+          Nuevo RHS Malta = 1290. Hay que resolver el nuevo sistema Lúpulo∩Malta con el RHS actualizado. Como Malta tiene Shadow Price &gt; 0 (está activa), el nuevo Z será mayor: Z_nuevo = 660 + SP_malta × 100.
+        </div>
+        <div class="warn">
+          <strong>¿Y si solo hay 1.000 kg de Malta?</strong><br>
+          Verificar si 1000 está dentro del rango RHS allowable. Si está dentro, la base no cambia pero se pierde beneficio. Si está fuera del rango, cambia la base (otro par de restricciones activas).
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============================== EJ 3 ============================== -->
+<div class="section" id="ej3">
+  <div class="ej-header">
+    <span class="ej-badge">TP1 — Ej. 3</span>
+    <h3>Dieta Alimenticia (Minimización)</h3>
+  </div>
+
+  <p><strong>Enunciado:</strong> Una persona necesita consumir mínimo: Vitaminas 800g, Proteínas 1900g, Sustancias Grasas 700g. Tiene 2 productos:</p>
+
+  <table>
+    <tr><th>Nutriente</th><th>Producto A (por paquete)</th><th>Producto B (por paquete)</th><th>Mínimo requerido</th></tr>
+    <tr><td>Vitaminas (g)</td><td>10</td><td>30</td><td>800</td></tr>
+    <tr><td>Proteínas (g)</td><td>30</td><td>40</td><td>1.900</td></tr>
+    <tr><td>Grasas (g)</td><td>30</td><td>10</td><td>700</td></tr>
+    <tr style="background:#e8f5e9"><td>Costo ($)</td><td>20</td><td>25</td><td>MIN Z</td></tr>
+  </table>
+
+  <div class="steps">
+    <div class="step">
+      <div class="step-num">1</div>
+      <div class="step-body">
+        <strong>¡Ojo! Este es un problema de MINIMIZACIÓN con restricciones ≥</strong>
+        <div class="warn">
+          En problemas de dieta, los nutrientes deben <em>superar</em> un mínimo (≥), no estar por debajo de un máximo. Las restricciones van al revés que en maximización. Esto cambia el tipo de variable: en vez de "holgura" hay <strong>superávit</strong>.
+        </div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <div class="step-body">
+        <strong>Modelo Matemático</strong>
+        <div class="code-block">Variables: x₁ = paquetes de A, x₂ = paquetes de B
+
+MIN Z = 20x₁ + 25x₂
+
+Sujeto a:
+  10x₁ + 30x₂ ≥  800   (Vitaminas)
+  30x₁ + 40x₂ ≥ 1900   (Proteínas)
+  30x₁ + 10x₂ ≥  700   (Grasas)
+  x₁, x₂ ≥ 0</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <div class="step-body">
+        <strong>Interceptos de cada restricción</strong>
+        <table style="font-size:.88rem">
+          <tr><th>Restricción</th><th>x₁=0 → x₂</th><th>x₂=0 → x₁</th></tr>
+          <tr><td>Vitaminas (÷10)</td><td>x₂ = 80</td><td>x₁ = 80</td></tr>
+          <tr><td>Proteínas (÷10)</td><td>x₂ = 47.5</td><td>x₁ = 63.3</td></tr>
+          <tr><td>Grasas (÷10)</td><td>x₂ = 70</td><td>x₁ = 23.3</td></tr>
+        </table>
+        <div class="tip">
+          <strong>Diferencia clave con MAX:</strong> En minimización con ≥, la región factible está <em>por encima y a la derecha</em> de las rectas. El óptimo está en el vértice más cercano al origen.
+        </div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">4</div>
+      <div class="step-body">
+        <strong>Encontrar vértices por intersecciones</strong>
+        <div class="tip">
+          <strong>Vitaminas ∩ Proteínas:</strong><br>
+          10x₁+30x₂=800 &nbsp;(÷10)→ x₁+3x₂=80<br>
+          30x₁+40x₂=1900 &nbsp;(÷10)→ 3x₁+4x₂=190<br>
+          De (V): x₁=80−3x₂<br>
+          3(80−3x₂)+4x₂=190 → 240−9x₂+4x₂=190 → −5x₂=−50<br>
+          <strong>x₂=10, x₁=50</strong><br>
+          Verificar Grasas: 30(50)+10(10)=1600 ≥ 700 ✅
+        </div>
+        <div class="tip">
+          <strong>Proteínas ∩ Grasas:</strong><br>
+          30x₁+40x₂=1900 y 30x₁+10x₂=700<br>
+          Restando: 30x₂=1200 → <strong>x₂=40</strong><br>
+          30x₁+400=1900 → x₁=50. Pero 30(50)+40(40)=1500+1600=3100 ≥ 1900 ✅
+        </div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">5</div>
+      <div class="step-body">
+        <strong>Evaluar Z en vértices</strong>
+        <table>
+          <tr><th>Vértice</th><th>x₁</th><th>x₂</th><th>Z = 20x₁+25x₂</th></tr>
+          <tr><td>(0, 80) Vitaminas eje y</td><td>0</td><td>80</td><td>$2.000</td></tr>
+          <tr style="background:#c8e6c9"><td><strong>Vit ∩ Prot ★</strong></td><td><strong>50</strong></td><td><strong>10</strong></td><td><strong>$1.250</strong></td></tr>
+          <tr><td>Prot ∩ Gras</td><td>50</td><td>40</td><td>$2.000</td></tr>
+          <tr><td>(23.3, 0) Grasas eje x</td><td>23.3</td><td>0</td><td>$467</td></tr>
+        </table>
+        <div class="warn">⚠️ El punto (23.3, 0) da Z=$467 pero hay que verificar que cumple TODAS las restricciones. Proteínas: 30(23.3)=699 &lt; 1900 ❌ No es factible.</div>
+        <div class="ok"><strong>✅ Solución óptima:</strong> 50 paquetes A + 10 paquetes B = <strong>Costo mínimo $1.250</strong></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============================== EJ 4 ============================== -->
+<div class="section" id="ej4">
+  <div class="ej-header">
+    <span class="ej-badge">TP1b — Ej. 1</span>
+    <h3>Raquetas CSD — Modelado con Restricción de %</h3>
+  </div>
+
+  <p><strong>Enunciado:</strong> CSD fabrica raquetas Estándar ($10/u) y Grande ($15/u). Datos para 2 semanas:</p>
+  <ul style="margin:.5rem 0 .8rem 1.4rem;font-size:.93rem">
+    <li>Aleación disponible: 80 kg (Estándar: 0.125 kg/u; Grande: 0.4 kg/u)</li>
+    <li>Tiempo manufactura: 80 hs totales (Estándar: 10 min/u; Grande: 12 min/u)</li>
+    <li>Condición: Estándar debe ser ≥ 20% de la producción total</li>
+  </ul>
+
+  <div class="steps">
+    <div class="step">
+      <div class="step-num">1</div>
+      <div class="step-body">
+        <strong>Cómo modelar "al menos el 20%"</strong>
+        <div class="tip">
+          Esta es la restricción más complicada. "x₁ es al menos el 20% del total" significa:<br><br>
+          x₁ ≥ 0.20 · (x₁ + x₂)<br><br>
+          Expandimos: x₁ ≥ 0.20x₁ + 0.20x₂<br>
+          Pasamos todo a un lado: x₁ − 0.20x₁ − 0.20x₂ ≥ 0<br>
+          <strong>0.80x₁ − 0.20x₂ ≥ 0</strong><br><br>
+          O equivalente: x₁ ≥ 0.25x₂ (multiplicando por 5/4)
+        </div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <div class="step-body">
+        <strong>Modelo Completo</strong>
+        <div class="code-block">Variables: x₁ = raquetas Estándar, x₂ = raquetas Grandes
+
+MAX Z = 10x₁ + 15x₂
+
+Sujeto a:
+  0.125x₁ + 0.4x₂  ≤  80       (aleación)
+     10x₁ + 12x₂   ≤ 4800      (tiempo: 80hs × 60min)
+   0.80x₁ − 0.20x₂ ≥   0       (mínimo 20% estándar)
+   x₁, x₂ ≥ 0</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <div class="step-body">
+        <strong>Interpretación de las Variables de Holgura</strong>
+        <table>
+          <tr><th>Variable</th><th>Significado</th></tr>
+          <tr><td>s₁ (Aleación)</td><td>Kg de aleación que sobran sin usar</td></tr>
+          <tr><td>s₂ (Tiempo)</td><td>Minutos de manufactura sobrantes</td></tr>
+          <tr><td>s₃ (% mínimo)</td><td>Exceso de raquetas estándar sobre el 20% requerido</td></tr>
+        </table>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">4</div>
+      <div class="step-body">
+        <strong>Respuesta: ¿Cuánto pagaría por hora extra de manufactura?</strong>
+        <div class="tip">
+          El precio máximo a pagar por tiempo extra = <strong>Shadow Price</strong> de la restricción de tiempo.<br><br>
+          Si SP = $X/minuto → pagaría hasta $X por cada minuto extra, porque ese minuto adicional genera exactamente $X de beneficio adicional.<br>
+          Si SP = 0, la restricción de tiempo no está activa (hay holgura), y no tiene sentido pagar por más tiempo.
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============================== EJ 5 ============================== -->
+<div class="section" id="ej5">
+  <div class="ej-header">
+    <span class="ej-badge">TP0 — Análisis</span>
+    <h3>Sensibilidad — Usando los Resultados del TP0</h3>
+  </div>
+
+  <p>El TP0 pide, <em>habiendo hallado la solución óptima</em>, responder preguntas de sensibilidad. Tomamos el problema del Práctico 1 de TP0 como base:</p>
+
+  <div class="ok">
+    <strong>Solución Óptima (dada por TP0):</strong><br>
+    x₁ = 18, x₂ = 4, holguras s₁=0, s₂=0, s₃=22, <strong>Z = 700</strong>
+  </div>
+
+  <div class="steps">
+    <div class="step">
+      <div class="step-num">A</div>
+      <div class="step-body">
+        <strong>Pregunta: "Modifique el problema para que adopte solución múltiple"</strong>
+        <div class="tip">
+          Hay solución múltiple cuando la <strong>Función Objetivo es paralela</strong> a una restricción activa. Eso pasa cuando la pendiente de la FO = pendiente de una restricción.<br><br>
+          Si Z = c₁x₁ + c₂x₂, la pendiente es −c₁/c₂.<br>
+          Ajustá c₁ o c₂ hasta que sea igual a la pendiente de una restricción activa. Así el óptimo "se extiende" por todo ese segmento.
+        </div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">B</div>
+      <div class="step-body">
+        <strong>Pregunta: "Si b₃ disminuye, ¿sobre qué recta se desplaza la solución?"</strong>
+        <div class="tip">
+          b₃ es el RHS de la restricción 3. Si cambia b₃, la recta de esa restricción se desplaza paralela a sí misma. Como la restricción 3 <em>no está activa</em> (s₃ = 22 &gt; 0), el óptimo actual no está sobre esa recta. Mientras b₃ baje menos de 22, la solución no cambia. Si baja más, la restricción 3 se vuelve activa y la solución se mueve sobre la intersección de las otras dos restricciones activas.
+        </div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">C</div>
+      <div class="step-body">
+        <strong>Pregunta: "Si b₃ disminuye a 2 unidades, ¿cuál es la nueva solución?"</strong>
+        <div class="tip">
+          Con b₃ = 2, la tercera restricción se vuelve sumamente restrictiva. Habría que resolver el nuevo sistema completo. Si el vértice óptimo anterior viola la nueva restricción (verificar: s₃_nuevo = restricción − x₁°, x₂°), hay que buscar el nuevo vértice factible más cercano donde Z sea máximo.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div style="background:#e8eaf6;border-radius:8px;padding:1rem;margin:1rem 0">
+    <strong>📌 Resumen de Conceptos Clave de Sensibilidad:</strong>
+    <table style="margin:.6rem 0">
+      <tr><th>Concepto</th><th>Qué mide</th><th>Cómo se usa</th></tr>
+      <tr><td>Shadow Price (SP)</td><td>Cambio en Z por 1 unidad extra de recurso</td><td>SP &gt; costo extra → conviene comprar</td></tr>
+      <tr><td>Rango RHS</td><td>Hasta dónde puede variar b sin cambiar la BASE</td><td>Si nuevo b está en rango → SP sigue válido</td></tr>
+      <tr><td>Rango c(j)</td><td>Hasta dónde puede variar el beneficio sin cambiar la BASE</td><td>Si c está en rango → solución óptima no cambia</td></tr>
+      <tr><td>Reduced Cost</td><td>Cuánto debe bajar el costo para que una var. entre a la base</td><td>Si RC = 0 → variable ya está en la base (produce)</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- ============================== QUIZ ============================== -->
+<div class="section" id="quiz">
+  <h2 style="color:#6a1b9a">🧠 Preguntas Teóricas — Hacé click para ver la respuesta</h2>
+  <p style="color:#555;margin-bottom:1rem">Intentá responder mentalmente antes de abrir cada una.</p>
+
+  <div class="quiz-section">
+
+    <div class="quiz-item" onclick="this.classList.toggle('abierto')">
+      ¿Qué son las variables de decisión en PL?
+      <div class="resp">Son las incógnitas del problema: representan <strong>cuánto</strong> de cada cosa se decide hacer (producir, comprar, asignar). Se llaman x₁, x₂, etc. Siempre son ≥ 0 porque no tiene sentido producir negativos. En el enunciado suelen ser "la cantidad de X a fabricar".</div>
+    </div>
+
+    <div class="quiz-item" onclick="this.classList.toggle('abierto')">
+      ¿Qué es la región factible y cómo se construye?
+      <div class="resp">Es el conjunto de todos los puntos (x₁, x₂) que satisfacen <strong>todas</strong> las restricciones simultáneamente, incluyendo la no negatividad. Gráficamente es la intersección de todos los semiplanos definidos por las inecuaciones. Se construye graficando cada restricción como recta y sombreando el lado que cumple la desigualdad.</div>
+    </div>
+
+    <div class="quiz-item" onclick="this.classList.toggle('abierto')">
+      ¿Por qué el óptimo siempre está en un vértice de la región factible?
+      <div class="resp">Porque la función objetivo es lineal (una función lineal en un polígono convexo siempre alcanza su máximo/mínimo en un extremo, no en el interior). Al mover la línea Z = k alejándola del origen (en MAX), el último punto que toca la región factible antes de salir de ella es siempre un vértice.</div>
+    </div>
+
+    <div class="quiz-item" onclick="this.classList.toggle('abierto')">
+      ¿Qué significa que una restricción tenga holgura = 0?
+      <div class="resp">Que el recurso está <strong>completamente utilizado</strong> (saturado). El valor de la variable de holgura s = 0 indica que la solución óptima se encuentra exactamente sobre esa recta restricción. El Shadow Price de esa restricción será ≠ 0, lo que significa que si consiguiéramos más de ese recurso, el beneficio aumentaría.</div>
+    </div>
+
+    <div class="quiz-item" onclick="this.classList.toggle('abierto')">
+      ¿Cuál es la diferencia entre una restricción ≤ y una restricción ≥?
+      <div class="resp">
+        <strong>≤ (menos o igual):</strong> Se usa para recursos con límite superior (no podés usar más de lo disponible). La holgura s ≥ 0 mide lo que sobra. Aparece en: horas máquina, kg de materia prima, presupuesto.<br><br>
+        <strong>≥ (mayor o igual):</strong> Se usa para requisitos mínimos que deben cumplirse. La variable de superávit s mide cuánto se supera el mínimo. Aparece en: dietas (mínimos nutricionales), demanda mínima de producción.
+      </div>
+    </div>
+
+    <div class="quiz-item" onclick="this.classList.toggle('abierto')">
+      ¿Qué es el Shadow Price (precio sombra) y cómo se interpreta?
+      <div class="resp">Es el incremento en el valor óptimo de Z que resulta de relajar en <strong>una unidad</strong> el RHS de una restricción activa. Si SP = $5 para la restricción de Horas-Máquina, significa que si conseguimos 1 hora más de máquina, el beneficio máximo aumenta en $5. Si SP = 0, la restricción no está activa y agregar más recurso no sirve de nada.</div>
+    </div>
+
+    <div class="quiz-item" onclick="this.classList.toggle('abierto')">
+      ¿Qué significa "solución múltiple" en PL gráfico?
+      <div class="resp">Ocurre cuando la función objetivo tiene exactamente la misma pendiente que una restricción activa. Gráficamente, la recta Z = k es paralela a un lado de la región factible, y "toca" todo ese segmento a la vez. El resultado es que cualquier combinación convexa de los dos vértices extremos del segmento es también una solución óptima con el mismo Z.</div>
+    </div>
+
+    <div class="quiz-item" onclick="this.classList.toggle('abierto')">
+      ¿Cómo se modela una restricción del tipo "X debe ser al menos el p% del total"?
+      <div class="resp">
+        x₁ ≥ p · (x₁ + x₂)<br>
+        Expandir: x₁ ≥ p·x₁ + p·x₂<br>
+        Pasar todo a un lado: x₁ − p·x₁ − p·x₂ ≥ 0<br>
+        Simplificar: (1−p)·x₁ − p·x₂ ≥ 0<br><br>
+        Ejemplo con p=20%: 0.8x₁ − 0.2x₂ ≥ 0
+      </div>
+    </div>
+
+    <div class="quiz-item" onclick="this.classList.toggle('abierto')">
+      ¿Qué pasa cuando la región factible es vacía?
+      <div class="resp">Si no existe ningún punto que satisfaga simultáneamente todas las restricciones, el problema es <strong>infactible</strong>. No tiene solución. Esto puede ocurrir cuando las restricciones se contradicen entre sí. En la práctica, suele ser señal de que hay un error en el modelado.</div>
+    </div>
+
+    <div class="quiz-item" onclick="this.classList.toggle('abierto')">
+      ¿Qué significa que el Reduced Cost de una variable sea −5?
+      <div class="resp">Significa que esa variable está fuera de la base (x = 0 en la solución óptima) y que para que valga la pena producirla, su beneficio unitario debería aumentar en $5. En otras palabras, es el costo de oportunidad de forzar la producción de esa variable.</div>
+    </div>
+
+    <div class="quiz-item" onclick="this.classList.toggle('abierto')">
+      ¿Qué es el Rango Allowable del coeficiente de la FO?
+      <div class="resp">Es el intervalo [mín, máx] dentro del cual puede variar el coeficiente c(j) de la función objetivo sin que cambie la <strong>base óptima</strong> (es decir, sin que cambie qué variables producen). Si el coeficiente sale del rango, el óptimo se mueve a otro vértice. Importante: el Z sí cambia aunque la base no cambie, porque la pendiente de la FO cambió.</div>
+    </div>
+
+    <div class="quiz-item" onclick="this.classList.toggle('abierto')">
+      ¿Cómo decido si conviene contratar más horas de máquina a un costo extra?
+      <div class="resp">
+        Comparar el Shadow Price de esa restricción con el costo extra por unidad:<br>
+        • Si SP &gt; costo extra → <strong>conviene</strong> (cada hora adicional genera más beneficio de lo que cuesta)<br>
+        • Si SP &lt; costo extra → <strong>no conviene</strong><br>
+        • Si SP = costo extra → indiferente<br><br>
+        Además verificar que la cantidad extra esté dentro del Rango Allowable del RHS, si no, habrá que recalcular el SP.
+      </div>
+    </div>
+
+  </div>
+</div>
+
+</main>
+
+<script>
+  const sections = document.querySelectorAll('[id]');
+  const navLinks = document.querySelectorAll('nav a');
+  window.addEventListener('scroll', () => {
+    let current = '';
+    sections.forEach(s => { if (window.scrollY >= s.offsetTop - 90) current = s.id; });
+    navLinks.forEach(a => {
+      a.classList.remove('active');
+      if (a.getAttribute('href') === '#' + current) a.classList.add('active');
+    });
+  });
+</script>
+</body>
+</html>
