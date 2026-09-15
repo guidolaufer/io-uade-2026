@@ -1,0 +1,1295 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Investigación Operativa — Material de Estudio UADE 2026</title>
+<style>
+  :root {
+    --azul: #1F4E79; --azul2: #2E75B6; --azulc: #BDD7EE;
+    --naranja: #C55A11; --naranjac: #FCE4D6;
+    --verde: #375623; --verdec: #E2EFDA;
+    --rojo: #C00000;
+    --gris: #F5F5F5; --grisd: #D9D9D9;
+    --amarillo: #FFF9C4;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Segoe UI', Arial, sans-serif; font-size: 15px; background: #f0f4f8; color: #222; }
+
+  /* NAV */
+  nav { position: fixed; top: 0; left: 0; width: 220px; height: 100vh; background: var(--azul); color: white; overflow-y: auto; z-index: 100; padding: 16px 0; }
+  nav h3 { padding: 8px 16px 16px; font-size: 13px; color: #acd; text-transform: uppercase; letter-spacing: 1px; }
+  nav a { display: block; padding: 8px 16px; color: #cde; text-decoration: none; font-size: 13px; border-left: 3px solid transparent; transition: all .2s; }
+  nav a:hover, nav a.active { background: rgba(255,255,255,.1); border-left-color: #7EC8E3; color: white; }
+  nav .nav-tema { font-weight: bold; color: #7EC8E3; margin-top: 10px; font-size: 13px; padding: 6px 16px 2px; }
+
+  /* MAIN */
+  main { margin-left: 220px; padding: 32px 40px; max-width: 1100px; }
+
+  /* SECCIONES */
+  .section { background: white; border-radius: 10px; padding: 32px; margin-bottom: 32px; box-shadow: 0 2px 12px rgba(0,0,0,.08); }
+  h1 { font-size: 26px; color: var(--azul); border-bottom: 3px solid var(--azul2); padding-bottom: 10px; margin-bottom: 20px; }
+  h2 { font-size: 20px; color: var(--azul2); margin: 24px 0 12px; }
+  h3 { font-size: 16px; color: var(--naranja); margin: 18px 0 8px; }
+  p { line-height: 1.7; margin-bottom: 10px; }
+
+  /* CAJA */
+  .caja { border-radius: 8px; padding: 16px 20px; margin: 12px 0; }
+  .caja-verde { background: var(--verdec); border-left: 5px solid var(--verde); }
+  .caja-naranja { background: var(--naranjac); border-left: 5px solid var(--naranja); }
+  .caja-azul { background: var(--azulc); border-left: 5px solid var(--azul2); }
+  .caja-rojo { background: #fde8e8; border-left: 5px solid var(--rojo); }
+  .caja-amarillo { background: var(--amarillo); border-left: 5px solid #c8a000; }
+  .caja-gris { background: var(--gris); border-left: 5px solid var(--grisd); }
+
+  /* TABLA */
+  table { border-collapse: collapse; width: 100%; margin: 12px 0; font-size: 13.5px; }
+  th { background: var(--azul2); color: white; padding: 9px 12px; text-align: left; }
+  td { padding: 8px 12px; border-bottom: 1px solid #eee; }
+  tr:nth-child(even) td { background: #f8f9fc; }
+  .optimo td { background: #e6f4ea !important; font-weight: bold; }
+  .critica td { background: #fce8d4 !important; font-weight: bold; }
+
+  /* FORMULA */
+  .formula { background: var(--azul); color: white; border-radius: 8px; padding: 12px 20px; font-family: 'Courier New', monospace; font-size: 17px; text-align: center; margin: 14px 0; }
+  code { background: #eef; color: var(--naranja); padding: 2px 6px; border-radius: 4px; font-family: 'Courier New', monospace; }
+
+  /* PASOS */
+  .paso { display: flex; gap: 14px; margin: 10px 0; align-items: flex-start; }
+  .num { background: var(--azul2); color: white; border-radius: 50%; width: 28px; height: 28px; display: flex; align-items: center; justify-content: center; font-weight: bold; flex-shrink: 0; font-size: 14px; }
+  .bala { padding-left: 24px; position: relative; margin: 5px 0; }
+  .bala::before { content: "▸"; color: var(--azul2); position: absolute; left: 6px; }
+
+  /* PORTADA */
+  .portada { background: linear-gradient(135deg, var(--azul) 0%, #2E75B6 100%); color: white; border-radius: 12px; padding: 48px; text-align: center; margin-bottom: 32px; }
+  .portada h1 { color: white; border: none; font-size: 34px; }
+  .portada p { color: #cde; }
+  .badge { display: inline-block; background: rgba(255,255,255,.2); border-radius: 6px; padding: 6px 14px; margin: 6px; font-size: 14px; }
+  .badge.prio { background: #27ae60; font-weight: bold; }
+
+  /* DIAGRAMA SENSIBILIDAD */
+  .diagrama-container { overflow-x: auto; margin: 20px 0; }
+  .diagrama-tabla { border-collapse: collapse; font-size: 12.5px; min-width: 900px; }
+  .diagrama-tabla th { background: #2E75B6; color: white; padding: 8px 10px; }
+  .highlight-solucion, .highlight-rango-fo, .highlight-shadow, .highlight-rango-rhs, .highlight-slack, .highlight-basis, .highlight-reduced { color: #111 !important; }
+  .diagrama-tabla td { padding: 7px 10px; border: 1px solid #ccc; }
+  .diagrama-tabla tr.data-row td { background: #fafafa; }
+  .diagrama-tabla tr.data-row:nth-child(even) td { background: #eef3fb; }
+  .highlight-solucion { background: #fff9c4 !important; outline: 3px solid #c8a000; }
+  .highlight-rango-fo { background: #e8f5e9 !important; outline: 3px solid #27ae60; }
+  .highlight-shadow { background: #fce4d6 !important; outline: 3px solid #c55a11; }
+  .highlight-rango-rhs { background: #e3f2fd !important; outline: 3px solid #1976d2; }
+  .highlight-slack { background: #f3e5f5 !important; outline: 3px solid #7b1fa2; }
+  .highlight-basis { background: #e8eaf6 !important; outline: 3px solid #3949ab; }
+  .highlight-reduced { background: #fef3cd !important; outline: 2px solid #e6a817; color: #5a3e00 !important; }
+
+  /* LEYENDA DIAGRAMA */
+  .leyenda { display: flex; flex-wrap: wrap; gap: 10px; margin: 12px 0; }
+  .ley-item { display: flex; align-items: center; gap: 7px; font-size: 13px; }
+  .ley-color { width: 20px; height: 20px; border-radius: 4px; border: 2px solid #888; }
+
+  /* ANOTACION VISUAL SVG */
+  .svg-wrapper { width: 100%; overflow-x: auto; margin: 16px 0; }
+
+  /* QUIZ */
+  .quiz { background: #fff; border: 2px solid var(--rojo); border-radius: 8px; padding: 20px; margin: 16px 0; }
+  .quiz h3 { color: var(--rojo); }
+  .quiz-item { margin: 8px 0; padding: 8px 12px; background: #fff5f5; border-radius: 6px; cursor: pointer; border: 1px solid #f5c6c6; transition: background .2s; }
+  .quiz-item:hover { background: #fee; }
+  .quiz-item .respuesta { display: none; margin-top: 8px; padding: 8px; background: #e8f5e9; border-radius: 4px; border-left: 4px solid var(--verde); }
+  .quiz-item.abierto .respuesta { display: block; }
+
+  /* FLASH CARD */
+  .flash { background: var(--azul); color: white; border-radius: 10px; padding: 20px 24px; margin: 10px 0; }
+  .flash .titulo { font-weight: bold; font-size: 14px; color: #acd; text-transform: uppercase; margin-bottom: 8px; }
+
+  @media print { nav { display: none; } main { margin-left: 0; } }
+</style>
+</head>
+<body>
+
+<nav>
+  <h3>Índice</h3>
+  <div class="nav-tema">📌 Temas prioritarios</div>
+  <a href="#tema1">Tema 1 — PL Gráfico</a>
+  <a href="#t1-formulacion">Formulación</a>
+  <a href="#t1-grafico">Método Gráfico</a>
+  <a href="#t1-ejemplo">Ejemplo (Embassy)</a>
+  <div class="nav-tema">📊 Análisis</div>
+  <a href="#tema2">Tema 2 — Sensibilidad</a>
+  <a href="#t2-cuadro">El Cuadro Anotado</a>
+  <a href="#t2-calculos">🧮 Cómo calcular</a>
+  <a href="#t2-reglas">Las 4 Reglas</a>
+  <a href="#t2-ejemplo">Ejemplo (Lácteos)</a>
+  <div class="nav-tema">🌐 Redes</div>
+  <a href="#tema3">Tema 3 — Ford-Fulkerson</a>
+  <a href="#tema4">Tema 4 — PERT/CPM</a>
+  <div class="nav-tema">⚡ Repaso</div>
+  <a href="#resumen">Resumen Flash</a>
+  <a href="#quiz">Preguntas tipo examen</a>
+<a href="#tp-ejercicios">🏋️ Ejercicios TP</a>
+</nav>
+
+<main>
+
+<!-- PORTADA -->
+<div class="portada">
+  <h1>📚 Investigación Operativa</h1>
+  <p style="font-size:18px; margin:10px 0">Material de Estudio — 1er Parcial · UADE 2026</p>
+  <p style="color:#acd; margin-bottom:20px">Prof. Dafne Gonzalez · Miércoles 09/09/2026</p>
+  <div>
+    <span class="badge prio">✅ TEMA 1 — Programación Lineal</span>
+    <span class="badge prio">✅ TEMA 2 — Análisis de Sensibilidad</span>
+    <span class="badge">TEMA 3 — Ford-Fulkerson</span>
+    <span class="badge">TEMA 4 — PERT/CPM</span>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════ -->
+<!-- TEMA 1 -->
+<!-- ════════════════════════════════════════════ -->
+<div class="section" id="tema1">
+  <h1>🔵 TEMA 1 — Programación Lineal: Formulación y Método Gráfico</h1>
+
+  <div class="caja caja-azul">
+    <strong>¿Qué es?</strong> Una técnica para tomar la <em>mejor decisión posible</em> cuando tenés recursos limitados. Todo es <em>lineal</em> (sin cuadrados ni productos entre variables). Se usa para maximizar ganancias, minimizar costos, optimizar producción.
+  </div>
+
+  <h2 id="t1-formulacion">Los 4 componentes de todo modelo PL</h2>
+  <table>
+    <tr><th>Componente</th><th>¿Qué es?</th><th>Ejemplo del parcial</th></tr>
+    <tr><td><strong>Variables de decisión</strong></td><td>Lo que querés determinar (¿cuánto producir?)</td><td>x₁ = cant. EZ-Rider, x₂ = cant. Lady-Sport</td></tr>
+    <tr><td><strong>Función objetivo</strong></td><td>Lo que querés maximizar o minimizar</td><td>Max Z = 2400·x₁ + 1800·x₂</td></tr>
+    <tr><td><strong>Restricciones</strong></td><td>Los límites de cada recurso</td><td>6x₁ + 3x₂ ≤ 2100 (horas manufactura)</td></tr>
+    <tr><td><strong>No negatividad</strong></td><td>Las variables no pueden ser negativas</td><td>x₁ ≥ 0, x₂ ≥ 0</td></tr>
+  </table>
+
+  <h2>Los 5 pasos para formular</h2>
+  <div class="paso"><div class="num">1</div><div><strong>Identificar las variables:</strong> ¿qué se decide? Generalmente "cuánto producir de cada producto".</div></div>
+  <div class="paso"><div class="num">2</div><div><strong>Escribir la función objetivo:</strong> Σ(ganancia unitaria × cantidad). ¿Maximizar o minimizar?</div></div>
+  <div class="paso"><div class="num">3</div><div><strong>Escribir restricciones de recursos:</strong> una por cada recurso limitado. Identificar coeficientes y RHS.</div></div>
+  <div class="paso"><div class="num">4</div><div><strong>Restricciones de demanda:</strong> máximos o mínimos de cada variable.</div></div>
+  <div class="paso"><div class="num">5</div><div><strong>No negatividad:</strong> todas las variables ≥ 0.</div></div>
+
+  <h2 id="t1-ejemplo">🏍️ EJEMPLO COMPLETO — Embassy Motorcycles (del parcial)</h2>
+  <div class="caja caja-naranja">
+    <strong>Problema:</strong> Producir EZ-Rider (x₁) y Lady-Sport (x₂). Ganancia: $2400 y $1800 por unidad. Recursos: manufactura de motores (2100 hs), cuadros Lady-Sport (280 und), ensamblaje (1000 hs).
+  </div>
+
+  <h3>Tabla de datos</h3>
+  <table>
+    <tr><th>Recurso</th><th>EZ-Rider (x₁)</th><th>Lady-Sport (x₂)</th><th>Disponibilidad</th></tr>
+    <tr><td>Manufactura motores</td><td>6 hs/unid</td><td>3 hs/unid</td><td>≤ 2100 hs</td></tr>
+    <tr><td>Cuadros Lady-Sport</td><td>–</td><td>1/unid</td><td>≤ 280 cuadros</td></tr>
+    <tr><td>Ensamblaje y pruebas</td><td>2 hs/unid</td><td>2,5 hs/unid</td><td>≤ 1000 hs</td></tr>
+    <tr><td>Ganancia unitaria</td><td>$2400</td><td>$1800</td><td>— (FO)</td></tr>
+  </table>
+
+  <h3>Modelo formulado</h3>
+  <div class="caja caja-verde">
+    <div class="formula">Max Z = 2400·x₁ + 1800·x₂</div>
+    <p><strong>(R1) Manufactura:</strong> &nbsp; <code>6·x₁ + 3·x₂ ≤ 2100</code></p>
+    <p><strong>(R2) Cuadros:</strong> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <code>x₂ ≤ 280</code></p>
+    <p><strong>(R3) Ensamblaje:</strong> &nbsp;&nbsp;&nbsp; <code>2·x₁ + 2,5·x₂ ≤ 1000</code></p>
+    <p><strong>(NNeg):</strong> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <code>x₁ ≥ 0, x₂ ≥ 0</code></p>
+  </div>
+
+  <h2 id="t1-grafico">Método Gráfico — paso a paso</h2>
+
+  <h3>Paso 1: Encontrar cortes con los ejes</h3>
+  <table>
+    <tr><th>Restricción</th><th>Corte eje x₁ (x₂=0)</th><th>Corte eje x₂ (x₁=0)</th></tr>
+    <tr><td>R1: 6x₁+3x₂=2100</td><td>x₁ = 350</td><td>x₂ = 700</td></tr>
+    <tr><td>R2: x₂=280</td><td>—</td><td>x₂ = 280 (horizontal)</td></tr>
+    <tr><td>R3: 2x₁+2,5x₂=1000</td><td>x₁ = 500</td><td>x₂ = 400</td></tr>
+  </table>
+
+  <h3>Paso 2: Lado factible</h3>
+  <p>Probá el origen <code>(0,0)</code> en cada restricción. Si lo satisface → sombreá hacia ese lado.</p>
+  <div class="caja caja-gris">
+    <div class="bala">R1: 6(0)+3(0)=0 ≤ 2100 ✅ → región del origen (abajo-izquierda)</div>
+    <div class="bala">R2: 0 ≤ 280 ✅ → por debajo de la recta horizontal</div>
+    <div class="bala">R3: 0 ≤ 1000 ✅ → región del origen</div>
+  </div>
+
+  <h3>Paso 3: Calcular los vértices</h3>
+  <div class="caja caja-amarillo">
+    <p><strong>Vértice A:</strong> Origen → (0, 0)</p>
+    <p><strong>Vértice B:</strong> Eje x₁=0 con R2 → (0, 280)</p>
+    <p><strong>Vértice C:</strong> R2 ∩ R3 → x₂=280, sustituyo en R3:<br>
+    <code>2x₁ + 2,5(280) = 1000 → 2x₁ = 300 → x₁ = 150</code><br>→ <strong>C = (150, 280)</strong></p>
+    <p><strong>Vértice D:</strong> R1 ∩ R3 → sistema de ecuaciones:<br>
+    De R1: <code>x₂ = 700 − 2x₁</code><br>
+    Sustituyo en R3: <code>2x₁ + 2,5(700−2x₁) = 1000 → −3x₁ = −750 → x₁ = 250</code><br>
+    <code>x₂ = 700 − 2(250) = 200</code> → <strong>D = (250, 200)</strong></p>
+    <p><strong>Vértice E:</strong> R1 con eje x₂=0 → (350, 0)</p>
+  </div>
+
+  <!-- GRÁFICO SVG -->
+  <h3>Gráfico de la región factible</h3>
+  <div class="svg-wrapper">
+  <svg viewBox="0 0 520 420" width="520" height="420" style="border:1px solid #ddd; border-radius:8px; background:#fafafa;">
+    <!-- Ejes -->
+    <line x1="50" y1="380" x2="500" y2="380" stroke="#333" stroke-width="2"/>
+    <line x1="50" y1="380" x2="50" y2="20" stroke="#333" stroke-width="2"/>
+    <!-- Flechas ejes -->
+    <polygon points="500,376 510,380 500,384" fill="#333"/>
+    <polygon points="46,20 50,10 54,20" fill="#333"/>
+    <!-- Etiquetas ejes -->
+    <text x="505" y="384" font-size="13" fill="#333">x₁</text>
+    <text x="36" y="16" font-size="13" fill="#333">x₂</text>
+
+    <!-- Escala: x1 max=500 → px: 50+(x1/500)*430 ; x2 max=700 → py: 380-(x2/700)*350 -->
+    <!-- R1: (350,0)-(0,700) -->
+    <line x1="351" y1="380" x2="50" y2="30" stroke="#2E75B6" stroke-width="2.5" stroke-dasharray="6,3"/>
+    <text x="355" y="378" font-size="12" fill="#2E75B6">R1</text>
+    <!-- R2: y=280 → py=380-280/700*350=240 -->
+    <line x1="50" y1="240" x2="490" y2="240" stroke="#C55A11" stroke-width="2.5" stroke-dasharray="6,3"/>
+    <text x="460" y="235" font-size="12" fill="#C55A11">R2 (x₂=280)</text>
+    <!-- R3: (500,0)-(0,400) -->
+    <line x1="480" y1="380" x2="50" y2="180" stroke="#375623" stroke-width="2.5" stroke-dasharray="6,3"/>
+    <text x="462" y="375" font-size="12" fill="#375623">R3</text>
+
+    <!-- REGIÓN FACTIBLE (polígono sombreado) -->
+    <!-- A=(0,0)→(50,380), B=(0,280)→(50,240), C=(150,280)→(179,240), D=(250,200)→(264,280), E=(350,0)→(351,380) -->
+    <polygon points="50,380 50,240 179,240 264,280 351,380" fill="rgba(46,117,182,0.18)" stroke="#2E75B6" stroke-width="2"/>
+
+    <!-- Vértices -->
+    <circle cx="50" cy="380" r="6" fill="#888"/> <text x="55" y="395" font-size="12" fill="#555">A(0,0)</text>
+    <circle cx="50" cy="240" r="6" fill="#888"/> <text x="55" y="238" font-size="12" fill="#555">B(0,280)</text>
+    <circle cx="179" cy="240" r="7" fill="#C55A11"/> <text x="184" y="237" font-size="12" fill="#C55A11">C(150,280)</text>
+    <circle cx="264" cy="280" r="9" fill="#1F4E79"/> <text x="270" y="276" font-size="13" font-weight="bold" fill="#1F4E79">D(250,200) ← ÓPTIMO</text>
+    <circle cx="351" cy="380" r="6" fill="#888"/> <text x="353" y="395" font-size="12" fill="#555">E(350,0)</text>
+
+    <!-- Flecha ÓPTIMO -->
+    <path d="M340,255 Q310,265 275,282" stroke="#1F4E79" stroke-width="2" fill="none" marker-end="url(#arr)"/>
+    <defs><marker id="arr" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L0,6 L9,3 z" fill="#1F4E79"/></marker></defs>
+    <text x="285" y="252" font-size="12" fill="#1F4E79" font-weight="bold">Z=$960.000</text>
+
+    <!-- Marcas en ejes -->
+    <text x="344" y="395" font-size="11" fill="#2E75B6">350</text>
+    <text x="44" y="244" font-size="11" fill="#C55A11" text-anchor="end">280</text>
+    <text x="44" y="184" font-size="11" fill="#375623" text-anchor="end">400</text>
+
+    <!-- Leyenda -->
+    <rect x="55" y="25" width="220" height="70" fill="white" stroke="#ddd" rx="5"/>
+    <text x="65" y="42" font-size="11" fill="#333" font-weight="bold">Leyenda</text>
+    <line x1="65" y1="52" x2="90" y2="52" stroke="#2E75B6" stroke-width="2" stroke-dasharray="5,2"/>
+    <text x="95" y="56" font-size="11" fill="#333">R1: Manufactura motores</text>
+    <line x1="65" y1="64" x2="90" y2="64" stroke="#C55A11" stroke-width="2" stroke-dasharray="5,2"/>
+    <text x="95" y="68" font-size="11" fill="#333">R2: Cuadros Lady-Sport</text>
+    <line x1="65" y1="76" x2="90" y2="76" stroke="#375623" stroke-width="2" stroke-dasharray="5,2"/>
+    <text x="95" y="80" font-size="11" fill="#333">R3: Ensamblaje</text>
+  </svg>
+  </div>
+
+  <h3>Paso 4: Evaluar la función objetivo en cada vértice</h3>
+  <table>
+    <tr><th>Vértice</th><th>x₁</th><th>x₂</th><th>Z = 2400x₁ + 1800x₂</th><th>¿Óptimo?</th></tr>
+    <tr><td>A</td><td>0</td><td>0</td><td>$0</td><td></td></tr>
+    <tr><td>B</td><td>0</td><td>280</td><td>$504.000</td><td></td></tr>
+    <tr><td>C</td><td>150</td><td>280</td><td>$864.000</td><td></td></tr>
+    <tr class="optimo"><td><strong>D ← ÓPTIMO</strong></td><td><strong>250</strong></td><td><strong>200</strong></td><td><strong>$960.000</strong></td><td>✅ MAX</td></tr>
+    <tr><td>E</td><td>350</td><td>0</td><td>$840.000</td><td></td></tr>
+  </table>
+
+  <div class="caja caja-verde">
+    <strong>🏆 Solución óptima:</strong> Producir <strong>250 EZ-Rider</strong> y <strong>200 Lady-Sport</strong> → <strong>Z = $960.000</strong><br>
+    <small>Verificación: R1: 6(250)+3(200)=2100 ✅ | R2: 200≤280 ✅ | R3: 2(250)+2,5(200)=1000 ✅</small>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════ -->
+<!-- TEMA 2 -->
+<!-- ════════════════════════════════════════════ -->
+<div class="section" id="tema2">
+  <h1>📊 TEMA 2 — Análisis de Sensibilidad</h1>
+
+  <div class="caja caja-azul">
+    <strong>¿Para qué sirve?</strong> Después de resolver el PL, te preguntás: <em>"¿qué pasa si cambia un dato del problema?"</em>. El análisis de sensibilidad responde eso sin tener que resolver de nuevo. <br><br>
+    El informe de sensibilidad tiene dos secciones: <strong>variables de decisión</strong> y <strong>restricciones</strong>.
+  </div>
+
+  <!-- ══════════════════════════════════════════
+       DIAGRAMA VISUAL DEL CUADRO DE SENSIBILIDAD
+       ══════════════════════════════════════════ -->
+  <h2 id="t2-cuadro">🔍 El Cuadro de Sensibilidad — ANOTADO y EXPLICADO</h2>
+  <p>A continuación está el cuadro real del parcial (Lácteos del Valle) con cada columna marcada con color para que sepas exactamente qué leer y para qué sirve.</p>
+
+  <div class="leyenda">
+    <div class="ley-item"><div class="ley-color" style="background:#fff9c4; border-color:#c8a000; border-width:3px"></div> <strong>Amarillo</strong> — Solution Value, ganancia y contribución (la solución)</div>
+    <div class="ley-item"><div class="ley-color" style="background:#fef3cd; border-color:#e6a817; border-width:2px"></div> <strong style="color:#7a4f00">Naranja pálido</strong> — Reduced Cost (= 0 si está en solución; ≠ 0 → no se produce)</div>
+    <div class="ley-item"><div class="ley-color" style="background:#e8eaf6; border-color:#3949ab; border-width:3px"></div> <strong style="color:#3949ab">Azul índigo</strong> — Basis Status ("basic" = en la solución; "at lower bound" = no produce)</div>
+    <div class="ley-item"><div class="ley-color" style="background:#e8f5e9; border-color:#27ae60; border-width:3px"></div> <strong>Verde</strong> — Rangos del coef. FO: [Allowable Min c(j), Allowable Max c(j)]</div>
+    <div class="ley-item"><div class="ley-color" style="background:#f3e5f5; border-color:#7b1fa2; border-width:3px"></div> <strong>Violeta</strong> — Slack/Surplus: holgura del recurso (= 0 → restricción activa)</div>
+    <div class="ley-item"><div class="ley-color" style="background:#fce4d6; border-color:#c55a11; border-width:3px"></div> <strong>Naranja</strong> — Shadow Price: cuánto sube Z si el RHS sube 1 unidad</div>
+    <div class="ley-item"><div class="ley-color" style="background:#e3f2fd; border-color:#1976d2; border-width:3px"></div> <strong>Azul celeste</strong> — Rangos del RHS: [Allowable Min RHS, Allowable Max RHS]</div>
+  </div>
+
+  <div class="diagrama-container">
+  <p style="font-weight:bold; margin-bottom:8px; color:#1F4E79">SECCIÓN 1: Variables de decisión</p>
+  <table class="diagrama-tabla">
+    <tr>
+      <th>#</th>
+      <th>Variable</th>
+      <th class="highlight-solucion" style="color:#111">Solution Value<br><small style="font-weight:normal">← CUÁNTO PRODUCIR</small></th>
+      <th class="highlight-solucion" style="color:#111">Unit Profit c(j)</th>
+      <th class="highlight-solucion" style="color:#111">Total Contribution</th>
+      <th class="highlight-reduced" style="color:#111">Reduced Cost<br><small style="font-weight:normal">← SI ≠ 0, no entra</small></th>
+      <th class="highlight-basis" style="color:#111">Basis Status<br><small style="font-weight:normal">← basic / no</small></th>
+      <th class="highlight-rango-fo" style="color:#111">Allowable Min c(j)<br><small style="font-weight:normal">← RANGO FO MÍNIMO</small></th>
+      <th class="highlight-rango-fo" style="color:#111">Allowable Max c(j)<br><small style="font-weight:normal">← RANGO FO MÁXIMO</small></th>
+    </tr>
+    <tr class="data-row">
+      <td>1</td><td>Q1 (Gouda)</td>
+      <td class="highlight-solucion"><strong>150,00</strong></td>
+      <td class="highlight-solucion">25,00</td>
+      <td class="highlight-solucion">3.750,00</td>
+      <td class="highlight-reduced"><strong>0,00</strong></td>
+      <td class="highlight-basis"><strong>basic</strong></td>
+      <td class="highlight-rango-fo">-M (−∞)</td>
+      <td class="highlight-rango-fo"><strong>30,40</strong></td>
+    </tr>
+    <tr class="data-row">
+      <td>2</td><td>Q2 (Sardo)</td>
+      <td class="highlight-solucion"><strong>318,67</strong></td>
+      <td class="highlight-solucion">35,00</td>
+      <td class="highlight-solucion">11.153,33</td>
+      <td class="highlight-reduced"><strong>0,00</strong></td>
+      <td class="highlight-basis"><strong>basic</strong></td>
+      <td class="highlight-rango-fo"><strong>0,00</strong></td>
+      <td class="highlight-rango-fo"><strong>37,50</strong></td>
+    </tr>
+    <tr class="data-row">
+      <td>3</td><td>Q3 (Danbo)</td>
+      <td class="highlight-solucion"><strong>700,00</strong></td>
+      <td class="highlight-solucion">60,00</td>
+      <td class="highlight-solucion">42.000,00</td>
+      <td class="highlight-reduced"><strong>0,00</strong></td>
+      <td class="highlight-basis"><strong>basic</strong></td>
+      <td class="highlight-rango-fo"><strong>15,27</strong></td>
+      <td class="highlight-rango-fo">M (+∞)</td>
+    </tr>
+    <tr class="data-row">
+      <td>4</td><td>Q4 (Reggianito)</td>
+      <td class="highlight-solucion"><strong>1.440,00</strong></td>
+      <td class="highlight-solucion">45,00</td>
+      <td class="highlight-solucion">64.800,00</td>
+      <td class="highlight-reduced"><strong>0,00</strong></td>
+      <td class="highlight-basis"><strong>basic</strong></td>
+      <td class="highlight-rango-fo"><strong>42,00</strong></td>
+      <td class="highlight-rango-fo"><strong>82,29</strong></td>
+    </tr>
+    <tr style="background:#1F4E79; color:white;">
+      <td colspan="3" style="color:white; font-weight:bold">Objective Function (MAX) = <strong>121.703,33</strong></td>
+      <td colspan="6"></td>
+    </tr>
+  </table>
+  </div>
+
+  <!-- Anotaciones visuales sección 1 -->
+  <div class="svg-wrapper" style="margin-top:8px;">
+  <svg viewBox="0 0 800 200" width="800" style="border:1px solid #ddd; border-radius:8px; background:#fefefe;">
+    <!-- Fila cabecera simulada -->
+    <rect x="10" y="10" width="780" height="40" fill="#2E75B6" rx="4"/>
+    <text x="20" y="35" fill="white" font-size="13" font-weight="bold">GUÍA DE LECTURA DEL CUADRO — SECCIÓN VARIABLES</text>
+
+    <!-- Bloque 1: Solution Value -->
+    <rect x="10" y="60" width="180" height="80" fill="#fff9c4" stroke="#c8a000" stroke-width="2" rx="5"/>
+    <text x="100" y="82" text-anchor="middle" font-size="12" font-weight="bold" fill="#c8a000">Solution Value</text>
+    <text x="100" y="98" text-anchor="middle" font-size="11" fill="#333">= cuánto producir</text>
+    <text x="100" y="114" text-anchor="middle" font-size="11" fill="#555">Ej: Q1=150, Q3=700</text>
+    <text x="100" y="130" text-anchor="middle" font-size="10" fill="#888">Si es 0 → no se produce</text>
+
+    <!-- Bloque 2: Reduced Cost — color naranja pálido igual al cuadro -->
+    <rect x="210" y="60" width="180" height="80" fill="#fef3cd" stroke="#e6a817" stroke-width="2" rx="5"/>
+    <text x="300" y="82" text-anchor="middle" font-size="12" font-weight="bold" fill="#7a4f00">Reduced Cost</text>
+    <text x="300" y="98" text-anchor="middle" font-size="11" fill="#333">= 0 si está en solución</text>
+    <text x="300" y="114" text-anchor="middle" font-size="11" fill="#555">Si ≠ 0: cuánto debe</text>
+    <text x="300" y="130" text-anchor="middle" font-size="11" fill="#555">mejorar c(j) para entrar</text>
+
+    <!-- Bloque 3: Basis Status — color índigo igual al cuadro -->
+    <rect x="410" y="60" width="180" height="80" fill="#e8eaf6" stroke="#3949ab" stroke-width="2" rx="5"/>
+    <text x="500" y="82" text-anchor="middle" font-size="12" font-weight="bold" fill="#3949ab">Basis Status</text>
+    <text x="500" y="98" text-anchor="middle" font-size="11" fill="#333">"basic" → en la solución</text>
+    <text x="500" y="114" text-anchor="middle" font-size="11" fill="#555">"at lower bound" → NO</text>
+    <text x="500" y="130" text-anchor="middle" font-size="11" fill="#555">se produce (vale 0)</text>
+
+    <!-- Bloque 4: Rango FO -->
+    <rect x="610" y="60" width="180" height="80" fill="#e8f5e9" stroke="#27ae60" stroke-width="2" rx="5"/>
+    <text x="700" y="82" text-anchor="middle" font-size="12" font-weight="bold" fill="#27ae60">Rango c(j)</text>
+    <text x="700" y="98" text-anchor="middle" font-size="11" fill="#333">[Min, Max] del coef. FO</text>
+    <text x="700" y="114" text-anchor="middle" font-size="11" fill="#555">Dentro → misma solución</text>
+    <text x="700" y="130" text-anchor="middle" font-size="11" fill="#555">Fuera → base cambia</text>
+
+    <!-- Flechas conectoras -->
+    <line x1="100" y1="140" x2="100" y2="158" stroke="#c8a000" stroke-width="1.5" marker-end="url(#a1)"/>
+    <line x1="300" y1="140" x2="300" y2="158" stroke="#e6a817" stroke-width="1.5" marker-end="url(#a2)"/>
+    <line x1="500" y1="140" x2="500" y2="158" stroke="#3949ab" stroke-width="1.5" marker-end="url(#a3)"/>
+    <line x1="700" y1="140" x2="700" y2="158" stroke="#27ae60" stroke-width="1.5" marker-end="url(#a4)"/>
+    <defs>
+      <marker id="a1" markerWidth="6" markerHeight="6" refX="3" refY="3" orient="auto"><polygon points="0,0 6,3 0,6" fill="#c8a000"/></marker>
+      <marker id="a2" markerWidth="6" markerHeight="6" refX="3" refY="3" orient="auto"><polygon points="0,0 6,3 0,6" fill="#e6a817"/></marker>
+      <marker id="a3" markerWidth="6" markerHeight="6" refX="3" refY="3" orient="auto"><polygon points="0,0 6,3 0,6" fill="#3949ab"/></marker>
+      <marker id="a4" markerWidth="6" markerHeight="6" refX="3" refY="3" orient="auto"><polygon points="0,0 6,3 0,6" fill="#27ae60"/></marker>
+    </defs>
+    <text x="100" y="175" text-anchor="middle" font-size="10" fill="#888">¿Qué producir?</text>
+    <text x="300" y="175" text-anchor="middle" font-size="10" fill="#888">¿Vale producirlo?</text>
+    <text x="500" y="175" text-anchor="middle" font-size="10" fill="#888">¿Está en la solución?</text>
+    <text x="700" y="175" text-anchor="middle" font-size="10" fill="#888">¿Cambia si c(j) varía?</text>
+  </svg>
+  </div>
+
+  <!-- SECCIÓN 2: RESTRICCIONES -->
+  <br>
+  <div class="diagrama-container">
+  <p style="font-weight:bold; margin-bottom:8px; color:#1F4E79">SECCIÓN 2: Restricciones</p>
+  <table class="diagrama-tabla">
+    <tr>
+      <th>#</th>
+      <th>Restricción</th>
+      <th>Left Hand Side</th>
+      <th>Direction</th>
+      <th>Right Hand Side</th>
+      <th class="highlight-slack" style="color:#111">Slack/Surplus<br><small>← HOLGURA</small></th>
+      <th class="highlight-shadow" style="color:#111">Shadow Price<br><small>← PRECIO REC.</small></th>
+      <th class="highlight-rango-rhs" style="color:#111">Allowable Min RHS<br><small>← RANGO MÍN</small></th>
+      <th class="highlight-rango-rhs" style="color:#111">Allowable Max RHS<br><small>← RANGO MÁX</small></th>
+    </tr>
+    <tr class="data-row">
+      <td>1</td><td>Pasteurización</td>
+      <td>36.000</td><td>≤</td>
+      <td>36.000</td>
+      <td class="highlight-slack"><strong>0 ← ACTIVA</strong></td>
+      <td class="highlight-shadow"><strong>2,33</strong></td>
+      <td class="highlight-rango-rhs">31.220</td><td class="highlight-rango-rhs">40.220</td>
+    </tr>
+    <tr class="data-row">
+      <td>2</td><td>Coagulación</td>
+      <td>24.000</td><td>≤</td>
+      <td>24.000</td>
+      <td class="highlight-slack"><strong>0 ← ACTIVA</strong></td>
+      <td class="highlight-shadow"><strong>0,30</strong></td>
+      <td class="highlight-rango-rhs">21.655</td><td class="highlight-rango-rhs">24.600</td>
+    </tr>
+    <tr class="data-row">
+      <td>3</td><td>Maduración</td>
+      <td>29.962</td><td>≤</td>
+      <td>45.000</td>
+      <td class="highlight-slack"><strong>15.038 ← HOLGURA</strong></td>
+      <td class="highlight-shadow" style="background:#ffe0cc!important; color:#a00"><strong>0,00 ← NO escaso</strong></td>
+      <td class="highlight-rango-rhs">29.962</td><td class="highlight-rango-rhs">M (+∞)</td>
+    </tr>
+    <tr class="data-row">
+      <td>4</td><td>Demanda max Q1</td>
+      <td>150</td><td>≤</td>
+      <td>800</td>
+      <td class="highlight-slack">650 ← HOLGURA</td>
+      <td class="highlight-shadow" style="background:#ffe0cc!important; color:#a00"><strong>0,00 ← NO escaso</strong></td>
+      <td class="highlight-rango-rhs">150</td><td class="highlight-rango-rhs">M (+∞)</td>
+    </tr>
+    <tr class="data-row">
+      <td>6</td><td>Demanda max Q3</td>
+      <td>700</td><td>≤</td>
+      <td>700</td>
+      <td class="highlight-slack"><strong>0 ← ACTIVA</strong></td>
+      <td class="highlight-shadow"><strong>44,73</strong></td>
+      <td class="highlight-rango-rhs">650</td><td class="highlight-rango-rhs">954,22</td>
+    </tr>
+    <tr class="data-row">
+      <td>8</td><td>Demanda min Q1</td>
+      <td>150</td><td>≥</td>
+      <td>150</td>
+      <td class="highlight-slack"><strong>0 ← ACTIVA</strong></td>
+      <td class="highlight-shadow" style="color:#c00">−5,40 ← negativo</td>
+      <td class="highlight-rango-rhs">75</td><td class="highlight-rango-rhs">800</td>
+    </tr>
+  </table>
+  </div>
+
+  <!-- Anotaciones visuales sección 2 -->
+  <div class="svg-wrapper" style="margin-top:8px;">
+  <svg viewBox="0 0 820 220" width="820" style="border:1px solid #ddd; border-radius:8px; background:#fefefe;">
+    <rect x="10" y="10" width="800" height="40" fill="#1F4E79" rx="4"/>
+    <text x="20" y="35" fill="white" font-size="13" font-weight="bold">GUÍA DE LECTURA DEL CUADRO — SECCIÓN RESTRICCIONES</text>
+
+    <!-- Bloque Slack -->
+    <rect x="10" y="60" width="185" height="100" fill="#f3e5f5" stroke="#7b1fa2" stroke-width="2" rx="5"/>
+    <text x="102" y="80" text-anchor="middle" font-size="12" font-weight="bold" fill="#7b1fa2">Slack / Surplus</text>
+    <text x="102" y="97" text-anchor="middle" font-size="11" fill="#333">= Recurso sobrante</text>
+    <text x="102" y="113" text-anchor="middle" font-size="11" fill="#555">Si = 0 → restricción</text>
+    <text x="102" y="128" text-anchor="middle" font-size="11" fill="#555">ACTIVA (saturada)</text>
+    <text x="102" y="148" text-anchor="middle" font-size="10" fill="#888">Si > 0 → tiene holgura</text>
+
+    <!-- Bloque Shadow Price -->
+    <rect x="210" y="60" width="185" height="100" fill="#fce4d6" stroke="#c55a11" stroke-width="2" rx="5"/>
+    <text x="302" y="80" text-anchor="middle" font-size="12" font-weight="bold" fill="#c55a11">Shadow Price</text>
+    <text x="302" y="97" text-anchor="middle" font-size="11" fill="#333">= Valor del recurso</text>
+    <text x="302" y="113" text-anchor="middle" font-size="11" fill="#555">Si RHS sube 1 unidad,</text>
+    <text x="302" y="128" text-anchor="middle" font-size="11" fill="#555">Z sube en Shadow $</text>
+    <text x="302" y="148" text-anchor="middle" font-size="10" fill="#888">Si = 0 → recurso no escaso</text>
+
+    <!-- Bloque RHS Range -->
+    <rect x="410" y="60" width="200" height="100" fill="#e3f2fd" stroke="#1976d2" stroke-width="2" rx="5"/>
+    <text x="510" y="80" text-anchor="middle" font-size="12" font-weight="bold" fill="#1976d2">Rango RHS [Min, Max]</text>
+    <text x="510" y="97" text-anchor="middle" font-size="11" fill="#333">Shadow Price válido solo</text>
+    <text x="510" y="113" text-anchor="middle" font-size="11" fill="#555">dentro de este rango</text>
+    <text x="510" y="128" text-anchor="middle" font-size="11" fill="#555">Nuevo Z = Z + Shadow × Δ</text>
+    <text x="510" y="148" text-anchor="middle" font-size="10" fill="#888">Fuera → resolver de nuevo</text>
+
+    <!-- Bloque Fórmula central -->
+    <rect x="625" y="60" width="185" height="100" fill="#e8f5e9" stroke="#27ae60" stroke-width="2" rx="5"/>
+    <text x="717" y="80" text-anchor="middle" font-size="12" font-weight="bold" fill="#27ae60">Fórmula clave</text>
+    <text x="717" y="100" text-anchor="middle" font-size="13" fill="#333" font-family="Courier New">ΔZ = SP × ΔRHS</text>
+    <text x="717" y="118" text-anchor="middle" font-size="11" fill="#555">SP = Shadow Price</text>
+    <text x="717" y="133" text-anchor="middle" font-size="11" fill="#555">ΔRHS = cambio en</text>
+    <text x="717" y="148" text-anchor="middle" font-size="11" fill="#555">la disponibilidad</text>
+
+    <!-- Pregunta clave abajo -->
+    <rect x="10" y="170" width="800" height="35" fill="#1F4E79" rx="4"/>
+    <text x="415" y="192" text-anchor="middle" fill="white" font-size="12">
+      ⚠️ SIEMPRE VERIFICAR: ¿El nuevo RHS cae dentro del rango [Min RHS, Max RHS]? Si no → NO usar Shadow Price directamente.
+    </text>
+  </svg>
+  </div>
+
+  <!-- ══════════════════════════════════════════
+       CÓMO CALCULAR — SECCIÓN NUEVA
+       ══════════════════════════════════════════ -->
+  <h2 id="t2-calculos">🧮 Cómo calcular los nuevos valores — paso a paso</h2>
+
+  <div class="caja caja-azul">
+    <strong>Idea general:</strong> En el Análisis de Sensibilidad siempre hay un parámetro que cambia (una ganancia, una capacidad). El objetivo es saber <em>qué impacto tiene ese cambio</em> sin resolver el problema de nuevo. Siempre seguís el mismo protocolo de 3 pasos.
+  </div>
+
+  <!-- PROTOCOLO GENERAL -->
+  <h3>El protocolo de 3 pasos (sirve para CUALQUIER pregunta)</h3>
+  <table>
+    <tr><th>Paso</th><th>Qué hacer</th><th>Qué dato usar del reporte</th></tr>
+    <tr><td><strong>1. Identificar qué cambió</strong></td><td>¿Cambió un coeficiente de la FO c(j)? ¿O cambió un RHS (disponibilidad de un recurso)?</td><td>—</td></tr>
+    <tr><td><strong>2. Verificar el rango</strong></td><td>¿El nuevo valor cae dentro del rango permitido?</td><td>Si cambió c(j) → mirar [Allowable Min c(j), Allowable Max c(j)]<br>Si cambió RHS → mirar [Allowable Min RHS, Allowable Max RHS]</td></tr>
+    <tr><td><strong>3a. Si está dentro del rango</strong></td><td>La base NO cambia. Calcular nuevo Z con la fórmula.</td><td>Usar Shadow Price o los valores actuales de x</td></tr>
+    <tr><td><strong>3b. Si está FUERA del rango</strong></td><td>La base CAMBIA → el plan de producción es diferente → no podés calcular directamente.</td><td>Decir "la base cambia" y no aplicar las fórmulas.</td></tr>
+  </table>
+
+  <!-- CASO 1 -->
+  <h3 style="color:#c8a000; margin-top:24px">📌 CASO 1 — Cambió la ganancia unitaria de un producto (coef. FO)</h3>
+  <div class="caja caja-amarillo">
+    <p><strong>Ejemplo:</strong> La ganancia de Q1 sube de $25 a $30/kg (un +20%). ¿Qué pasa?</p>
+
+    <p style="margin-top:10px"><strong>Paso 1 — ¿Qué cambió?</strong> El coeficiente c(Q1) de la función objetivo.</p>
+
+    <p><strong>Paso 2 — Verificar el rango:</strong> Del reporte, Allowable Min c(Q1) = −∞ y Allowable Max c(Q1) = <strong>30,40</strong>.<br>
+    El nuevo valor es $30. ¿30 está en [−∞, 30,40]? <strong>SÍ ✅</strong></p>
+
+    <p><strong>Paso 3 — La base NO cambia.</strong> Las cantidades producidas son las mismas: Q1=150, Q2=318,67, Q3=700, Q4=1440.<br>
+    Solo cambia el Z. Lo calculás así:</p>
+    <div style="background:#fff; border-radius:6px; padding:10px; font-family:Courier New; font-size:14px; margin:8px 0;">
+      Nuevo Z = Z_anterior − (c_viejo × x) + (c_nuevo × x)<br>
+      Nuevo Z = 121.703,33 − (25 × 150) + (30 × 150)<br>
+      Nuevo Z = 121.703,33 − 3.750 + 4.500<br>
+      <strong>Nuevo Z = $122.453,33</strong>
+    </div>
+    <p><strong>Regla práctica:</strong> solo recalculás la contribución de la variable que cambió. El resto se mantiene igual.</p>
+  </div>
+
+  <!-- CASO 2 -->
+  <h3 style="color:#c55a11; margin-top:24px">📌 CASO 2 — Cambió la disponibilidad de un recurso (RHS)</h3>
+  <div class="caja caja-naranja">
+    <p><strong>Ejemplo:</strong> La capacidad de Pasteurización sube de 36.000 a 40.000 min/mes. ¿Qué pasa?</p>
+
+    <p style="margin-top:10px"><strong>Paso 1 — ¿Qué cambió?</strong> El RHS de la restricción Pasteurización.</p>
+
+    <p><strong>Paso 2 — Verificar el rango:</strong> Del reporte, Allowable Min RHS = 31.220 y Allowable Max RHS = <strong>40.220</strong>.<br>
+    El nuevo valor es 40.000. ¿40.000 está en [31.220, 40.220]? <strong>SÍ ✅</strong></p>
+
+    <p><strong>Paso 3 — Calcular nuevo Z con Shadow Price:</strong></p>
+    <div style="background:#fff; border-radius:6px; padding:10px; font-family:Courier New; font-size:14px; margin:8px 0;">
+      Δ RHS = RHS_nuevo − RHS_actual = 40.000 − 36.000 = +4.000<br>
+      Shadow Price de Pasteurización = 2,33<br>
+      ΔZ = Shadow Price × Δ RHS = 2,33 × 4.000 = +9.320<br>
+      <strong>Nuevo Z = 121.703,33 + 9.320 = $131.023,33</strong>
+    </div>
+    <p><strong>Interpretación:</strong> Por cada minuto adicional de Pasteurización (dentro del rango), la ganancia sube $2,33.</p>
+  </div>
+
+  <!-- CASO 3 - FUERA DEL RANGO -->
+  <h3 style="color:#c00000; margin-top:24px">📌 CASO 3 — El cambio está FUERA del rango</h3>
+  <div class="caja caja-rojo">
+    <p><strong>Ejemplo:</strong> La ganancia de Q2 sube de $35 a $45/kg. ¿Qué pasa?</p>
+
+    <p style="margin-top:10px"><strong>Paso 1 — ¿Qué cambió?</strong> El coeficiente c(Q2).</p>
+
+    <p><strong>Paso 2 — Verificar el rango:</strong> Allowable Max c(Q2) = <strong>37,50</strong>.<br>
+    El nuevo valor es $45. ¿45 está en [0, 37,50]? <strong>NO ❌</strong></p>
+
+    <p><strong>Paso 3 — La base CAMBIA.</strong> No podés aplicar las fórmulas.<br>
+    Respuesta correcta: <em>"El nuevo valor está fuera del rango permitido [0; 37,50], por lo tanto la base óptima cambia y el plan de producción se modifica. Habría que resolver nuevamente el problema con c(Q2) = 45."</em></p>
+    <p><strong>Interpretación económica:</strong> Q2 se vuelve tan rentable que conviene producir más de él, reasignando recursos de otros productos.</p>
+  </div>
+
+  <!-- CASO 4 - CONVENIENCIA INVERSIÓN -->
+  <h3 style="color:#375623; margin-top:24px">📌 CASO 4 — ¿Conviene invertir en más capacidad?</h3>
+  <div class="caja caja-verde">
+    <p><strong>Ejemplo:</strong> Podemos ampliar Pasteurización a 50.000 min/mes a un costo de $1,80/min. ¿Conviene?</p>
+
+    <p style="margin-top:10px"><strong>Paso 1 — Identificar el delta pedido:</strong> Δ = 50.000 − 36.000 = +14.000 min.</p>
+
+    <p><strong>Paso 2 — Verificar el rango:</strong> Allowable Max RHS Pasteurización = <strong>40.220</strong>.<br>
+    ¿50.000 ≤ 40.220? <strong>NO ❌</strong> — el delta supera el rango.</p>
+
+    <p><strong>Paso 3 — Analizás solo el tramo válido:</strong></p>
+    <div style="background:#fff; border-radius:6px; padding:10px; font-family:Courier New; font-size:14px; margin:8px 0;">
+      Delta válido (hasta donde aplica Shadow Price) = 40.220 − 36.000 = 4.220 min<br>
+      Ganancia adicional = 4.220 × $2,33 = $9.832,60<br><br>
+      Costo total de la inversión = 14.000 × $1,80 = $25.200<br><br>
+      <strong>¿Conviene? NO: $9.832,60 &lt; $25.200</strong>
+    </div>
+    <p><strong>Importante:</strong> el costo se calcula sobre el total de minutos que ampliás (14.000), pero la ganancia solo se puede estimar con certeza hasta el límite del rango (4.220 min). Comparás lo máximo que podés ganar contra lo que cuesta → si el costo gana, no conviene.</p>
+  </div>
+
+  <!-- TABLA RESUMEN -->
+  <h3 style="margin-top:24px">📋 Resumen: ¿Qué dato tomar de qué columna?</h3>
+  <table>
+    <tr><th>Situación</th><th>Dato que cambia</th><th>Rango a verificar</th><th>Fórmula si está dentro</th><th>Si está fuera</th></tr>
+    <tr><td>Ganancia sube/baja</td><td>c(j) nuevo</td><td>[Allowable Min c(j), Allowable Max c(j)]</td><td>Nuevo Z = Z − (c_viejo × x) + (c_nuevo × x)</td><td>Base cambia → resolver de nuevo</td></tr>
+    <tr><td>Disponibilidad de recurso sube/baja</td><td>RHS nuevo</td><td>[Allowable Min RHS, Allowable Max RHS]</td><td>Nuevo Z = Z + Shadow Price × ΔRHS</td><td>Base cambia → resolver de nuevo</td></tr>
+    <tr><td>Inversión en más capacidad</td><td>ΔRHS y costo/unidad</td><td>[Min RHS, Max RHS]</td><td>Ganancia = SP × delta válido; comparar con costo</td><td>Solo estimás hasta el límite del rango</td></tr>
+    <tr><td>Nueva restricción (mínimo de demanda)</td><td>Nueva restricción</td><td>¿La solución actual ya la cumple?</td><td>Si ya se cumple → no cambia nada</td><td>Si no se cumple → base cambia</td></tr>
+  </table>
+
+  <h2 id="t2-reglas">Las 4 Reglas de Oro del Análisis de Sensibilidad</h2>
+
+  <div class="caja caja-verde">
+    <h3>REGLA 1 — Cambio en coeficiente de la FO c(j)</h3>
+    <p>Si el nuevo c(j) ∈ [Allowable Min c(j), Allowable Max c(j)] → <strong>la solución óptima NO cambia</strong> (mismas cantidades). Solo recalculás Z.</p>
+    <p>Si sale del rango → la base cambia → plan de producción diferente.</p>
+    <div class="formula" style="font-size:15px">Nuevo Z = Z_actual − (c_viejo × x) + (c_nuevo × x)</div>
+  </div>
+
+  <div class="caja caja-naranja">
+    <h3>REGLA 2 — Cambio en RHS de una restricción</h3>
+    <p>Si el nuevo RHS ∈ [Allowable Min RHS, Allowable Max RHS] → <strong>la base NO cambia</strong>. Podés calcular el nuevo Z directamente:</p>
+    <div class="formula" style="font-size:15px">Nuevo Z = Z_actual + Shadow_Price × (RHS_nuevo − RHS_actual)</div>
+    <p>Si sale del rango → resolver de nuevo.</p>
+  </div>
+
+  <div class="caja caja-azul">
+    <h3>REGLA 3 — Shadow Price = 0</h3>
+    <p>Cuando Shadow Price = 0: la restricción tiene holgura (Slack > 0). <strong>Agregar más de ese recurso NO mejora Z</strong>. Es un recurso abundante, no escaso.</p>
+    <p>Ejemplo: Maduración tiene SP=0 y Slack=15.038 → sobran 15.038 minutos de Maduración. Ampliar eso no sirve.</p>
+  </div>
+
+  <div class="caja caja-amarillo">
+    <h3>REGLA 4 — ¿Conviene invertir en más capacidad?</h3>
+    <p>Conviene si: <strong>Shadow_Price × delta &gt; Costo adicional</strong> AND el nuevo RHS cae dentro del rango válido.</p>
+    <p>Si el delta supera el rango → el Shadow Price cambia en ese tramo → no podés extrapolar directamente.</p>
+  </div>
+
+  <h2 id="t2-ejemplo">🧀 EJEMPLO — Lácteos del Valle (todas las preguntas del parcial)</h2>
+
+  <div class="caja caja-gris">
+    <strong>Solución óptima base:</strong> Q1=150, Q2=318,67, Q3=700, Q4=1440 → Z = $121.703,33
+  </div>
+
+  <h3>b) ¿Qué pasa si exigimos mínimo 250 kg de Q2?</h3>
+  <div class="caja caja-verde">
+    La solución actual ya produce Q2 = 318,67 kg. Como <strong>318,67 &gt; 250</strong>, la restricción "Q2 ≥ 250" ya se cumple.
+    → <strong>No cambia nada</strong>. El plan óptimo y la utilidad son los mismos.<br>
+    <em>Si hubieran pedido mínimo 400 kg, ahí sí cambiaría (318,67 &lt; 400).</em>
+  </div>
+
+  <h3>c) Si la utilidad de Q1 aumenta un 20%</h3>
+  <div class="caja caja-azul">
+    Nuevo c(Q1) = 25 × 1,20 = <strong>$30/kg</strong>. Allowable Max c(j) de Q1 = <strong>30,40</strong>.<br>
+    Como 30 &lt; 30,40 → dentro del rango → <strong>misma solución</strong>.<br>
+    Nuevo Z = 121.703,33 − (150×25) + (150×30) = 121.703,33 + 750 = <strong>$122.453,33</strong>
+  </div>
+
+  <h3>d) ¿Conviene ampliar Pasteurización a 50.000 min/mes a $1,80/min?</h3>
+  <div class="caja caja-rojo">
+    RHS actual = 36.000. Nuevo RHS = 50.000. Delta = +14.000.<br>
+    Allowable Max RHS Pasteurización = <strong>40.220</strong>.<br>
+    <strong>⚠️ El delta pedido (hasta 50.000) SUPERA el rango válido (40.220).</strong> El shadow price $2,33 solo aplica hasta 40.220.<br><br>
+    En el tramo válido: delta = 40.220 − 36.000 = 4.220<br>
+    <code>Ganancia adicional = 4.220 × $2,33 = $9.832,60</code><br>
+    <code>Costo adicional total = 14.000 × $1,80 = $25.200</code><br><br>
+    <strong>❌ NO conviene. El costo ($25.200) supera la ganancia posible ($9.832,60).</strong>
+  </div>
+
+  <h3>e) Si demanda máxima Q3 sube a 1.500 kg</h3>
+  <div class="caja caja-amarillo">
+    RHS actual = 700. Nuevo RHS = 1.500. Delta = +800.<br>
+    Allowable Max RHS Demanda max Q3 = <strong>954,22</strong>.<br>
+    Como 1.500 &gt; 954,22 → <strong>fuera del rango</strong> → base cambia.<br>
+    Aproximación hasta el límite: delta válido = 254,22. Shadow = 44,73.<br>
+    <code>Z nuevo ≈ 121.703,33 + 254,22 × 44,73 ≈ $133.078</code>
+  </div>
+
+  <h3>f) Si la utilidad de Q2 sube en $10/kg</h3>
+  <div class="caja caja-rojo">
+    Nuevo c(Q2) = $45/kg. Allowable Max c(j) de Q2 = <strong>37,50</strong>.<br>
+    Como 45 &gt; 37,50 → <strong>fuera del rango → BASE CAMBIA</strong>. El plan de producción se modifica y hay que resolver de nuevo.<br>
+    Interpretación: Q2 se vuelve tan rentable que conviene producir más Q2 y redistribuir recursos.
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════ -->
+<!-- TEMA 3 -->
+<!-- ════════════════════════════════════════════ -->
+<div class="section" id="tema3">
+  <h1>🌐 TEMA 3 — Flujo Máximo en Redes (Ford-Fulkerson)</h1>
+
+  <div class="caja caja-azul">
+    <strong>Idea central:</strong> Tenés una red (cañerías, rutas, datos). ¿Cuánto flujo máximo puede ir del nodo <strong>Fuente (A)</strong> al nodo <strong>Sumidero (Z)</strong> respetando las capacidades de cada arco?
+  </div>
+
+  <h2>Conceptos clave</h2>
+  <table>
+    <tr><th>Término</th><th>Qué es</th></tr>
+    <tr><td><strong>Capacidad c(i,j)</strong></td><td>Máximo flujo que puede pasar por ese arco (el número sobre la flecha)</td></tr>
+    <tr><td><strong>Cap. residual</strong></td><td>Lo que le queda al arco = c(i,j) − f(i,j)</td></tr>
+    <tr><td><strong>Camino aumentante</strong></td><td>Ruta de Fuente a Sumidero donde TODOS los arcos tienen residual &gt; 0</td></tr>
+    <tr><td><strong>Cuello de botella</strong></td><td>El MÍNIMO de las capacidades residuales de un camino</td></tr>
+    <tr><td><strong>Corte mínimo</strong></td><td>El "tajo" que separa Fuente de Sumidero con mínima capacidad total</td></tr>
+  </table>
+
+  <h2>Algoritmo Ford-Fulkerson</h2>
+  <div class="paso"><div class="num">1</div><div>Inicializar: todos los flujos = 0.</div></div>
+  <div class="paso"><div class="num">2</div><div>Buscar un <strong>camino aumentante</strong> de Fuente a Sumidero en la red residual.</div></div>
+  <div class="paso"><div class="num">3</div><div>Si NO existe camino → <strong>TERMINÁ</strong>. El flujo actual es el MÁXIMO.</div></div>
+  <div class="paso"><div class="num">4</div><div>Si SÍ existe → calculá el <strong>cuello de botella</strong> = mínimo de los residuales del camino.</div></div>
+  <div class="paso"><div class="num">5</div><div>Actualizá flujos: sumá el cuello en los arcos directos, restá en los inversos.</div></div>
+  <div class="paso"><div class="num">6</div><div>Volvé al paso 2.</div></div>
+
+  <div class="caja caja-verde">
+    <strong>📌 Teorema Max-Flow Min-Cut:</strong> Flujo máximo = Capacidad del corte mínimo. Sirve para <em>verificar</em> el resultado.<br>
+    Para encontrar el corte mínimo: en la red residual final, marcá todos los nodos alcanzables desde la Fuente (conjunto S). Los arcos que van de S hacia el resto (T) forman el corte mínimo.
+  </div>
+
+  <h2>Para aumentar el flujo en 1 unidad</h2>
+  <div class="caja caja-amarillo">
+    Después de aplicar Ford-Fulkerson, identificá los arcos saturados que forman el corte mínimo. <strong>Solo ampliando uno de ESOS arcos</strong> se puede aumentar el flujo máximo en 1 unidad. Ampliar arcos con holgura no sirve.
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════ -->
+<!-- TEMA 4 -->
+<!-- ════════════════════════════════════════════ -->
+<div class="section" id="tema4">
+  <h1>⏱️ TEMA 4 — PERT/CPM: Ruta Crítica y Probabilidades</h1>
+
+  <div class="caja caja-azul">
+    <strong>Idea central:</strong> Tenés un proyecto con actividades que dependen unas de otras. ¿Cuánto tiempo lleva? ¿Qué actividades son críticas? ¿Cuál es la probabilidad de terminar antes de cierta fecha?
+  </div>
+
+  <h2>Fórmulas fundamentales</h2>
+  <div class="formula">Te = (To + 4·Tm + Tp) / 6</div>
+  <div class="formula">Varianza = ((Tp − To) / 6)²</div>
+  <div class="formula">Holgura = LF − EF = LS − ES</div>
+  <div class="formula">Z = (T* − Media_ruta_crítica) / √(Varianza_total)</div>
+
+  <h2>Los 4 pasos del método CPM</h2>
+  <div class="caja caja-gris">
+    <div class="paso"><div class="num">1</div><div><strong>Calcular Te y Var</strong> para cada actividad con las fórmulas PERT.</div></div>
+    <div class="paso"><div class="num">2</div><div><strong>Cálculo ADELANTE</strong> (Early Times): E(nodo) = <strong>máximo</strong> de [E(predecesor) + Te]. El E del último nodo = duración esperada del proyecto.</div></div>
+    <div class="paso"><div class="num">3</div><div><strong>Cálculo ATRÁS</strong> (Late Times): L(nodo) = <strong>mínimo</strong> de [L(sucesor) − Te]. Empezar desde el último nodo.</div></div>
+    <div class="paso"><div class="num">4</div><div><strong>Holgura = LF − EF</strong>. Si = 0 → actividad <strong>crítica</strong>. La ruta crítica = cadena de actividades críticas de inicio a fin.</div></div>
+  </div>
+
+  <h2>🖥️ EJEMPLO — Proyecto Informático (del parcial)</h2>
+  <table>
+    <tr><th>Actividad</th><th>To</th><th>Tm</th><th>Tp</th><th>Te = (To+4Tm+Tp)/6</th><th>Var = ((Tp-To)/6)²</th></tr>
+    <tr><td>1-2</td><td>12</td><td>15</td><td>18</td><td>15,00</td><td>1,00</td></tr>
+    <tr><td>1-3</td><td>16</td><td>20</td><td>30</td><td>21,00</td><td>5,44</td></tr>
+    <tr><td>2-4</td><td>22</td><td>28</td><td>40</td><td>29,00</td><td>9,00</td></tr>
+    <tr><td>2-5</td><td>10</td><td>14</td><td>18</td><td>14,00</td><td>1,78</td></tr>
+    <tr><td>3-4</td><td>8</td><td>12</td><td>16</td><td>12,00</td><td>1,78</td></tr>
+    <tr><td>3-5</td><td>18</td><td>24</td><td>36</td><td>25,00</td><td>9,00</td></tr>
+    <tr><td>4-6</td><td>14</td><td>18</td><td>28</td><td>19,00</td><td>5,44</td></tr>
+    <tr><td>5-6</td><td>20</td><td>26</td><td>32</td><td>26,00</td><td>4,00</td></tr>
+  </table>
+
+  <h3>Cálculo hacia adelante y atrás</h3>
+  <div class="caja caja-gris" style="font-family: Courier New; font-size:14px;">
+    <strong>ADELANTE (buscar MÁXIMO):</strong><br>
+    E1=0 | E2=0+15=<strong>15</strong> | E3=0+21=<strong>21</strong><br>
+    E4=max(15+29, 21+12)=max(44,33)=<strong>44</strong><br>
+    E5=max(15+14, 21+25)=max(29,46)=<strong>46</strong><br>
+    E6=max(44+19, 46+26)=max(63,72)=<strong>72</strong> ← duración esperada = 72 semanas<br><br>
+    <strong>ATRÁS (buscar MÍNIMO):</strong><br>
+    L6=72 | L5=72-26=<strong>46</strong> | L4=72-19=<strong>53</strong><br>
+    L3=min(53-12, 46-25)=min(41,21)=<strong>21</strong><br>
+    L2=min(53-29, 46-14)=min(24,32)=<strong>24</strong><br>
+    L1=min(24-15, 21-21)=min(9,0)=<strong>0</strong>
+  </div>
+
+  <h3>Holguras</h3>
+  <table>
+    <tr><th>Actividad</th><th>ES</th><th>EF</th><th>LS</th><th>LF</th><th>Holgura</th><th>¿Crítica?</th></tr>
+    <tr><td>1-2</td><td>0</td><td>15</td><td>9</td><td>24</td><td>9</td><td>NO</td></tr>
+    <tr class="critica"><td><strong>1-3</strong></td><td>0</td><td>21</td><td>0</td><td>21</td><td><strong>0</strong></td><td>✅ SÍ</td></tr>
+    <tr><td>2-4</td><td>15</td><td>44</td><td>24</td><td>53</td><td>9</td><td>NO</td></tr>
+    <tr><td>2-5</td><td>15</td><td>29</td><td>32</td><td>46</td><td>17</td><td>NO</td></tr>
+    <tr><td>3-4</td><td>21</td><td>33</td><td>41</td><td>53</td><td>20</td><td>NO</td></tr>
+    <tr class="critica"><td><strong>3-5</strong></td><td>21</td><td>46</td><td>21</td><td>46</td><td><strong>0</strong></td><td>✅ SÍ</td></tr>
+    <tr><td>4-6</td><td>44</td><td>63</td><td>53</td><td>72</td><td>9</td><td>NO</td></tr>
+    <tr class="critica"><td><strong>5-6</strong></td><td>46</td><td>72</td><td>46</td><td>72</td><td><strong>0</strong></td><td>✅ SÍ</td></tr>
+  </table>
+
+  <div class="caja caja-verde">
+    <strong>🏆 Ruta crítica: 1 → 3 → 5 → 6</strong> (duración = 21+25+26 = <strong>72 semanas</strong>)<br>
+    Varianza total = 5,44+9,00+4,00 = 18,44 | Desv. Estándar = √18,44 ≈ <strong>4,29 semanas</strong><br>
+    Prob. de terminar en 80 semanas: Z=(80-72)/4,29 = 1,86 → <strong>P ≈ 96,9%</strong>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════ -->
+<!-- RESUMEN FLASH -->
+<!-- ════════════════════════════════════════════ -->
+<div class="section" id="resumen">
+  <h1>⚡ RESUMEN FLASH — Para repasar 10 min antes del examen</h1>
+
+  <div class="flash">
+    <div class="titulo">TEMA 1 — Programación Lineal Gráfica</div>
+    <div class="bala" style="color:#cde">Variables → Función Objetivo → Restricciones → No Negatividad</div>
+    <div class="bala" style="color:#cde">Cortes con ejes: poner x₂=0 (corte eje x₁) y x₁=0 (corte eje x₂)</div>
+    <div class="bala" style="color:#cde">Probar origen (0,0) → si cumple la restricción, sombrear hacia origen</div>
+    <div class="bala" style="color:#cde">Evaluar Z en cada vértice → tomar el máximo (MAX) o mínimo (MIN)</div>
+  </div>
+
+  <div class="flash" style="background:#C55A11">
+    <div class="titulo">TEMA 2 — Análisis de Sensibilidad</div>
+    <div class="bala" style="color:#fce4d6">c(j) cambia: si nuevo ∈ [Min c(j), Max c(j)] → misma solución, solo cambia Z</div>
+    <div class="bala" style="color:#fce4d6">RHS cambia: si nuevo ∈ [Min RHS, Max RHS] → Nuevo Z = Z + Shadow × Δ</div>
+    <div class="bala" style="color:#fce4d6">Shadow Price = 0 → restricción con holgura → más recurso no ayuda</div>
+    <div class="bala" style="color:#fce4d6">Inversión conviene si Shadow×Δ &gt; Costo (y Δ dentro del rango)</div>
+    <div class="bala" style="color:#fce4d6">Fuera del rango → base cambia → resolver de nuevo</div>
+  </div>
+
+  <div class="flash" style="background:#375623">
+    <div class="titulo">TEMA 3 — Ford-Fulkerson</div>
+    <div class="bala" style="color:#e2efda">Flujo=0 → buscar camino → cuello de botella = mínimo residual del camino</div>
+    <div class="bala" style="color:#e2efda">Actualizar flujos → repetir hasta no haber más caminos</div>
+    <div class="bala" style="color:#e2efda">Verificar: flujo máx = capacidad del corte mínimo</div>
+    <div class="bala" style="color:#e2efda">Para aumentar flujo: ampliar arcos del corte mínimo (los saturados)</div>
+  </div>
+
+  <div class="flash" style="background:#6B2FAF">
+    <div class="titulo">TEMA 4 — PERT/CPM</div>
+    <div class="bala" style="color:#e3d8f8">Te = (To + 4Tm + Tp)/6 | Var = ((Tp−To)/6)²</div>
+    <div class="bala" style="color:#e3d8f8">Adelante: E(nodo) = MÁXIMO de [E(pred)+Te]</div>
+    <div class="bala" style="color:#e3d8f8">Atrás: L(nodo) = MÍNIMO de [L(suc)−Te]</div>
+    <div class="bala" style="color:#e3d8f8">Holgura = LF−EF → si =0 → CRÍTICA</div>
+    <div class="bala" style="color:#e3d8f8">Z = (T*−Media) / √Var_total → buscar en tabla normal</div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════ -->
+<!-- QUIZ -->
+<!-- ════════════════════════════════════════════ -->
+<div class="section" id="quiz">
+  <h1>❓ Preguntas tipo examen — hacé clic para ver la respuesta</h1>
+
+  <h2>Tema 1</h2>
+  <div class="quiz">
+    <div class="quiz-item" onclick="this.classList.toggle('abierto')">
+      ¿Por qué la solución óptima de un PL siempre está en un vértice?
+      <div class="respuesta">Porque la función objetivo es lineal y la región factible es un poliedro convexo. La función "crece" en una dirección fija y el último punto de la región que toca es siempre un vértice (extremo).</div>
+    </div>
+    <div class="quiz-item" onclick="this.classList.toggle('abierto')">
+      ¿Cómo se calcula la intersección de dos restricciones R1 y R2?
+      <div class="respuesta">Resolvés el sistema de 2 ecuaciones con 2 incógnitas. Método más fácil: de R1 despejás x₂ en función de x₁, después sustituís esa expresión en R2 y despejás x₁. Luego calculás x₂.</div>
+    </div>
+    <div class="quiz-item" onclick="this.classList.toggle('abierto')">
+      ¿Qué significa que el origen satisface una restricción?
+      <div class="respuesta">Que el punto (0,0) cumple con esa restricción. Si es "≤ algo", entonces 0 ≤ algo es verdadero. Esto te dice que el lado factible (la región que buscás) es el que contiene al origen → sombreás hacia ese lado.</div>
+    </div>
+  </div>
+
+  <h2>Tema 2</h2>
+  <div class="quiz">
+    <div class="quiz-item" onclick="this.classList.toggle('abierto')">
+      ¿Qué SIEMPRE tenés que verificar antes de usar el shadow price para calcular un nuevo Z?
+      <div class="respuesta">Verificar que el nuevo valor del RHS caiga DENTRO del rango válido [Allowable Min RHS, Allowable Max RHS]. Si cae fuera, el shadow price ya no aplica para todo ese delta y la base cambia.</div>
+    </div>
+    <div class="quiz-item" onclick="this.classList.toggle('abierto')">
+      ¿Qué significa "la base cambia" en términos prácticos?
+      <div class="respuesta">Significa que el plan de producción óptimo cambia: las variables que se producen y sus cantidades son otras. No podés usar las fórmulas simples del análisis de sensibilidad; tendrías que resolver el problema de nuevo con los nuevos datos.</div>
+    </div>
+    <div class="quiz-item" onclick="this.classList.toggle('abierto')">
+      El shadow price de Maduración es 0 con holgura de 15.038. ¿Qué significa para el negocio?
+      <div class="respuesta">Significa que Maduración NO es el cuello de botella. Sobran 15.038 minutos sin usar. Invertir en más capacidad de Maduración no va a mejorar la ganancia. El negocio está limitado por Pasteurización y Coagulación (las que tienen shadow price > 0).</div>
+    </div>
+    <div class="quiz-item" onclick="this.classList.toggle('abierto')">
+      La utilidad de Q2 sube a $45/kg (estaba en $35). El Allowable Max c(Q2) = 37,50. ¿Cambia el plan?
+      <div class="respuesta">SÍ cambia, porque $45 > $37,50 (fuera del rango). La base cambia → el plan de producción se modifica. Q2 se vuelve tan rentable que conviene producir más de él y redistribuir los recursos.</div>
+    </div>
+    <div class="quiz-item" onclick="this.classList.toggle('abierto')">
+      ¿Cuándo conviene invertir en ampliar un recurso?
+      <div class="respuesta">Cuando: (1) el delta pedido cae dentro del rango válido del RHS, Y (2) la ganancia adicional (Shadow Price × delta) es mayor que el costo de la inversión. Si el delta supera el rango, hay que analizar solo la parte válida.</div>
+    </div>
+  </div>
+
+  <h2>Temas 3 y 4</h2>
+  <div class="quiz">
+    <div class="quiz-item" onclick="this.classList.toggle('abierto')">
+      ¿Para qué sirve el Teorema Max-Flow Min-Cut?
+      <div class="respuesta">Para VERIFICAR que tu flujo máximo es correcto. El teorema dice que flujo máximo = capacidad del corte mínimo. Si los dos dan el mismo número → está bien. El corte mínimo son los arcos saturados que desconectarían la fuente del sumidero.</div>
+    </div>
+    <div class="quiz-item" onclick="this.classList.toggle('abierto')">
+      ¿Qué pasa si una actividad crítica se retrasa 3 semanas?
+      <div class="respuesta">El proyecto completo se retrasa 3 semanas. Las actividades críticas tienen holgura = 0, así que cualquier demora en ellas impacta directamente en la fecha final. Las no críticas pueden retrasarse hasta su valor de holgura sin afectar el proyecto.</div>
+    </div>
+    <div class="quiz-item" onclick="this.classList.toggle('abierto')">
+      ¿Por qué usamos ADELANTE=máximo y ATRÁS=mínimo en CPM?
+      <div class="respuesta">ADELANTE (Early Times): una actividad puede empezar recién cuando TODAS sus predecesoras terminaron → tomamos el MÁXIMO de los tiempos de llegada. ATRÁS (Late Times): una actividad debe terminar a más tardar cuando la más urgente de sus sucesoras necesita empezar → tomamos el MÍNIMO.</div>
+    </div>
+  </div>
+</div>
+
+
+<div class="section" id="tp-ejercicios">
+<h2>🏋️ Ejercicios de Práctica — Guías de TP</h2>
+<p style="color:#555;margin-bottom:1.5rem">Ejercicios seleccionados de las guías de trabajos prácticos, con desarrollo paso a paso y preguntas con respuestas.</p>
+
+<!-- ===== TP1: PL GRAFICA ===== -->
+<h3 style="color:#1565c0;border-bottom:2px solid #1565c0;padding-bottom:6px;margin-top:2rem">📐 TP1 — Programación Lineal Gráfica</h3>
+
+<!-- Ejercicio 1: Mezcla de Productos -->
+<div style="background:#f8f9ff;border-left:4px solid #1565c0;border-radius:8px;padding:1.2rem;margin-bottom:1.5rem">
+  <h4 style="color:#1565c0;margin:0 0 .8rem">Ejercicio 1: Mezcla de Productos (Empresa A/B)</h4>
+  <p><strong>Enunciado:</strong> Una empresa fabrica 2 productos A y B. Recursos disponibles: Materia Prima (MP) 160 kg, Mano de Obra (MO) 60 hs, Equipo (EQ) 150 hs. Requerimientos por unidad:</p>
+  <table style="border-collapse:collapse;width:100%;margin:.8rem 0;font-size:.92rem">
+    <tr style="background:#1565c0;color:#fff"><th style="padding:6px 10px">Recurso</th><th style="padding:6px 10px">Producto A</th><th style="padding:6px 10px">Producto B</th><th style="padding:6px 10px">Disponible</th></tr>
+    <tr style="background:#fff"><td style="padding:5px 10px;border:1px solid #ddd">MP (kg)</td><td style="padding:5px 10px;border:1px solid #ddd;text-align:center">8</td><td style="padding:5px 10px;border:1px solid #ddd;text-align:center">4</td><td style="padding:5px 10px;border:1px solid #ddd;text-align:center">160</td></tr>
+    <tr style="background:#f5f5f5"><td style="padding:5px 10px;border:1px solid #ddd">MO (hs)</td><td style="padding:5px 10px;border:1px solid #ddd;text-align:center">2</td><td style="padding:5px 10px;border:1px solid #ddd;text-align:center">6</td><td style="padding:5px 10px;border:1px solid #ddd;text-align:center">60</td></tr>
+    <tr style="background:#fff"><td style="padding:5px 10px;border:1px solid #ddd">EQ (hs)</td><td style="padding:5px 10px;border:1px solid #ddd;text-align:center">6</td><td style="padding:5px 10px;border:1px solid #ddd;text-align:center">5</td><td style="padding:5px 10px;border:1px solid #ddd;text-align:center">150</td></tr>
+    <tr style="background:#e8f5e9"><td style="padding:5px 10px;border:1px solid #ddd"><strong>Beneficio/u</strong></td><td style="padding:5px 10px;border:1px solid #ddd;text-align:center"><strong>$30</strong></td><td style="padding:5px 10px;border:1px solid #ddd;text-align:center"><strong>$40</strong></td><td style="padding:5px 10px;border:1px solid #ddd;text-align:center">MAX Z</td></tr>
+  </table>
+
+  <div style="background:#fff;border:1px solid #c5cae9;border-radius:6px;padding:1rem;margin:.8rem 0">
+    <strong>📝 Planteo Matemático:</strong>
+    <pre style="background:#1a237e;color:#e8eaf6;padding:1rem;border-radius:6px;margin:.5rem 0;font-size:.9rem">Variables:  x₁ = unidades de A,  x₂ = unidades de B
+
+MAX Z = 30x₁ + 40x₂
+
+Sujeto a:
+  8x₁ + 4x₂ ≤ 160   (MP)
+  2x₁ + 6x₂ ≤  60   (MO)
+  6x₁ + 5x₂ ≤ 150   (EQ)
+  x₁, x₂ ≥ 0</pre>
+  </div>
+
+  <div style="background:#fff;border:1px solid #c5cae9;border-radius:6px;padding:1rem;margin:.8rem 0">
+    <strong>📊 Resolución Gráfica — Vértices de la Región Factible:</strong>
+    <p style="margin:.5rem 0">Despejamos cada restricción para x₂:</p>
+    <ul style="margin:.3rem 0 .5rem 1.2rem;font-size:.93rem">
+      <li>MP: x₂ ≤ (160 - 8x₁)/4 = 40 - 2x₁ → interceptos: (0,40) y (20,0)</li>
+      <li>MO: x₂ ≤ (60 - 2x₁)/6 = 10 - ⅓x₁ → interceptos: (0,10) y (30,0)</li>
+      <li>EQ: x₂ ≤ (150 - 6x₁)/5 = 30 - 1.2x₁ → interceptos: (0,30) y (25,0)</li>
+    </ul>
+
+    <!-- SVG grafico -->
+    <svg viewBox="0 0 400 320" style="width:100%;max-width:480px;display:block;margin:.8rem auto;border:1px solid #ddd;border-radius:8px;background:#fafafa">
+      <!-- ejes -->
+      <line x1="40" y1="280" x2="380" y2="280" stroke="#333" stroke-width="2"/>
+      <line x1="40" y1="280" x2="40" y2="20" stroke="#333" stroke-width="2"/>
+      <!-- labels ejes -->
+      <text x="385" y="284" font-size="13" fill="#333">x₁</text>
+      <text x="28" y="16" font-size="13" fill="#333">x₂</text>
+      <!-- marcas eje x -->
+      <text x="95" y="295" font-size="10" fill="#555" text-anchor="middle">5</text>
+      <text x="150" y="295" font-size="10" fill="#555" text-anchor="middle">10</text>
+      <text x="205" y="295" font-size="10" fill="#555" text-anchor="middle">15</text>
+      <text x="260" y="295" font-size="10" fill="#555" text-anchor="middle">20</text>
+      <text x="315" y="295" font-size="10" fill="#555" text-anchor="middle">25</text>
+      <!-- marcas eje y (escala: y_pixel = 280 - x2*6) -->
+      <text x="32" y="220" font-size="10" fill="#555" text-anchor="end">10</text>
+      <text x="32" y="160" font-size="10" fill="#555" text-anchor="end">20</text>
+      <text x="32" y="100" font-size="10" fill="#555" text-anchor="end">30</text>
+      <text x="32" y="40" font-size="10" fill="#555" text-anchor="end">40</text>
+      <!-- rectas (escala: x1 pixel = 40+x1*11, x2 pixel = 280-x2*6) -->
+      <!-- MP: (0,40)-(20,0) → pixel (40,40)-(260,280) -->
+      <line x1="40" y1="40" x2="260" y2="280" stroke="#e53935" stroke-width="2" stroke-dasharray="5,3"/>
+      <text x="50" y="35" font-size="11" fill="#e53935">MP: 8x₁+4x₂=160</text>
+      <!-- MO: (0,10)-(30,0) → pixel (40,220)-(370,280) -->
+      <line x1="40" y1="220" x2="370" y2="280" stroke="#1565c0" stroke-width="2" stroke-dasharray="5,3"/>
+      <text x="250" y="215" font-size="11" fill="#1565c0">MO: 2x₁+6x₂=60</text>
+      <!-- EQ: (0,30)-(25,0) → pixel (40,100)-(315,280) -->
+      <line x1="40" y1="100" x2="315" y2="280" stroke="#388e3c" stroke-width="2" stroke-dasharray="5,3"/>
+      <text x="160" y="95" font-size="11" fill="#388e3c">EQ: 6x₁+5x₂=150</text>
+      <!-- Región factible (polígono aproximado de vértices) -->
+      <!-- vértices: O(0,0), A(0,10) MO, intersec MP-MO=(18,4), intersec MP-EQ... cheq EQ domina antes -->
+      <!-- Intersección MO y EQ: 2x1+6x2=60, 6x1+5x2=150 → x1=18.26,x2=3.9 approx -->
+      <!-- Pixel O(40,280) A(40,220) B(x1=18,x2=4)→(238,256) C(25,0)→(315,280) -->
+      <polygon points="40,280 40,220 238,256 260,280" fill="#bbdefb" fill-opacity="0.5" stroke="#1565c0" stroke-width="1.5"/>
+      <!-- vértice óptimo -->
+      <circle cx="238" cy="256" r="6" fill="#f57f17" stroke="#fff" stroke-width="2"/>
+      <text x="242" y="250" font-size="11" fill="#f57f17" font-weight="bold">★ Óptimo</text>
+      <text x="242" y="263" font-size="10" fill="#333">(18, 4)</text>
+      <!-- Función objetivo indicativa -->
+      <text x="40" y="308" font-size="10" fill="#666">Región factible (azul claro) | ★ Solución óptima</text>
+    </svg>
+
+    <div style="background:#e8f5e9;border-radius:6px;padding:.8rem;margin:.5rem 0">
+      <strong>✅ Solución Óptima:</strong> x₁ = 18 unidades de A, x₂ = 4 unidades de B<br>
+      <strong>Z = 30(18) + 40(4) = 540 + 160 = $700</strong><br>
+      Holguras: s₁(MP)=0, s₂(MO)=0, s₃(EQ)=22 hs. disponibles sin usar
+    </div>
+  </div>
+
+  <!-- Q&A -->
+  <div style="margin-top:1rem">
+    <div class="quiz-item" onclick="this.classList.toggle('abierto')" style="cursor:pointer;background:#fff3e0;border-radius:6px;padding:.8rem;margin:.4rem 0;border:1px solid #ffe0b2">
+      ❓ ¿Qué recursos son cuellos de botella en este problema?
+      <div class="respuesta">MP y MO son los recursos saturados (holgura = 0). EQ tiene 22 hs. sobrantes. Esto significa que si quisiéramos producir más, los límites son la materia prima y la mano de obra.</div>
+    </div>
+    <div class="quiz-item" onclick="this.classList.toggle('abierto')" style="cursor:pointer;background:#fff3e0;border-radius:6px;padding:.8rem;margin:.4rem 0;border:1px solid #ffe0b2">
+      ❓ ¿Hasta qué precio del beneficio de A dejaría de convenir producirlo?
+      <div class="respuesta">Usando análisis de sensibilidad: el rango de c₁ (beneficio de A) para que la solución base no cambie. Si baja demasiado, la pendiente de la FO cambiaría y el óptimo se movería a otro vértice. Hay que calcular la relación de pendientes con cada restricción activa.</div>
+    </div>
+    <div class="quiz-item" onclick="this.classList.toggle('abierto')" style="cursor:pointer;background:#fff3e0;border-radius:6px;padding:.8rem;margin:.4rem 0;border:1px solid #ffe0b2">
+      ❓ ¿Qué pasa si MO disponible sube a 70 hs.?
+      <div class="respuesta">La restricción de MO se desplaza hacia afuera, la región factible se agranda. Hay que resolver el nuevo sistema. Si el shadow price de MO es positivo, el nuevo Z será mayor: Z_nuevo = Z_actual + shadow_price × 10.</div>
+    </div>
+  </div>
+</div>
+
+<!-- Ejercicio 2: Cerveza BIER S.A. -->
+<div style="background:#f8fff8;border-left:4px solid #388e3c;border-radius:8px;padding:1.2rem;margin-bottom:1.5rem">
+  <h4 style="color:#388e3c;margin:0 0 .8rem">Ejercicio 2: Cerveza BIER S.A.</h4>
+  <p><strong>Enunciado:</strong> Fábrica produce cerveza Negra ($13/barril) y Blanca ($23/barril). Recursos: Maíz 480 kg, Lúpulo 160 unid., Malta 1190 kg.</p>
+  <table style="border-collapse:collapse;width:100%;margin:.8rem 0;font-size:.92rem">
+    <tr style="background:#388e3c;color:#fff"><th style="padding:6px 10px">Recurso</th><th style="padding:6px 10px">Negra</th><th style="padding:6px 10px">Blanca</th><th style="padding:6px 10px">Disponible</th></tr>
+    <tr><td style="padding:5px 10px;border:1px solid #ddd">Maíz (kg)</td><td style="padding:5px 10px;border:1px solid #ddd;text-align:center">5</td><td style="padding:5px 10px;border:1px solid #ddd;text-align:center">15</td><td style="padding:5px 10px;border:1px solid #ddd;text-align:center">480</td></tr>
+    <tr style="background:#f5f5f5"><td style="padding:5px 10px;border:1px solid #ddd">Lúpulo</td><td style="padding:5px 10px;border:1px solid #ddd;text-align:center">4</td><td style="padding:5px 10px;border:1px solid #ddd;text-align:center">4</td><td style="padding:5px 10px;border:1px solid #ddd;text-align:center">160</td></tr>
+    <tr><td style="padding:5px 10px;border:1px solid #ddd">Malta (kg)</td><td style="padding:5px 10px;border:1px solid #ddd;text-align:center">35</td><td style="padding:5px 10px;border:1px solid #ddd;text-align:center">20</td><td style="padding:5px 10px;border:1px solid #ddd;text-align:center">1190</td></tr>
+  </table>
+
+  <div style="background:#fff;border:1px solid #a5d6a7;border-radius:6px;padding:1rem;margin:.8rem 0">
+    <strong>📝 Modelo Matemático:</strong>
+    <pre style="background:#1b5e20;color:#e8f5e9;padding:1rem;border-radius:6px;margin:.5rem 0;font-size:.9rem">Variables: x₁ = barriles de Negra,  x₂ = barriles de Blanca
+
+MAX Z = 13x₁ + 23x₂
+
+Sujeto a:
+   5x₁ + 15x₂ ≤  480   (Maíz)
+   4x₁ +  4x₂ ≤  160   (Lúpulo)
+  35x₁ + 20x₂ ≤ 1190   (Malta)
+  x₁, x₂ ≥ 0</pre>
+  </div>
+
+  <div style="background:#e8f5e9;border-radius:6px;padding:.8rem;margin:.5rem 0">
+    <strong>✅ Resolución paso a paso:</strong><br>
+    Vértice intersección Lúpulo (4x₁+4x₂=160 → x₁+x₂=40) y Malta (35x₁+20x₂=1190):<br>
+    De Lúpulo: x₁ = 40 - x₂. Sustituyendo en Malta:<br>
+    35(40-x₂) + 20x₂ = 1190 → 1400 - 35x₂ + 20x₂ = 1190 → -15x₂ = -210 → <strong>x₂ = 14</strong><br>
+    x₁ = 40 - 14 = <strong>26</strong><br>
+    <strong>Z = 13(26) + 23(14) = 338 + 322 = $660</strong>
+  </div>
+
+  <div style="margin-top:.8rem">
+    <div class="quiz-item" onclick="this.classList.toggle('abierto')" style="cursor:pointer;background:#f1f8e9;border-radius:6px;padding:.8rem;margin:.4rem 0;border:1px solid #c5e1a5">
+      ❓ ¿Convendría comprar 100 kg más de malta a $1,20/kg adicional?
+      <div class="respuesta">Solo conviene si el Shadow Price de Malta &gt; $1,20/kg adicional. Si el shadow price es, por ej., $2/kg, entonces el beneficio extra supera el costo, y SÍ conviene comprar. Verificar que 1190+100 esté dentro del rango RHS allowable.</div>
+    </div>
+    <div class="quiz-item" onclick="this.classList.toggle('abierto')" style="cursor:pointer;background:#f1f8e9;border-radius:6px;padding:.8rem;margin:.4rem 0;border:1px solid #c5e1a5">
+      ❓ ¿El dueño tiene razón al decir que seguiría produciendo cerveza negra aunque su precio baje?
+      <div class="respuesta">Sí, siempre que el beneficio de la negra se mantenga dentro del rango Allowable Min del análisis de sensibilidad. Si baja pero sigue en el rango, la solución base no cambia y sigue siendo óptimo producir ambas. Recién cuando baja del límite inferior el mix cambia.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== TP1b: MODELADO ===== -->
+<h3 style="color:#6a1b9a;border-bottom:2px solid #6a1b9a;padding-bottom:6px;margin-top:2rem">🎾 TP1b — Modelado PL (casos variados)</h3>
+
+<div style="background:#f9f0ff;border-left:4px solid #6a1b9a;border-radius:8px;padding:1.2rem;margin-bottom:1.5rem">
+  <h4 style="color:#6a1b9a;margin:0 0 .8rem">Ejercicio 3: Raquetas CSD (2 tipos)</h4>
+  <p><strong>Enunciado:</strong> CSD fabrica raquetas Estándar ($10/u) y Grande ($15/u). Aleación disponible: 80 kg (2 semanas). Tiempo manufactura: 40 hs/semana = 80 hs totales. Requisito: estándar ≥ 20% producción total.</p>
+
+  <div style="background:#fff;border:1px solid #ce93d8;border-radius:6px;padding:1rem;margin:.8rem 0">
+    <pre style="background:#4a148c;color:#f3e5f5;padding:1rem;border-radius:6px;margin:.5rem 0;font-size:.9rem">Variables: x₁ = raquetas Estándar, x₂ = raquetas Grandes
+
+MAX Z = 10x₁ + 15x₂
+
+Sujeto a:
+  0.125x₁ + 0.4x₂ ≤  80       (aleación, kg)
+  10x₁   + 12x₂   ≤ 4800      (tiempo, min → 80hs×60)
+  x₁ ≥ 0.2(x₁ + x₂)           (mínimo 20% estándar)
+  → 0.8x₁ - 0.2x₂ ≥ 0
+  x₁, x₂ ≥ 0</pre>
+  </div>
+
+  <div class="quiz-item" onclick="this.classList.toggle('abierto')" style="cursor:pointer;background:#f3e5f5;border-radius:6px;padding:.8rem;margin:.4rem 0;border:1px solid #ce93d8">
+    ❓ ¿Cómo se modeliza la restricción "al menos 20% de la producción"?
+    <div class="respuesta">x₁ ≥ 0.2(x₁ + x₂) → x₁ ≥ 0.2x₁ + 0.2x₂ → 0.8x₁ ≥ 0.2x₂ → 0.8x₁ - 0.2x₂ ≥ 0. Siempre se pasan todos los términos al mismo lado para obtener la forma estándar ax₁ + bx₂ ≤/≥ c.</div>
+  </div>
+  <div class="quiz-item" onclick="this.classList.toggle('abierto')" style="cursor:pointer;background:#f3e5f5;border-radius:6px;padding:.8rem;margin:.4rem 0;border:1px solid #ce93d8">
+    ❓ ¿Cuánto pagaría por horas extras de manufactura?
+    <div class="respuesta">El Shadow Price del recurso "tiempo de manufactura" indica el beneficio adicional por cada hora-minuto extra. Si el SP es positivo (recurso activo), conviene pagar hasta ese valor. Si es 0 (recurso con holgura), no conviene pagar nada.</div>
+  </div>
+</div>
+
+<!-- ===== TP2: TRANSPORTE ===== -->
+<h3 style="color:#bf360c;border-bottom:2px solid #bf360c;padding-bottom:6px;margin-top:2rem">🚚 TP2 — Modelos de Transporte y Asignación</h3>
+
+<div style="background:#fff8f5;border-left:4px solid #bf360c;border-radius:8px;padding:1.2rem;margin-bottom:1.5rem">
+  <h4 style="color:#bf360c;margin:0 0 .8rem">Concepto Clave: Modelo de Transporte</h4>
+  <p>Un problema de transporte busca distribuir producto desde <strong>m orígenes</strong> (plantas/depósitos) a <strong>n destinos</strong> (clientes/centros) minimizando costo total.</p>
+
+  <div style="background:#fff;border:1px solid #ffccbc;border-radius:6px;padding:1rem;margin:.8rem 0">
+    <strong>📐 Estructura del Modelo:</strong>
+    <pre style="background:#bf360c;color:#fff3e0;padding:1rem;border-radius:6px;margin:.5rem 0;font-size:.9rem">Variables: xᵢⱼ = unidades enviadas del origen i al destino j
+
+MIN Z = Σᵢ Σⱼ cᵢⱼ · xᵢⱼ    (costo total)
+
+Restricciones de oferta (origen i):
+  Σⱼ xᵢⱼ ≤ Sᵢ   para todo i   (no puede enviar más de lo que produce)
+
+Restricciones de demanda (destino j):
+  Σᵢ xᵢⱼ = Dⱼ   para todo j   (debe satisfacer la demanda)
+
+No negatividad: xᵢⱼ ≥ 0</pre>
+  </div>
+
+  <h4 style="color:#bf360c;margin:.8rem 0 .5rem">Ejercicio 4: 3 Plantas → 4 Centros</h4>
+  <p>Plantas P1, P2, P3 con oferta 12, 17, 11. Centros C1–C4 con demanda 10 cada uno. Flete = $100 + $0.50/milla.</p>
+
+  <div style="background:#fff;border:1px solid #ffccbc;border-radius:6px;padding:1rem;margin:.8rem 0">
+    <strong>💡 Método Esquina Noroeste (punto de partida):</strong>
+    <ol style="margin:.5rem 0 0 1.2rem;font-size:.93rem">
+      <li>Comenzar en la celda (P1, C1) — esquina superior izquierda</li>
+      <li>Asignar el mínimo entre oferta disponible y demanda pendiente</li>
+      <li>Tachar la fila (si oferta agotada) o columna (si demanda satisfecha)</li>
+      <li>Avanzar a la siguiente celda disponible</li>
+      <li>Repetir hasta asignar todo</li>
+    </ol>
+    <p style="margin:.6rem 0 0;font-size:.92rem;color:#666">⚠️ Esquina Noroeste da una solución inicial factible pero <em>no óptima</em>. Para optimizar se usa el método MODI o se resuelve con Solver/WinQSB.</p>
+  </div>
+
+  <!-- SVG red de transporte -->
+  <svg viewBox="0 0 440 220" style="width:100%;max-width:500px;display:block;margin:.8rem auto;border:1px solid #ddd;border-radius:8px;background:#fafafa">
+    <!-- Plantas (izquierda) -->
+    <rect x="15" y="30" width="80" height="35" rx="8" fill="#bf360c" />
+    <text x="55" y="52" font-size="12" fill="#fff" text-anchor="middle" font-weight="bold">P1 (12)</text>
+    <rect x="15" y="90" width="80" height="35" rx="8" fill="#bf360c" />
+    <text x="55" y="112" font-size="12" fill="#fff" text-anchor="middle" font-weight="bold">P2 (17)</text>
+    <rect x="15" y="150" width="80" height="35" rx="8" fill="#bf360c" />
+    <text x="55" y="172" font-size="12" fill="#fff" text-anchor="middle" font-weight="bold">P3 (11)</text>
+    <!-- Centros (derecha) -->
+    <rect x="340" y="20" width="85" height="30" rx="8" fill="#1565c0" />
+    <text x="382" y="39" font-size="11" fill="#fff" text-anchor="middle">C1 (dem=10)</text>
+    <rect x="340" y="65" width="85" height="30" rx="8" fill="#1565c0" />
+    <text x="382" y="84" font-size="11" fill="#fff" text-anchor="middle">C2 (dem=10)</text>
+    <rect x="340" y="110" width="85" height="30" rx="8" fill="#1565c0" />
+    <text x="382" y="129" font-size="11" fill="#fff" text-anchor="middle">C3 (dem=10)</text>
+    <rect x="340" y="155" width="85" height="30" rx="8" fill="#1565c0" />
+    <text x="382" y="174" font-size="11" fill="#fff" text-anchor="middle">C4 (dem=10)</text>
+    <!-- Arcos (solo algunos, indicativos) -->
+    <line x1="95" y1="47" x2="340" y2="35" stroke="#999" stroke-width="1" stroke-dasharray="4,2"/>
+    <line x1="95" y1="47" x2="340" y2="80" stroke="#999" stroke-width="1" stroke-dasharray="4,2"/>
+    <line x1="95" y1="107" x2="340" y2="80" stroke="#999" stroke-width="1" stroke-dasharray="4,2"/>
+    <line x1="95" y1="107" x2="340" y2="125" stroke="#999" stroke-width="1" stroke-dasharray="4,2"/>
+    <line x1="95" y1="167" x2="340" y2="125" stroke="#999" stroke-width="1" stroke-dasharray="4,2"/>
+    <line x1="95" y1="167" x2="340" y2="170" stroke="#999" stroke-width="1" stroke-dasharray="4,2"/>
+    <!-- Etiqueta -->
+    <text x="220" y="210" font-size="10" fill="#666" text-anchor="middle">Red de Transporte: 3 Plantas → 4 Centros (Oferta total=40, Demanda total=40 ✓)</text>
+  </svg>
+
+  <div class="quiz-item" onclick="this.classList.toggle('abierto')" style="cursor:pointer;background:#fff8f5;border-radius:6px;padding:.8rem;margin:.4rem 0;border:1px solid #ffccbc">
+    ❓ ¿Qué pasa si la oferta total ≠ demanda total?
+    <div class="respuesta">Hay que agregar una planta o destino FICTICIO con costo 0 para balancear. Si oferta &gt; demanda: destino ficticio. Si demanda &gt; oferta: origen ficticio. El problema es "desbalanceado" y el ficticio absorbe el excedente sin costo real.</div>
+  </div>
+  <div class="quiz-item" onclick="this.classList.toggle('abierto')" style="cursor:pointer;background:#fff8f5;border-radius:6px;padding:.8rem;margin:.4rem 0;border:1px solid #ffccbc">
+    ❓ ¿Cómo se analiza no poder transportar de P3 a C1?
+    <div class="respuesta">Se pone un costo artificialmente alto (M, tipo Big-M) en la celda (P3,C1), o directamente se elimina esa variable del modelo. En WinQSB/Solver: se fija x₃₁ = 0. La solución óptima evitará esa ruta y redirigirá el flujo, probablemente aumentando el costo total.</div>
+  </div>
+</div>
+
+<!-- ===== FLUJOS (TP3) extra ===== -->
+<h3 style="color:#00695c;border-bottom:2px solid #00695c;padding-bottom:6px;margin-top:2rem">🌊 TP3 — Flujo Máximo: Ejercicios Adicionales</h3>
+
+<div style="background:#f0faf9;border-left:4px solid #00695c;border-radius:8px;padding:1.2rem;margin-bottom:1.5rem">
+  <h4 style="color:#00695c;margin:0 0 .8rem">Ejercicio 5: Red con 10 nodos (del TP especial)</h4>
+  <p>Ejemplo Red 1 (del PDF): FROM/TO con capacidades reales (A→B=14, A→F=19, A→G=9, B→C=8, B→D=17, ...)</p>
+
+  <div style="background:#fff;border:1px solid #80cbc4;border-radius:6px;padding:1rem;margin:.8rem 0">
+    <strong>📋 Datos Red 1:</strong>
+    <table style="border-collapse:collapse;width:100%;font-size:.85rem;margin:.5rem 0">
+      <tr style="background:#00695c;color:#fff"><th style="padding:4px 8px">Arco</th><th style="padding:4px 8px">Capacidad</th><th style="padding:4px 8px">Flujo óptimo</th><th style="padding:4px 8px">Holgura</th></tr>
+      <tr><td style="padding:4px 8px;border:1px solid #ddd">A→B</td><td style="padding:4px 8px;border:1px solid #ddd;text-align:center">14</td><td style="padding:4px 8px;border:1px solid #ddd;text-align:center">14</td><td style="padding:4px 8px;border:1px solid #ddd;text-align:center;background:#ffcdd2">0 ← saturado</td></tr>
+      <tr style="background:#f5f5f5"><td style="padding:4px 8px;border:1px solid #ddd">A→F</td><td style="padding:4px 8px;border:1px solid #ddd;text-align:center">19</td><td style="padding:4px 8px;border:1px solid #ddd;text-align:center">19</td><td style="padding:4px 8px;border:1px solid #ddd;text-align:center;background:#ffcdd2">0 ← saturado</td></tr>
+      <tr><td style="padding:4px 8px;border:1px solid #ddd">A→G</td><td style="padding:4px 8px;border:1px solid #ddd;text-align:center">9</td><td style="padding:4px 8px;border:1px solid #ddd;text-align:center">6</td><td style="padding:4px 8px;border:1px solid #ddd;text-align:center">3</td></tr>
+      <tr style="background:#f5f5f5"><td style="padding:4px 8px;border:1px solid #ddd">E→J</td><td style="padding:4px 8px;border:1px solid #ddd;text-align:center">16</td><td style="padding:4px 8px;border:1px solid #ddd;text-align:center">14</td><td style="padding:4px 8px;border:1px solid #ddd;text-align:center">2</td></tr>
+      <tr><td style="padding:4px 8px;border:1px solid #ddd">F→J</td><td style="padding:4px 8px;border:1px solid #ddd;text-align:center">19</td><td style="padding:4px 8px;border:1px solid #ddd;text-align:center">19</td><td style="padding:4px 8px;border:1px solid #ddd;text-align:center;background:#ffcdd2">0 ← saturado</td></tr>
+    </table>
+    <p style="font-size:.88rem;margin:.4rem 0"><strong>Flujo Máximo Total</strong> = 14 + 19 + 6 = <strong>39 unidades</strong> salen de A</p>
+  </div>
+
+  <div style="background:#fff;border:1px solid #80cbc4;border-radius:6px;padding:1rem;margin:.8rem 0">
+    <strong>✂️ Corte Mínimo — Cómo identificarlo:</strong>
+    <ol style="margin:.5rem 0 0 1.2rem;font-size:.93rem">
+      <li>Luego del Ford-Fulkerson, marcar los nodos alcanzables desde la fuente en la red residual</li>
+      <li>El corte separa los nodos alcanzables (lado S) de los no alcanzables (lado T)</li>
+      <li>Los arcos que van de S a T con holgura=0 forman el corte mínimo</li>
+      <li><strong>Capacidad del corte = Flujo Máximo</strong> (Teorema Max-Flow Min-Cut)</li>
+    </ol>
+    <p style="background:#e0f2f1;border-radius:4px;padding:.5rem;margin:.5rem 0;font-size:.9rem"><strong>En Red 1:</strong> Los arcos A→B (cap=14) y A→F (cap=19) y A→G (cap=9) salen de A. Flujo máximo = 39. Un posible corte: {A→B, A→F, A→G} con capacidades 14+19+9=42... pero el flujo es 39. El corte mínimo real excluye A→G si no está saturado. Analizar la red residual es la forma correcta.</p>
+  </div>
+
+  <div style="background:#fff;border:1px solid #80cbc4;border-radius:6px;padding:1rem;margin:.8rem 0">
+    <strong>📏 Rangos de Ampliación de Arcos:</strong>
+    <p style="font-size:.92rem">¿Hasta cuánto se puede ampliar cada arco para que AUMENTE la capacidad de la red?</p>
+    <ul style="margin:.3rem 0 0 1.2rem;font-size:.92rem">
+      <li>Un arco NO pertenece al corte mínimo → ampliar su capacidad NO aumenta el flujo máximo</li>
+      <li>Un arco SÍ pertenece al corte mínimo → ampliarlo en k unidades puede aumentar el flujo hasta k (si no hay otro cuello de botella)</li>
+      <li>Arcos con holgura &gt; 0 → ya tienen capacidad ociosa, ampliarlos es inútil</li>
+    </ul>
+  </div>
+
+  <div class="quiz-item" onclick="this.classList.toggle('abierto')" style="cursor:pointer;background:#e0f2f1;border-radius:6px;padding:.8rem;margin:.4rem 0;border:1px solid #80cbc4">
+    ❓ ¿Puede haber más de un corte mínimo?
+    <div class="respuesta">Sí, puede haber múltiples cortes mínimos con la misma capacidad total. Esto ocurre cuando varios conjuntos de arcos saturados tienen la misma suma de capacidades = flujo máximo. Hay que identificarlos todos para saber qué arcos son críticos para expandir la red.</div>
+  </div>
+  <div class="quiz-item" onclick="this.classList.toggle('abierto')" style="cursor:pointer;background:#e0f2f1;border-radius:6px;padding:.8rem;margin:.4rem 0;border:1px solid #80cbc4">
+    ❓ ¿Qué es la holgura en una red de flujo?
+    <div class="respuesta">Holgura = Capacidad - Flujo. Indica cuántas unidades más podrían enviarse por ese arco. Un arco con holgura = 0 está saturado y no puede recibir más flujo directo. En la red residual, los arcos con holgura &gt; 0 tienen arcos residuales en dirección directa disponibles.</div>
+  </div>
+</div>
+
+<!-- ===== RESUMEN TIPOS DE RESTRICCIONES ===== -->
+<h3 style="color:#37474f;border-bottom:2px solid #37474f;padding-bottom:6px;margin-top:2rem">📋 Resumen: Tipos de Restricciones en PL</h3>
+<div style="background:#fafafa;border:1px solid #cfd8dc;border-radius:8px;padding:1.2rem;margin-bottom:1rem">
+  <table style="border-collapse:collapse;width:100%;font-size:.91rem">
+    <tr style="background:#37474f;color:#fff"><th style="padding:8px 12px">Tipo</th><th style="padding:8px 12px">Símbolo</th><th style="padding:8px 12px">Variable de Holgura</th><th style="padding:8px 12px">Interpretación</th></tr>
+    <tr><td style="padding:6px 12px;border:1px solid #ddd">Recurso limitado</td><td style="padding:6px 12px;border:1px solid #ddd;text-align:center">≤</td><td style="padding:6px 12px;border:1px solid #ddd;text-align:center">+s (holgura positiva)</td><td style="padding:6px 12px;border:1px solid #ddd">Lo que sobra del recurso</td></tr>
+    <tr style="background:#f5f5f5"><td style="padding:6px 12px;border:1px solid #ddd">Demanda mínima</td><td style="padding:6px 12px;border:1px solid #ddd;text-align:center">≥</td><td style="padding:6px 12px;border:1px solid #ddd;text-align:center">−s (superávit)</td><td style="padding:6px 12px;border:1px solid #ddd">Lo que excede el mínimo</td></tr>
+    <tr><td style="padding:6px 12px;border:1px solid #ddd">Igualdad exacta</td><td style="padding:6px 12px;border:1px solid #ddd;text-align:center">=</td><td style="padding:6px 12px;border:1px solid #ddd;text-align:center">No hay holgura</td><td style="padding:6px 12px;border:1px solid #ddd">Siempre activa, SP siempre no nulo</td></tr>
+    <tr style="background:#f5f5f5"><td style="padding:6px 12px;border:1px solid #ddd">Porcentaje mínimo</td><td style="padding:6px 12px;border:1px solid #ddd;text-align:center">≥ %</td><td style="padding:6px 12px;border:1px solid #ddd;text-align:center">Reacomodar a forma estándar</td><td style="padding:6px 12px;border:1px solid #ddd">x₁ ≥ 0.2(x₁+x₂) → pasar todo a un lado</td></tr>
+  </table>
+  <div class="quiz-item" onclick="this.classList.toggle('abierto')" style="cursor:pointer;background:#eceff1;border-radius:6px;padding:.8rem;margin:.8rem 0 0;border:1px solid #cfd8dc">
+    ❓ ¿Cómo reconocer si una restricción es activa o inactiva en la solución óptima?
+    <div class="respuesta">Activa = la holgura es 0 (el recurso se usó todo). Inactiva = la holgura es positiva (queda recurso sin usar). Solo las restricciones activas tienen Shadow Price ≠ 0. Las inactivas tienen Shadow Price = 0 porque un cambio marginal en el RHS no afecta el óptimo todavía.</div>
+  </div>
+</div>
+
+</div>
+
+</main>
+
+<script>
+  // Highlight de nav activo al hacer scroll
+  const sections = document.querySelectorAll('[id]');
+  const navLinks = document.querySelectorAll('nav a');
+  window.addEventListener('scroll', () => {
+    let current = '';
+    sections.forEach(s => { if (window.scrollY >= s.offsetTop - 80) current = s.id; });
+    navLinks.forEach(a => {
+      a.classList.remove('active');
+      if (a.getAttribute('href') === '#' + current) a.classList.add('active');
+    });
+  });
+</script>
+</body>
+</html>
