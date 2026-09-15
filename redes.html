@@ -1,0 +1,768 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Teoría de Redes — TP3 | IO UADE 2026</title>
+<style>
+:root{color-scheme:light}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',Arial,sans-serif;background:#f0f4f8;color:#1a1a2e;line-height:1.68}
+nav{position:fixed;top:0;left:0;right:0;z-index:100;background:#0d47a1;padding:.45rem .8rem;display:flex;flex-wrap:wrap;gap:.3rem;align-items:center}
+nav span{font-weight:800;font-size:.95rem;color:#fff;margin-right:.5rem;white-space:nowrap}
+nav a{color:#bbdefb;text-decoration:none;font-size:.75rem;padding:.2rem .45rem;border-radius:4px;white-space:nowrap}
+nav a:hover,nav a.active{background:#1565c0;color:#fff}
+main{max-width:940px;margin:0 auto;padding:72px 1rem 3rem}
+h1{color:#0d47a1;font-size:1.8rem;margin-bottom:.3rem}
+.sub{color:#555;font-size:.95rem;margin-bottom:1.5rem}
+
+/* CARDS */
+.card{background:#fff;border-radius:12px;padding:1.6rem;margin-bottom:1.8rem;box-shadow:0 2px 10px rgba(0,0,0,.09)}
+.card h2{font-size:1.2rem;padding-bottom:.5rem;border-bottom:3px solid currentColor;margin-bottom:1.1rem}
+
+/* STEPS */
+.steps{counter-reset:st}
+.step{display:flex;gap:1rem;margin:.8rem 0;background:#f8faff;border-radius:8px;padding:.85rem;border-left:4px solid #1565c0}
+.sn{counter-increment:st;min-width:30px;height:30px;border-radius:50%;background:#1565c0;color:#fff;font-weight:700;font-size:.9rem;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:.1rem}
+.sb{flex:1}
+.sb strong{display:block;color:#1565c0;margin-bottom:.25rem}
+
+/* CALLOUTS */
+.tip{background:#e3f2fd;border-left:4px solid #1565c0;border-radius:6px;padding:.75rem 1rem;margin:.7rem 0;font-size:.91rem}
+.ok {background:#e8f5e9;border-left:4px solid #2e7d32;border-radius:6px;padding:.75rem 1rem;margin:.7rem 0;font-size:.91rem}
+.warn{background:#fff8e1;border-left:4px solid #f9a825;border-radius:6px;padding:.75rem 1rem;margin:.7rem 0;font-size:.91rem}
+.danger{background:#ffebee;border-left:4px solid #c62828;border-radius:6px;padding:.75rem 1rem;margin:.7rem 0;font-size:.91rem}
+
+/* CODE */
+pre{background:#1a237e;color:#e8eaf6;padding:1rem;border-radius:8px;font-size:.88rem;margin:.6rem 0;white-space:pre-wrap;overflow-x:auto}
+
+/* TABLES */
+table{border-collapse:collapse;width:100%;font-size:.88rem;margin:.7rem 0}
+th{background:#1565c0;color:#fff;padding:6px 10px;text-align:center}
+td{padding:5px 10px;border:1px solid #ddd;text-align:center}
+tr:nth-child(even) td{background:#f5f7ff}
+.critica td{background:#ffcdd2 !important;font-weight:700}
+.ok-row td{background:#c8e6c9 !important;font-weight:700}
+
+/* QUIZ */
+.quiz-item{background:#fff3e0;border:1px solid #ffe0b2;border-radius:8px;padding:.85rem 1rem;margin:.45rem 0;cursor:pointer;font-weight:600;color:#e65100;user-select:none}
+.quiz-item:hover{background:#ffe0b2}
+.quiz-item .resp{display:none;font-weight:400;color:#222;background:#fff;border-radius:6px;padding:.75rem;margin-top:.5rem;border-left:3px solid #f9a825;line-height:1.6}
+.quiz-item.open .resp{display:block}
+.quiz-item::before{content:"❓ "}
+.quiz-item.open::before{content:"✅ "}
+
+/* SVG */
+.svgw{text-align:center;margin:.9rem 0}
+.svgw svg{max-width:100%;border:1px solid #ddd;border-radius:10px;background:#fafafa}
+.svgcap{font-size:.82rem;color:#666;margin-top:.3rem}
+
+/* BADGE */
+.badge{display:inline-block;background:#0d47a1;color:#fff;border-radius:20px;padding:.15rem .7rem;font-size:.75rem;font-weight:700;margin-right:.5rem}
+.badge.green{background:#2e7d32}
+.badge.red{background:#c62828}
+.badge.orange{background:#e65100}
+</style>
+</head>
+<body>
+<nav>
+  <span>🕸️ Redes IO</span>
+  <a href="#intro">Intro</a>
+  <a href="#flujo">Flujo Máx</a>
+  <a href="#ej8">Ej.8 Oleoducto</a>
+  <a href="#ej9">Ej.9 Destilería</a>
+  <a href="#ej11">Ej.11 Acueducto</a>
+  <a href="#pert">PERT/CPM</a>
+  <a href="#arbol">Árbol Mínimo</a>
+  <a href="#quiz">Preguntas</a>
+</nav>
+
+<main>
+<h1>🕸️ Teoría de Redes — Preparación Parcial</h1>
+<p class="sub">TP3 completo: Flujo Máximo (Ford-Fulkerson), PERT/CPM, Árbol de Expansión Mínima — UADE IO 2026</p>
+
+<!-- ==================== INTRO ==================== -->
+<div class="card" id="intro">
+<h2 style="color:#0d47a1">🗺️ ¿Qué es una Red?</h2>
+<p>Una <strong>red</strong> es un conjunto de <strong>nodos</strong> (puntos) conectados por <strong>arcos</strong> (flechas o líneas). Cada arco tiene un valor: puede ser capacidad, distancia, tiempo o costo.</p>
+
+<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1rem;margin:1rem 0">
+  <div style="background:#e3f2fd;border-radius:8px;padding:1rem;text-align:center">
+    <div style="font-size:2rem">🌊</div>
+    <strong>Flujo Máximo</strong><br>
+    <small>¿Cuánto puede circular de A a Z?</small>
+  </div>
+  <div style="background:#e8f5e9;border-radius:8px;padding:1rem;text-align:center">
+    <div style="font-size:2rem">⏱️</div>
+    <strong>PERT/CPM</strong><br>
+    <small>¿Cuándo termina el proyecto?</small>
+  </div>
+  <div style="background:#fff8e1;border-radius:8px;padding:1rem;text-align:center">
+    <div style="font-size:2rem">🌳</div>
+    <strong>Árbol Mínimo</strong><br>
+    <small>¿Cómo conecto todo al menor costo?</small>
+  </div>
+</div>
+
+<div class="tip"><strong>Conceptos que deberías dominar:</strong> nodo fuente, nodo destino, arco saturado, holgura, camino aumentante, corte mínimo, ruta crítica, holgura de actividad.</div>
+</div>
+
+<!-- ==================== FLUJO MÁXIMO ==================== -->
+<div class="card" id="flujo">
+<h2 style="color:#1565c0">🌊 Flujo Máximo — Método Ford-Fulkerson</h2>
+
+<div class="steps">
+  <div class="step">
+    <div class="sn">1</div>
+    <div class="sb">
+      <strong>Entender el problema</strong>
+      Tenés una red con capacidades en cada arco. Querés enviar la mayor cantidad posible de "algo" (agua, petróleo, datos) desde la <strong>fuente (A/S)</strong> hasta el <strong>destino (Z/T)</strong>, respetando que por cada arco no puede pasar más de su capacidad.
+    </div>
+  </div>
+  <div class="step">
+    <div class="sn">2</div>
+    <div class="sb">
+      <strong>Inicializar: flujo = 0 en todos los arcos</strong>
+      Al principio, nada está fluyendo. La <em>capacidad residual</em> de cada arco = su capacidad original.
+    </div>
+  </div>
+  <div class="step">
+    <div class="sn">3</div>
+    <div class="sb">
+      <strong>Buscar un Camino Aumentante</strong>
+      Un camino de la fuente al destino donde todos los arcos tengan capacidad residual &gt; 0. Podés ir por caminos directos o por arcos "hacia atrás" (para deshacer flujo previo).
+    </div>
+  </div>
+  <div class="step">
+    <div class="sn">4</div>
+    <div class="sb">
+      <strong>Calcular el cuello de botella</strong>
+      El máximo flujo que podés mandar por ese camino = <strong>mínimo</strong> de todas las capacidades residuales del camino.
+    </div>
+  </div>
+  <div class="step">
+    <div class="sn">5</div>
+    <div class="sb">
+      <strong>Actualizar la red residual</strong>
+      Para cada arco del camino:<br>
+      • Arco directo: restar el flujo enviado<br>
+      • Arco inverso (de vuelta): sumar el flujo enviado (permite "deshacer")
+    </div>
+  </div>
+  <div class="step">
+    <div class="sn">6</div>
+    <div class="sb">
+      <strong>Repetir hasta que no haya más caminos aumentantes</strong>
+      Cuando no podés llegar de A a Z por ningún camino con capacidad residual &gt; 0, el algoritmo terminó. La suma de todos los flujos enviados es el <strong>Flujo Máximo</strong>.
+    </div>
+  </div>
+  <div class="step">
+    <div class="sn">7</div>
+    <div class="sb">
+      <strong>Verificar con el Corte Mínimo</strong>
+      Los nodos alcanzables desde A en la red residual final = Lado S. Los demás = Lado T. Los arcos de S→T saturados forman el corte mínimo. Su capacidad total debe ser igual al flujo máximo.
+    </div>
+  </div>
+</div>
+
+<div class="ok"><strong>Regla de oro:</strong> Flujo Máximo = Capacidad del Corte Mínimo (Teorema Max-Flow Min-Cut)</div>
+
+<div class="warn"><strong>¿Qué arco ampliar?</strong> Para aumentar la capacidad de la red, ampliar cualquier arco del corte mínimo. Ampliar arcos fuera del corte no sirve de nada.</div>
+
+<!-- EJEMPLO VISUAL RED PEQUEÑA -->
+<h3 style="margin:1.2rem 0 .7rem;color:#1565c0">📌 Ejemplo visual: red simple A→Z</h3>
+<div class="svgw">
+<svg viewBox="0 0 580 200" width="580" height="200">
+  <defs>
+    <marker id="a1" markerWidth="7" markerHeight="7" refX="6" refY="3" orient="auto"><path d="M0,0 L0,6 L7,3z" fill="#1565c0"/></marker>
+    <marker id="a2" markerWidth="7" markerHeight="7" refX="6" refY="3" orient="auto"><path d="M0,0 L0,6 L7,3z" fill="#e53935"/></marker>
+    <marker id="a3" markerWidth="7" markerHeight="7" refX="6" refY="3" orient="auto"><path d="M0,0 L0,6 L7,3z" fill="#43a047"/></marker>
+  </defs>
+  <!-- nodos -->
+  <circle cx="60" cy="100" r="22" fill="#0d47a1"/><text x="60" y="106" font-size="14" fill="#fff" text-anchor="middle" font-weight="bold">A</text>
+  <circle cx="220" cy="50" r="20" fill="#1565c0"/><text x="220" y="56" font-size="13" fill="#fff" text-anchor="middle" font-weight="bold">B</text>
+  <circle cx="220" cy="150" r="20" fill="#1565c0"/><text x="220" y="156" font-size="13" fill="#fff" text-anchor="middle" font-weight="bold">C</text>
+  <circle cx="380" cy="50" r="20" fill="#b71c1c"/><text x="380" y="56" font-size="13" fill="#fff" text-anchor="middle" font-weight="bold">D</text>
+  <circle cx="380" cy="150" r="20" fill="#b71c1c"/><text x="380" y="156" font-size="13" fill="#fff" text-anchor="middle" font-weight="bold">E</text>
+  <circle cx="520" cy="100" r="22" fill="#b71c1c"/><text x="520" y="106" font-size="14" fill="#fff" text-anchor="middle" font-weight="bold">Z</text>
+  <!-- arcos con flujo/cap -->
+  <line x1="82" y1="88" x2="200" y2="58" stroke="#e53935" stroke-width="3" marker-end="url(#a2)"/>
+  <text x="130" y="63" font-size="11" fill="#c62828" font-weight="bold" text-anchor="middle">3/3 ✂️</text>
+  <line x1="82" y1="112" x2="200" y2="142" stroke="#43a047" stroke-width="3" marker-end="url(#a3)"/>
+  <text x="130" y="140" font-size="11" fill="#1b5e20" font-weight="bold" text-anchor="middle">2/4</text>
+  <line x1="240" y1="50" x2="360" y2="50" stroke="#e53935" stroke-width="3" marker-end="url(#a2)"/>
+  <text x="300" y="43" font-size="11" fill="#c62828" font-weight="bold" text-anchor="middle">3/3 ✂️</text>
+  <line x1="240" y1="150" x2="360" y2="150" stroke="#43a047" stroke-width="3" marker-end="url(#a3)"/>
+  <text x="300" y="168" font-size="11" fill="#1b5e20" font-weight="bold" text-anchor="middle">2/5</text>
+  <line x1="240" y1="60" x2="360" y2="140" stroke="#1565c0" stroke-width="1.5" stroke-dasharray="4,2" marker-end="url(#a1)"/>
+  <text x="310" y="96" font-size="10" fill="#555" text-anchor="middle">0/2</text>
+  <line x1="398" y1="62" x2="500" y2="90" stroke="#43a047" stroke-width="3" marker-end="url(#a3)"/>
+  <text x="455" y="65" font-size="11" fill="#1b5e20" font-weight="bold" text-anchor="middle">3/5</text>
+  <line x1="398" y1="142" x2="500" y2="112" stroke="#43a047" stroke-width="3" marker-end="url(#a3)"/>
+  <text x="455" y="140" font-size="11" fill="#1b5e20" font-weight="bold" text-anchor="middle">2/4</text>
+  <!-- zona S y T -->
+  <rect x="8" y="20" width="340" height="160" rx="8" fill="none" stroke="#1565c0" stroke-width="1.5" stroke-dasharray="6,3"/>
+  <text x="16" y="36" font-size="11" fill="#1565c0" font-weight="bold">Lado S</text>
+  <rect x="358" y="20" width="200" height="160" rx="8" fill="none" stroke="#b71c1c" stroke-width="1.5" stroke-dasharray="6,3"/>
+  <text x="366" y="36" font-size="11" fill="#b71c1c" font-weight="bold">Lado T</text>
+  <!-- linea corte -->
+  <line x1="352" y1="15" x2="352" y2="185" stroke="#e53935" stroke-width="2" stroke-dasharray="8,4"/>
+  <text x="352" y="10" font-size="11" fill="#e53935" text-anchor="middle" font-weight="bold">✂️</text>
+  <!-- flujo total -->
+  <rect x="170" y="175" width="240" height="22" rx="5" fill="#0d47a1"/>
+  <text x="290" y="191" font-size="12" fill="#fff" text-anchor="middle" font-weight="bold">Flujo máximo = 5 | Corte = 3+3 = 6 → revisar</text>
+</svg>
+<p class="svgcap">Rojo ✂️ = arcos del corte mínimo (saturados) | Verde = flujo circulando | S/T = partición de nodos</p>
+</div>
+</div>
+
+<!-- ==================== EJ 8 OLEODUCTO ==================== -->
+<div class="card" id="ej8">
+<h2 style="color:#e65100">🛢️ Ejercicio 8 — Oleoducto (TP3)</h2>
+<p><strong>Enunciado:</strong> Un grafo representa oleoductos con capacidades en barriles/hora desde un campo petrolífero hasta un puerto de embarque.</p>
+<p style="margin:.5rem 0">a) Determinar la capacidad de la red. Verificar por Corte.<br>b) ¿Qué tramos habría que ampliar si se desea aumentar la capacidad total? <strong>Respuesta conocida: 305 barriles/hora.</strong></p>
+
+<div class="steps">
+  <div class="step">
+    <div class="sn">1</div>
+    <div class="sb">
+      <strong>Leer la red y armar la tabla FROM/TO/CAPACIDAD</strong>
+      Antes de resolver, escribí todos los arcos con sus capacidades. Esto es clave para no perderte ninguno.
+    </div>
+  </div>
+  <div class="step">
+    <div class="sn">2</div>
+    <div class="sb">
+      <strong>Aplicar Ford-Fulkerson iterativamente</strong>
+      Buscá caminos aumentantes hasta no encontrar más. El flujo acumulado = capacidad de la red.
+    </div>
+  </div>
+  <div class="step">
+    <div class="sn">3</div>
+    <div class="sb">
+      <strong>Verificar con el Corte Mínimo</strong>
+      Marcá los nodos alcanzables desde la fuente en la red residual. Los arcos S→T saturados forman el corte. La suma de sus capacidades debe ser igual a 305.
+    </div>
+  </div>
+  <div class="step">
+    <div class="sn">4</div>
+    <div class="sb">
+      <strong>Arcos a ampliar</strong>
+      Solo ampliar arcos del corte mínimo tiene efecto. Ampliar los demás no cambia el flujo máximo.
+    </div>
+  </div>
+</div>
+
+<div class="ok"><strong>Flujo máximo = 305 barriles/hora</strong> (dato del enunciado). Al resolver por Ford-Fulkerson, la suma de todos los caminos aumentantes debe dar 305.</div>
+
+<div class="tip">
+  <strong>Estrategia para el parcial:</strong> si el enunciado te da la respuesta (como acá), verificá tu trabajo comprobando que la suma del corte mínimo = 305. Si no coincide, revisá qué arco te faltó saturar o qué camino aumentante te perdiste.
+</div>
+</div>
+
+<!-- ==================== EJ 9 DESTILERÍA ==================== -->
+<div class="card" id="ej9">
+<h2 style="color:#6a1b9a">🏭 Ejercicio 9 — Destilería: Dos Tanques TK y TY</h2>
+<p><strong>Enunciado:</strong> Una destilería quiere llenar dos tanques TK y TY de 500 m³ cada uno. Se conocen las capacidades de fluido por tramo (m³/hora). Se pide:</p>
+<ul style="margin:.5rem 0 .8rem 1.2rem;font-size:.92rem">
+  <li>a) ¿En cuánto tiempo se llenan los tanques? (considerar que uno puede llenarse antes)</li>
+  <li>b) ¿Qué tramos ampliar para reducir el tiempo?</li>
+</ul>
+
+<div class="tip">
+  <strong>¿Qué tiene de diferente este ejercicio?</strong> Acá no hay un solo destino, sino DOS tanques. El flujo se divide hacia TK y hacia TY. Es un problema de <em>flujo máximo con múltiples destinos</em>.
+</div>
+
+<div class="steps">
+  <div class="step">
+    <div class="sn">1</div>
+    <div class="sb">
+      <strong>Modelar como un problema estándar</strong>
+      Creá un <em>super-destino</em> ficticio Z que recibe flujo de TK y de TY, con arcos de capacidad infinita (∞). Así el problema queda con una sola fuente y un solo destino → Ford-Fulkerson estándar.
+    </div>
+  </div>
+  <div class="step">
+    <div class="sn">2</div>
+    <div class="sb">
+      <strong>Calcular el Flujo Máximo total hacia Z</strong>
+      Este flujo (m³/hora) es la capacidad de llenado de ambos tanques juntos.
+    </div>
+  </div>
+  <div class="step">
+    <div class="sn">3</div>
+    <div class="sb">
+      <strong>Calcular el tiempo de llenado</strong>
+      Capacidad total tanques = 500 + 500 = 1000 m³<br>
+      <strong>Tiempo = 1000 m³ ÷ Flujo máximo (m³/hora)</strong><br>
+      <span style="color:#555;font-size:.9rem">Si uno se llena antes: hay que ver cuándo el flujo hacia ese tanque lo satura.</span>
+    </div>
+  </div>
+  <div class="step">
+    <div class="sn">4</div>
+    <div class="sb">
+      <strong>Tramos a ampliar</strong>
+      Igual que siempre: los arcos del corte mínimo. Ampliarlos aumenta el flujo por hora y reduce el tiempo de llenado.
+    </div>
+  </div>
+</div>
+
+<div class="warn">
+  <strong>Concepto clave — Capacidad de Transporte:</strong> cuando el enunciado dice "capacidad de transporte", habla del flujo máximo. Cuando dice "tiempo para llenar un volumen dado", usás: <strong>Tiempo = Volumen / Flujo</strong>.
+</div>
+</div>
+
+<!-- ==================== EJ 11 ACUEDUCTO (MISMO DEL PARCIAL) ==================== -->
+<div class="card" id="ej11">
+<h2 style="color:#00695c">💧 Ejercicio 11 — Acueducto A→Z (mismo del Parcial Ejercicio 3)</h2>
+<p>Este ejercicio es <strong>idéntico al Ejercicio 3 del modelo de parcial</strong>. La red es un acueducto con capacidades en metros cúbicos.</p>
+
+<div class="svgw">
+<svg viewBox="0 0 760 340" width="760" height="340">
+  <defs>
+    <marker id="ma1" markerWidth="7" markerHeight="7" refX="6" refY="3" orient="auto"><path d="M0,0 L0,6 L7,3z" fill="#43a047"/></marker>
+    <marker id="ma2" markerWidth="7" markerHeight="7" refX="6" refY="3" orient="auto"><path d="M0,0 L0,6 L7,3z" fill="#e53935"/></marker>
+    <marker id="ma3" markerWidth="7" markerHeight="7" refX="6" refY="3" orient="auto"><path d="M0,0 L0,6 L7,3z" fill="#9e9e9e"/></marker>
+  </defs>
+
+  <!-- Zonas S y T -->
+  <rect x="8" y="8" width="440" height="324" rx="10" fill="#e3f2fd" fill-opacity="0.4" stroke="#1565c0" stroke-width="1.5" stroke-dasharray="7,3"/>
+  <text x="18" y="26" font-size="12" fill="#1565c0" font-weight="bold">Lado S (alcanzable desde A)</text>
+  <rect x="458" y="8" width="294" height="324" rx="10" fill="#ffebee" fill-opacity="0.4" stroke="#b71c1c" stroke-width="1.5" stroke-dasharray="7,3"/>
+  <text x="468" y="26" font-size="12" fill="#b71c1c" font-weight="bold">Lado T</text>
+  <!-- Línea corte -->
+  <line x1="452" y1="4" x2="452" y2="336" stroke="#e53935" stroke-width="2.5" stroke-dasharray="10,5"/>
+  <text x="452" y="336" font-size="13" fill="#e53935" text-anchor="middle" font-weight="bold">✂️ CORTE</text>
+
+  <!-- NODOS: A(55,170), B(160,80), C(160,260), D(270,80), E(270,210), F(390,80), G(390,270), H(570,60), I(570,290), Z(700,170) -->
+  <circle cx="55" cy="170" r="24" fill="#0d47a1" stroke="#fff" stroke-width="2"/>
+  <text x="55" y="176" font-size="15" fill="#fff" text-anchor="middle" font-weight="bold">A</text>
+
+  <circle cx="160" cy="80" r="22" fill="#1565c0" stroke="#fff" stroke-width="2"/>
+  <text x="160" y="86" font-size="14" fill="#fff" text-anchor="middle" font-weight="bold">B</text>
+
+  <circle cx="160" cy="260" r="22" fill="#1565c0" stroke="#fff" stroke-width="2"/>
+  <text x="160" y="266" font-size="14" fill="#fff" text-anchor="middle" font-weight="bold">C</text>
+
+  <circle cx="270" cy="80" r="22" fill="#1565c0" stroke="#fff" stroke-width="2"/>
+  <text x="270" y="86" font-size="14" fill="#fff" text-anchor="middle" font-weight="bold">D</text>
+
+  <circle cx="270" cy="210" r="22" fill="#1565c0" stroke="#fff" stroke-width="2"/>
+  <text x="270" y="216" font-size="14" fill="#fff" text-anchor="middle" font-weight="bold">E</text>
+
+  <circle cx="390" cy="80" r="22" fill="#b71c1c" stroke="#fff" stroke-width="2"/>
+  <text x="390" y="86" font-size="14" fill="#fff" text-anchor="middle" font-weight="bold">F</text>
+
+  <circle cx="390" cy="270" r="22" fill="#b71c1c" stroke="#fff" stroke-width="2"/>
+  <text x="390" y="276" font-size="14" fill="#fff" text-anchor="middle" font-weight="bold">G</text>
+
+  <circle cx="570" cy="60" r="22" fill="#b71c1c" stroke="#fff" stroke-width="2"/>
+  <text x="570" y="66" font-size="14" fill="#fff" text-anchor="middle" font-weight="bold">H</text>
+
+  <circle cx="570" cy="290" r="22" fill="#b71c1c" stroke="#fff" stroke-width="2"/>
+  <text x="570" y="296" font-size="14" fill="#fff" text-anchor="middle" font-weight="bold">I</text>
+
+  <circle cx="700" cy="170" r="24" fill="#b71c1c" stroke="#fff" stroke-width="2"/>
+  <text x="700" y="176" font-size="15" fill="#fff" text-anchor="middle" font-weight="bold">Z</text>
+
+  <!-- ARCOS (flujo/cap): -->
+  <!-- A→B 4/5 verde -->
+  <line x1="78" y1="157" x2="139" y2="93" stroke="#43a047" stroke-width="2.5" marker-end="url(#ma1)"/>
+  <rect x="90" y="112" width="34" height="16" rx="3" fill="#fff" opacity=".85"/><text x="107" y="124" font-size="10" fill="#1b5e20" text-anchor="middle" font-weight="bold">4/5</text>
+
+  <!-- A→C 3/4 verde -->
+  <line x1="78" y1="183" x2="139" y2="247" stroke="#43a047" stroke-width="2.5" marker-end="url(#ma1)"/>
+  <rect x="88" y="208" width="34" height="16" rx="3" fill="#fff" opacity=".85"/><text x="105" y="220" font-size="10" fill="#1b5e20" text-anchor="middle" font-weight="bold">3/4</text>
+
+  <!-- B→D 4/4 rojo -->
+  <line x1="182" y1="80" x2="248" y2="80" stroke="#e53935" stroke-width="3" marker-end="url(#ma2)"/>
+  <rect x="199" y="66" width="34" height="16" rx="3" fill="#ffcdd2"/><text x="216" y="78" font-size="10" fill="#b71c1c" text-anchor="middle" font-weight="bold">4/4✂️</text>
+
+  <!-- B→E 0/1 gris -->
+  <line x1="176" y1="98" x2="255" y2="193" stroke="#9e9e9e" stroke-width="1.5" stroke-dasharray="4,2" marker-end="url(#ma3)"/>
+  <text x="224" y="145" font-size="10" fill="#aaa" text-anchor="middle">0/1</text>
+
+  <!-- C→B 0/2 gris curvo -->
+  <path d="M162,238 C110,190 112,128 140,98" stroke="#9e9e9e" stroke-width="1.2" stroke-dasharray="4,2" fill="none" marker-end="url(#ma3)"/>
+  <text x="105" y="175" font-size="10" fill="#aaa" text-anchor="middle">0/2</text>
+
+  <!-- C→E 3/3 rojo -->
+  <line x1="182" y1="252" x2="250" y2="220" stroke="#e53935" stroke-width="3" marker-end="url(#ma2)"/>
+  <rect x="202" y="228" width="34" height="16" rx="3" fill="#ffcdd2"/><text x="219" y="240" font-size="10" fill="#b71c1c" text-anchor="middle" font-weight="bold">3/3✂️</text>
+
+  <!-- D→F 3/3 rojo -->
+  <line x1="292" y1="80" x2="368" y2="80" stroke="#e53935" stroke-width="3" marker-end="url(#ma2)"/>
+  <rect x="313" y="66" width="34" height="16" rx="3" fill="#ffcdd2"/><text x="330" y="78" font-size="10" fill="#b71c1c" text-anchor="middle" font-weight="bold">3/3✂️</text>
+
+  <!-- D→E 1/2 verde -->
+  <line x1="270" y1="102" x2="270" y2="188" stroke="#43a047" stroke-width="2" marker-end="url(#ma1)"/>
+  <rect x="276" y="138" width="28" height="15" rx="3" fill="#fff" opacity=".85"/><text x="290" y="149" font-size="10" fill="#1b5e20" text-anchor="middle">1/2</text>
+
+  <!-- E→F 1/1 rojo -->
+  <line x1="291" y1="198" x2="370" y2="92" stroke="#e53935" stroke-width="3" marker-end="url(#ma2)"/>
+  <rect x="312" y="145" width="34" height="16" rx="3" fill="#ffcdd2"/><text x="329" y="157" font-size="10" fill="#b71c1c" text-anchor="middle" font-weight="bold">1/1✂️</text>
+
+  <!-- E→G 3/4 naranja (borde corte) -->
+  <line x1="290" y1="222" x2="369" y2="262" stroke="#e65100" stroke-width="3" marker-end="url(#ma2)"/>
+  <rect x="312" y="238" width="34" height="16" rx="3" fill="#ffe0b2"/><text x="329" y="250" font-size="10" fill="#bf360c" text-anchor="middle" font-weight="bold">3/4✂️</text>
+
+  <!-- F→H 4/4 verde -->
+  <line x1="412" y1="73" x2="549" y2="62" stroke="#43a047" stroke-width="2.5" marker-end="url(#ma1)"/>
+  <rect x="464" y="56" width="34" height="16" rx="3" fill="#fff" opacity=".85"/><text x="481" y="68" font-size="10" fill="#1b5e20" text-anchor="middle" font-weight="bold">4/4</text>
+
+  <!-- F→G 0/2 gris -->
+  <line x1="390" y1="102" x2="390" y2="248" stroke="#9e9e9e" stroke-width="1.5" stroke-dasharray="4,2" marker-end="url(#ma3)"/>
+  <text x="400" y="178" font-size="10" fill="#aaa" text-anchor="middle">0/2</text>
+
+  <!-- G→H 0/1 gris -->
+  <line x1="410" y1="256" x2="550" y2="74" stroke="#9e9e9e" stroke-width="1.2" stroke-dasharray="4,2" marker-end="url(#ma3)"/>
+  <text x="488" y="168" font-size="10" fill="#aaa" text-anchor="middle">0/1</text>
+
+  <!-- G→I 3/3 verde -->
+  <line x1="412" y1="278" x2="548" y2="288" stroke="#43a047" stroke-width="2.5" marker-end="url(#ma1)"/>
+  <rect x="464" y="276" width="34" height="16" rx="3" fill="#fff" opacity=".85"/><text x="481" y="288" font-size="10" fill="#1b5e20" text-anchor="middle" font-weight="bold">3/3</text>
+
+  <!-- H→Z 4/5 verde -->
+  <line x1="592" y1="72" x2="678" y2="152" stroke="#43a047" stroke-width="2.5" marker-end="url(#ma1)"/>
+  <rect x="622" y="100" width="34" height="16" rx="3" fill="#fff" opacity=".85"/><text x="639" y="112" font-size="10" fill="#1b5e20" text-anchor="middle" font-weight="bold">4/5</text>
+
+  <!-- I→Z 3/5 verde -->
+  <line x1="592" y1="278" x2="678" y2="192" stroke="#43a047" stroke-width="2.5" marker-end="url(#ma1)"/>
+  <rect x="622" y="240" width="34" height="16" rx="3" fill="#fff" opacity=".85"/><text x="639" y="252" font-size="10" fill="#1b5e20" text-anchor="middle" font-weight="bold">3/5</text>
+
+  <!-- FLUJO TOTAL -->
+  <rect x="260" y="305" width="240" height="24" rx="7" fill="#0d47a1"/>
+  <text x="380" y="321" font-size="13" fill="#fff" text-anchor="middle" font-weight="bold">Flujo Máximo = 7 m³</text>
+</svg>
+<p class="svgcap">Rojo ✂️ = arcos del corte mínimo | Verde = flujo circulando | Naranja = borde del corte (E→G)</p>
+</div>
+
+<div class="ok">
+  <strong>Corte Mínimo:</strong> {D→F (3/3), E→F (1/1), E→G (3/4)} → Capacidad = 3+1+3 = <strong>7 m³ = Flujo Máximo ✅</strong>
+</div>
+
+<table>
+  <tr><th>Iteración</th><th>Camino</th><th>Cuello de botella</th><th>Flujo acumulado</th></tr>
+  <tr><td>1</td><td>A→B→D→F→H→Z</td><td>mín(5,4,3,4,5)=3</td><td>3</td></tr>
+  <tr><td>2</td><td>A→B→D→E→G→I→Z</td><td>mín(2,1,2,4,3,5)=1</td><td>4</td></tr>
+  <tr><td>3</td><td>A→C→E→G→I→Z</td><td>mín(4,3,3,2,4)=2</td><td>6</td></tr>
+  <tr><td>4</td><td>A→C→E→F→H→Z</td><td>mín(2,1,1,1,2)=1</td><td>7</td></tr>
+  <tr class="ok-row"><td colspan="3"><strong>No quedan más caminos → TOTAL</strong></td><td><strong>7 m³</strong></td></tr>
+</table>
+
+<div class="tip">
+  <strong>Parte b) — Arco a ampliar:</strong> Ampliar <strong>D→F de 3→4</strong> abriría el camino A→B→D→F→H→Z para 1 m³ más (verificar que B→D tenga holgura y F→H tenga holgura). Alternativamente ampliar <strong>E→G de 4→5</strong> si G→I también tiene holgura.
+</div>
+</div>
+
+<!-- ==================== PERT/CPM ==================== -->
+<div class="card" id="pert">
+<h2 style="color:#2e7d32">⏱️ PERT/CPM — Gestión de Proyectos</h2>
+
+<div class="tip">
+  <strong>¿Cuándo usar PERT vs CPM?</strong><br>
+  <strong>CPM:</strong> tiempos determinísticos (un solo valor). <strong>PERT:</strong> tiempos probabilísticos (optimista, probable, pesimista). En el parcial, si te dan 3 tiempos → PERT.
+</div>
+
+<div class="steps">
+  <div class="step">
+    <div class="sn">1</div>
+    <div class="sb">
+      <strong>Calcular Te (tiempo esperado) para cada actividad</strong>
+      <pre>Te = (To + 4·Tm + Tp) / 6</pre>
+      To = optimista, Tm = más probable, Tp = pesimista
+    </div>
+  </div>
+  <div class="step">
+    <div class="sn">2</div>
+    <div class="sb">
+      <strong>Calcular la Varianza de cada actividad</strong>
+      <pre>σ² = ((Tp - To) / 6)²</pre>
+      Desvío estándar σ = √σ²
+    </div>
+  </div>
+  <div class="step">
+    <div class="sn">3</div>
+    <div class="sb">
+      <strong>Cálculo ADELANTE — Early Times E(i)</strong>
+      Empezás en el nodo inicial con E=0. Para cada nodo siguiente, tomás el <strong>MÁXIMO</strong> de (E del nodo anterior + Te del arco). Esto representa: "lo más pronto que puedo llegar a este nodo".
+      <pre>E(j) = MAX { E(i) + Te(i→j) }  para todos los i que llegan a j</pre>
+    </div>
+  </div>
+  <div class="step">
+    <div class="sn">4</div>
+    <div class="sb">
+      <strong>Cálculo ATRÁS — Late Times L(i)</strong>
+      Empezás en el nodo final con L = E (el tiempo del proyecto). Para cada nodo anterior, tomás el <strong>MÍNIMO</strong> de (L del nodo siguiente − Te del arco). Esto representa: "lo más tarde que puedo salir sin retrasar el proyecto".
+      <pre>L(i) = MIN { L(j) - Te(i→j) }  para todos los j a los que llega i</pre>
+    </div>
+  </div>
+  <div class="step">
+    <div class="sn">5</div>
+    <div class="sb">
+      <strong>Calcular la Holgura de cada actividad</strong>
+      <pre>Holgura = L(destino) - E(origen) - Te(actividad)</pre>
+      Holgura = 0 → actividad CRÍTICA (no puede retrasarse nada sin retrasar el proyecto).
+    </div>
+  </div>
+  <div class="step">
+    <div class="sn">6</div>
+    <div class="sb">
+      <strong>Ruta Crítica</strong>
+      Es el camino de inicio a fin formado por todas las actividades con holgura = 0. Es el camino más largo del proyecto. Su duración = duración total del proyecto.
+    </div>
+  </div>
+  <div class="step">
+    <div class="sn">7</div>
+    <div class="sb">
+      <strong>Varianza y Desvío del Proyecto</strong>
+      Se calcula solo sobre las actividades de la ruta crítica:
+      <pre>σ²_proyecto = Σ σ²(actividades críticas)
+σ_proyecto = √σ²_proyecto</pre>
+    </div>
+  </div>
+  <div class="step">
+    <div class="sn">8</div>
+    <div class="sb">
+      <strong>Probabilidad de terminar en fecha límite T</strong>
+      <pre>Z = (T - Te_proyecto) / σ_proyecto</pre>
+      Luego buscás la probabilidad en la tabla Z de distribución normal estándar.
+    </div>
+  </div>
+</div>
+
+<!-- EJEMPLO NUMÉRICO: SHARP COMPANY -->
+<h3 style="margin:1.2rem 0 .7rem;color:#2e7d32">📌 Ejemplo: Proyecto Informático (del Parcial — Ej.4)</h3>
+<p style="margin-bottom:.8rem">Actividades con To, Tm, Tp en semanas:</p>
+
+<table>
+  <tr><th>Actividad</th><th>To</th><th>Tm</th><th>Tp</th><th>Te = (To+4Tm+Tp)/6</th><th>σ² = ((Tp-To)/6)²</th></tr>
+  <tr><td>1→2</td><td>12</td><td>15</td><td>18</td><td>(12+60+18)/6 = <strong>15</strong></td><td>((18-12)/6)² = <strong>1</strong></td></tr>
+  <tr><td>1→3</td><td>16</td><td>20</td><td>30</td><td>(16+80+30)/6 = <strong>21</strong></td><td>((30-16)/6)² = <strong>5.44</strong></td></tr>
+  <tr><td>2→4</td><td>22</td><td>28</td><td>40</td><td>(22+112+40)/6 = <strong>29</strong></td><td>((40-22)/6)² = <strong>9</strong></td></tr>
+  <tr><td>2→5</td><td>10</td><td>14</td><td>18</td><td>(10+56+18)/6 = <strong>14</strong></td><td>((18-10)/6)² = <strong>1.78</strong></td></tr>
+  <tr><td>3→4</td><td>8</td><td>12</td><td>16</td><td>(8+48+16)/6 = <strong>12</strong></td><td>((16-8)/6)² = <strong>1.78</strong></td></tr>
+  <tr><td>3→5</td><td>18</td><td>24</td><td>36</td><td>(18+96+36)/6 = <strong>25</strong></td><td>((36-18)/6)² = <strong>9</strong></td></tr>
+  <tr><td>4→6</td><td>14</td><td>18</td><td>28</td><td>(14+72+28)/6 = <strong>19</strong></td><td>((28-14)/6)² = <strong>5.44</strong></td></tr>
+  <tr><td>5→6</td><td>20</td><td>26</td><td>32</td><td>(20+104+32)/6 = <strong>26</strong></td><td>((32-20)/6)² = <strong>4</strong></td></tr>
+</table>
+
+<table style="margin-top:1rem">
+  <tr><th>Nodo</th><th>E(i) — adelante</th><th>L(i) — atrás</th></tr>
+  <tr><td><strong>1</strong></td><td>0</td><td>0</td></tr>
+  <tr><td><strong>2</strong></td><td>0+15 = 15</td><td>mín(24, 32) = 24</td></tr>
+  <tr><td><strong>3</strong></td><td>0+21 = 21</td><td>mín(41, 21) = 21</td></tr>
+  <tr><td><strong>4</strong></td><td>máx(44, 33) = 44</td><td>72−19 = 53</td></tr>
+  <tr><td><strong>5</strong></td><td>máx(29, 46) = 46</td><td>72−26 = 46</td></tr>
+  <tr><td><strong>6</strong></td><td>máx(63, 72) = 72</td><td>72</td></tr>
+</table>
+
+<table style="margin-top:1rem">
+  <tr><th>Actividad</th><th>E(origen)</th><th>L(destino)</th><th>Te</th><th>Holgura</th><th>¿Crítica?</th></tr>
+  <tr><td>1→2</td><td>0</td><td>24</td><td>15</td><td>9</td><td>No</td></tr>
+  <tr class="critica"><td>1→3</td><td>0</td><td>21</td><td>21</td><td>0</td><td>✅ SÍ</td></tr>
+  <tr><td>2→4</td><td>15</td><td>53</td><td>29</td><td>9</td><td>No</td></tr>
+  <tr><td>2→5</td><td>15</td><td>46</td><td>14</td><td>17</td><td>No</td></tr>
+  <tr><td>3→4</td><td>21</td><td>53</td><td>12</td><td>20</td><td>No</td></tr>
+  <tr class="critica"><td>3→5</td><td>21</td><td>46</td><td>25</td><td>0</td><td>✅ SÍ</td></tr>
+  <tr><td>4→6</td><td>44</td><td>72</td><td>19</td><td>9</td><td>No</td></tr>
+  <tr class="critica"><td>5→6</td><td>46</td><td>72</td><td>26</td><td>0</td><td>✅ SÍ</td></tr>
+</table>
+
+<div class="ok">
+  <strong>Ruta Crítica: 1 → 3 → 5 → 6</strong> (Te = 21+25+26 = 72 semanas)<br>
+  σ²_proyecto = 5.44 + 9 + 4 = 18.44 → σ = √18.44 = <strong>4.29 semanas</strong><br><br>
+  <strong>P(terminar en 80 semanas):</strong> Z = (80−72)/4.29 = 1.86 → P ≈ <strong>96.9%</strong>
+</div>
+
+<!-- SVG red PERT -->
+<div class="svgw" style="margin-top:1rem">
+<svg viewBox="0 0 620 260" width="620" height="260">
+  <defs>
+    <marker id="pc" markerWidth="7" markerHeight="7" refX="6" refY="3" orient="auto"><path d="M0,0 L0,6 L7,3z" fill="#e53935"/></marker>
+    <marker id="pn" markerWidth="7" markerHeight="7" refX="6" refY="3" orient="auto"><path d="M0,0 L0,6 L7,3z" fill="#9e9e9e"/></marker>
+  </defs>
+  <!-- nodos -->
+  <circle cx="50" cy="130" r="22" fill="#0d47a1" stroke="#fff" stroke-width="2"/>
+  <text x="50" y="125" font-size="11" fill="#fff" text-anchor="middle">1</text>
+  <text x="50" y="138" font-size="9" fill="#bbdefb" text-anchor="middle">E=0 L=0</text>
+
+  <circle cx="180" cy="60" r="22" fill="#546e7a" stroke="#fff" stroke-width="2"/>
+  <text x="180" y="55" font-size="11" fill="#fff" text-anchor="middle">2</text>
+  <text x="180" y="68" font-size="9" fill="#cfd8dc" text-anchor="middle">E=15 L=24</text>
+
+  <circle cx="180" cy="200" r="22" fill="#b71c1c" stroke="#fff" stroke-width="2"/>
+  <text x="180" y="195" font-size="11" fill="#fff" text-anchor="middle">3</text>
+  <text x="180" y="208" font-size="9" fill="#ffcdd2" text-anchor="middle">E=21 L=21</text>
+
+  <circle cx="360" cy="60" r="22" fill="#546e7a" stroke="#fff" stroke-width="2"/>
+  <text x="360" y="55" font-size="11" fill="#fff" text-anchor="middle">4</text>
+  <text x="360" y="68" font-size="9" fill="#cfd8dc" text-anchor="middle">E=44 L=53</text>
+
+  <circle cx="360" cy="200" r="22" fill="#b71c1c" stroke="#fff" stroke-width="2"/>
+  <text x="360" y="195" font-size="11" fill="#fff" text-anchor="middle">5</text>
+  <text x="360" y="208" font-size="9" fill="#ffcdd2" text-anchor="middle">E=46 L=46</text>
+
+  <circle cx="560" cy="130" r="22" fill="#0d47a1" stroke="#fff" stroke-width="2"/>
+  <text x="560" y="125" font-size="11" fill="#fff" text-anchor="middle">6</text>
+  <text x="560" y="138" font-size="9" fill="#bbdefb" text-anchor="middle">E=72 L=72</text>
+
+  <!-- arcos no criticos gris -->
+  <line x1="72" y1="118" x2="158" y2="72" stroke="#9e9e9e" stroke-width="1.5" stroke-dasharray="4,2" marker-end="url(#pn)"/>
+  <text x="106" y="87" font-size="10" fill="#888" text-anchor="middle">Te=15</text>
+
+  <line x1="202" y1="60" x2="338" y2="60" stroke="#9e9e9e" stroke-width="1.5" stroke-dasharray="4,2" marker-end="url(#pn)"/>
+  <text x="270" y="52" font-size="10" fill="#888" text-anchor="middle">Te=29</text>
+
+  <line x1="202" y1="72" x2="338" y2="188" stroke="#9e9e9e" stroke-width="1.5" stroke-dasharray="4,2" marker-end="url(#pn)"/>
+  <text x="278" y="124" font-size="10" fill="#888" text-anchor="middle">Te=14</text>
+
+  <line x1="202" y1="188" x2="338" y2="72" stroke="#9e9e9e" stroke-width="1.5" stroke-dasharray="4,2" marker-end="url(#pn)"/>
+  <text x="262" y="148" font-size="10" fill="#888" text-anchor="middle">Te=12</text>
+
+  <line x1="382" y1="72" x2="540" y2="118" stroke="#9e9e9e" stroke-width="1.5" stroke-dasharray="4,2" marker-end="url(#pn)"/>
+  <text x="468" y="87" font-size="10" fill="#888" text-anchor="middle">Te=19</text>
+
+  <!-- arcos criticos rojo grueso -->
+  <line x1="72" y1="142" x2="158" y2="188" stroke="#e53935" stroke-width="3" marker-end="url(#pc)"/>
+  <text x="108" y="178" font-size="11" fill="#c62828" font-weight="bold" text-anchor="middle">Te=21</text>
+
+  <line x1="202" y1="200" x2="338" y2="200" stroke="#e53935" stroke-width="3" marker-end="url(#pc)"/>
+  <text x="270" y="218" font-size="11" fill="#c62828" font-weight="bold" text-anchor="middle">Te=25</text>
+
+  <line x1="382" y1="192" x2="540" y2="142" stroke="#e53935" stroke-width="3" marker-end="url(#pc)"/>
+  <text x="468" y="178" font-size="11" fill="#c62828" font-weight="bold" text-anchor="middle">Te=26</text>
+
+  <!-- leyenda -->
+  <line x1="60" y1="244" x2="90" y2="244" stroke="#e53935" stroke-width="3"/>
+  <text x="95" y="248" font-size="11" fill="#333">Ruta crítica (holgura=0)</text>
+  <line x1="270" y1="244" x2="300" y2="244" stroke="#9e9e9e" stroke-width="1.5" stroke-dasharray="4,2"/>
+  <text x="305" y="248" font-size="11" fill="#333">No crítica</text>
+</svg>
+<p class="svgcap">Ruta Crítica: 1→3→5→6 (72 semanas) | Duración total del proyecto</p>
+</div>
+</div>
+
+<!-- ==================== ÁRBOL MÍNIMO ==================== -->
+<div class="card" id="arbol">
+<h2 style="color:#f57f17">🌳 Árbol de Expansión Mínima (Kruskal / Prim)</h2>
+<p><strong>¿Para qué sirve?</strong> Conectar todos los nodos de una red al <strong>menor costo total</strong>. Ej: tender cables de luz a todos los pueblos, pavimentar caminos que unan todas las ciudades, instalar tuberías.</p>
+
+<div class="warn"><strong>Diferencia clave con Flujo Máximo:</strong> acá no hay fuente ni destino. Querés conectar TODOS los nodos entre sí, usando los arcos de menor costo y sin formar ciclos.</div>
+
+<div class="steps">
+  <div class="step">
+    <div class="sn">1</div>
+    <div class="sb">
+      <strong>Algoritmo de Kruskal — Ordenar arcos de menor a mayor costo</strong>
+      Listá todos los arcos con su costo/distancia. Ordenalos de menor a mayor.
+    </div>
+  </div>
+  <div class="step">
+    <div class="sn">2</div>
+    <div class="sb">
+      <strong>Ir agregando arcos de menor costo</strong>
+      Tomá el arco más barato. Si conecta dos nodos que NO estaban ya conectados entre sí → agregarlo. Si formaría un <strong>ciclo</strong> → descartarlo.
+    </div>
+  </div>
+  <div class="step">
+    <div class="sn">3</div>
+    <div class="sb">
+      <strong>Parar cuando tenés n-1 arcos</strong>
+      Con n nodos, un árbol de expansión tiene exactamente <strong>n−1 arcos</strong>. Cuando llegás a ese número, terminaste.
+    </div>
+  </div>
+</div>
+
+<div class="tip">
+  <strong>Algoritmo de Prim (alternativa):</strong><br>
+  1. Empezás por cualquier nodo.<br>
+  2. En cada paso, agregás el arco más barato que conecta un nodo ya incluido con uno que todavía no está.<br>
+  3. Repetís hasta incluir todos los nodos.
+</div>
+
+<h3 style="margin:1rem 0 .6rem;color:#f57f17">📌 Ejemplo: Electrificación Rural (TP3, Ej.6)</h3>
+<p style="font-size:.92rem;margin-bottom:.7rem">Una subestación en A debe alimentar otras poblaciones. Los costos son proporcionales a las distancias. Se busca el trazado más económico que conecte todos los pueblos.</p>
+
+<div class="steps">
+  <div class="step">
+    <div class="sn">1</div>
+    <div class="sb"><strong>Armar tabla de distancias (ejemplo genérico)</strong> Listá todas las conexiones posibles entre poblaciones con su distancia/costo.</div>
+  </div>
+  <div class="step">
+    <div class="sn">2</div>
+    <div class="sb"><strong>Ordenar de menor a mayor y aplicar Kruskal</strong> En cada paso verificá que no formes un ciclo. La suma de los arcos elegidos = costo total de la red más económica.</div>
+  </div>
+</div>
+
+<div class="ok"><strong>Resultado:</strong> El árbol de expansión mínima da el trazado de menor costo total que conecta todos los nodos. La suma de las distancias (o costos) de los arcos del árbol es el <em>costo mínimo</em> de la red.</div>
+</div>
+
+<!-- ==================== QUIZ ==================== -->
+<div class="card" id="quiz">
+<h2 style="color:#6a1b9a">🧠 Preguntas Teóricas de Redes — Click para respuesta</h2>
+<p style="color:#555;margin-bottom:1rem">Intentá responder mentalmente antes de abrir cada una. Estas son del tipo que suele preguntar el parcial.</p>
+
+<div class="quiz-item" onclick="this.classList.toggle('open')">¿Qué es un arco saturado?
+  <div class="resp">Un arco saturado es aquel cuyo <strong>flujo = capacidad</strong>, es decir, su holgura = 0. No puede recibir más flujo en dirección directa. En la red residual, el arco directo desaparece, pero aparece uno inverso que permite "deshacer" flujo si fuera necesario en una iteración posterior.</div>
+</div>
+
+<div class="quiz-item" onclick="this.classList.toggle('open')">¿Qué es la red residual y para qué sirve?
+  <div class="resp">La red residual muestra, para cada arco, cuánta capacidad le queda disponible. Para cada arco directo A→B con capacidad c y flujo f: aparece un arco directo con capacidad residual c−f y un arco inverso B→A con capacidad f (que permite cancelar flujo previamente enviado). Ford-Fulkerson busca caminos aumentantes en la red residual.</div>
+</div>
+
+<div class="quiz-item" onclick="this.classList.toggle('open')">¿Por qué el Teorema Max-Flow Min-Cut es útil para verificar la solución?
+  <div class="resp">Porque te da una forma independiente de confirmar tu resultado. Si encontraste un flujo máximo de X, tenés que poder identificar un corte (partición de nodos S y T) cuya capacidad también sea X. Si los dos coinciden, la solución es correcta. Si no encontrás un corte de esa capacidad, probablemente te quedó algún camino aumentante sin explorar.</div>
+</div>
+
+<div class="quiz-item" onclick="this.classList.toggle('open')">¿Cómo identifico el corte mínimo después de correr Ford-Fulkerson?
+  <div class="resp">1. Sobre la red residual final, marcá todos los nodos alcanzables desde la fuente (A) usando solo arcos con capacidad residual > 0. Esos nodos forman el Lado S.<br>2. Los nodos no alcanzables forman el Lado T.<br>3. Los arcos que van de S a T (en dirección original) forman el corte mínimo.<br>4. La suma de sus capacidades originales = flujo máximo.</div>
+</div>
+
+<div class="quiz-item" onclick="this.classList.toggle('open')">¿Qué significa "ampliar un arco" y cuándo conviene hacerlo?
+  <div class="resp">Ampliar un arco significa aumentar su capacidad (por ejemplo, instalar una cañería más grande). Solo conviene ampliar arcos que pertenecen al <strong>corte mínimo</strong>. Ampliar arcos fuera del corte no aumenta el flujo máximo porque el cuello de botella sigue estando en otro lado. Ampliar un arco del corte en k unidades puede aumentar el flujo máximo hasta en k unidades (si no aparece otro corte de menor capacidad antes).</div>
+</div>
+
+<div class="quiz-item" onclick="this.classList.toggle('open')">¿Puede haber más de un corte mínimo en una red?
+  <div class="resp">Sí. Puede haber múltiples cortes con la misma capacidad total = flujo máximo. Esto ocurre cuando varios conjuntos de arcos saturados tienen la misma suma de capacidades. En ese caso, hay varias opciones de arcos a ampliar para aumentar la capacidad de la red.</div>
+</div>
+
+<div class="quiz-item" onclick="this.classList.toggle('open')">¿Por qué en PERT tomamos el MÁXIMO en el cálculo adelante?
+  <div class="resp">Porque una actividad no puede empezar hasta que <strong>todas</strong> sus predecesoras hayan terminado. Si llegan dos caminos a un nodo, uno en semana 10 y otro en semana 15, tengo que esperar la semana 15 (el más lento). El máximo representa el "cuello de botella" en el tiempo de llegada.</div>
+</div>
+
+<div class="quiz-item" onclick="this.classList.toggle('open')">¿Por qué en PERT tomamos el MÍNIMO en el cálculo atrás?
+  <div class="resp">Porque el L(i) representa "lo más tarde que puedo estar en el nodo i sin retrasar el proyecto". Si desde ese nodo salen dos actividades, una que necesita empezar en semana 30 y otra en semana 25, tengo que estar listo para la semana 25 (la más urgente). El mínimo me obliga a respetar la restricción más exigente.</div>
+</div>
+
+<div class="quiz-item" onclick="this.classList.toggle('open')">¿Qué pasa si retraso una actividad crítica?
+  <div class="resp">El proyecto completo se retrasa en la misma cantidad. Las actividades críticas tienen holgura = 0, lo que significa que no tienen "colchón". Cualquier demora en ellas se propaga directamente a la fecha de finalización del proyecto.</div>
+</div>
+
+<div class="quiz-item" onclick="this.classList.toggle('open')">¿Qué significa la holgura de una actividad NO crítica?
+  <div class="resp">Es el margen de tiempo que tiene esa actividad para retrasarse sin afectar la fecha de finalización del proyecto. Por ejemplo, si una actividad tiene holgura = 5, puede empezar hasta 5 semanas después de su Early Time sin consecuencias. Si se retrasa más de 5, el proyecto se retrasa.</div>
+</div>
+
+<div class="quiz-item" onclick="this.classList.toggle('open')">¿Cómo se calcula la probabilidad de terminar el proyecto en tiempo?
+  <div class="resp">1. Calcular σ_proyecto = raíz de la suma de varianzas de las actividades críticas.<br>2. Z = (Fecha límite − Te_proyecto) / σ_proyecto<br>3. Buscar en la tabla Z de distribución normal: la probabilidad P(Z ≤ valor calculado).<br>Si Z > 0: probabilidad > 50% (optimista). Si Z < 0: probabilidad < 50% (pessimista).</div>
+</div>
+
+<div class="quiz-item" onclick="this.classList.toggle('open')">¿Cuál es la diferencia entre Árbol de Expansión Mínima y Flujo Máximo?
+  <div class="resp">Son problemas completamente distintos:<br>
+  <strong>Árbol Mínimo:</strong> conectar todos los nodos al menor costo total. No hay fuente ni destino. El resultado es un árbol (sin ciclos) que conecta todo.<br>
+  <strong>Flujo Máximo:</strong> enviar la mayor cantidad posible entre dos nodos específicos. Hay fuente y destino. El resultado es un flujo asignado a cada arco.<br>
+  En Árbol Mínimo se usan algoritmos de Kruskal o Prim. En Flujo Máximo se usa Ford-Fulkerson.</div>
+</div>
+
+</div>
+
+</main>
+<script>
+const secs=document.querySelectorAll('[id]'),lks=document.querySelectorAll('nav a');
+window.addEventListener('scroll',()=>{
+  let cur='';
+  secs.forEach(s=>{if(window.scrollY>=s.offsetTop-85)cur=s.id});
+  lks.forEach(a=>{a.classList.remove('active');if(a.getAttribute('href')==='#'+cur)a.classList.add('active')});
+});
+</script>
+</body>
+</html>
