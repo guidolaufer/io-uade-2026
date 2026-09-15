@@ -16,8 +16,12 @@
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body { font-family: 'Segoe UI', Arial, sans-serif; font-size: 15px; background: #f0f4f8; color: #222; }
 
-  /* NAV */
-  nav { position: fixed; top: 0; left: 0; width: 220px; height: 100vh; background: var(--azul); color: white; overflow-y: auto; z-index: 100; padding: 16px 0; }
+  /* NAV — sidebar en desktop, barra horizontal en móvil */
+  nav {
+    position: fixed; top: 0; left: 0; width: 220px; height: 100vh;
+    background: var(--azul); color: white; overflow-y: auto;
+    z-index: 100; padding: 16px 0;
+  }
   nav h3 { padding: 8px 16px 16px; font-size: 13px; color: #acd; text-transform: uppercase; letter-spacing: 1px; }
   nav a { display: block; padding: 8px 16px; color: #cde; text-decoration: none; font-size: 13px; border-left: 3px solid transparent; transition: all .2s; }
   nav a:hover, nav a.active { background: rgba(255,255,255,.1); border-left-color: #7EC8E3; color: white; }
@@ -25,6 +29,46 @@
 
   /* MAIN */
   main { margin-left: 220px; padding: 32px 40px; max-width: 1100px; }
+
+  /* ===== RESPONSIVE MÓVIL ===== */
+  @media (max-width: 700px) {
+    nav {
+      position: fixed; top: 0; left: 0; right: 0;
+      width: 100%; height: auto;
+      overflow-y: visible; overflow-x: auto;
+      display: flex; flex-wrap: nowrap;
+      flex-direction: row; align-items: center;
+      padding: 6px 8px; gap: 0;
+      border-bottom: 2px solid rgba(255,255,255,.2);
+    }
+    nav h3 { display: none; }
+    nav .nav-tema { display: none; }
+    nav a {
+      padding: 6px 10px; font-size: 11px; white-space: nowrap;
+      border-left: none; border-bottom: 2px solid transparent;
+      flex-shrink: 0;
+    }
+    nav a:hover, nav a.active {
+      border-left-color: transparent;
+      border-bottom-color: #7EC8E3;
+    }
+    main {
+      margin-left: 0;
+      padding: 64px 12px 24px;
+    }
+    .portada { padding: 24px 16px; }
+    .portada h1 { font-size: 22px; }
+    .section { padding: 18px 14px; margin-bottom: 20px; }
+    h1 { font-size: 20px; }
+    h2 { font-size: 17px; }
+    .formula { font-size: 13px; padding: 10px 12px; }
+    .diagrama-container { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+    .diagrama-tabla { font-size: 11px; }
+    .diagrama-tabla th, .diagrama-tabla td { padding: 5px 7px; }
+    table { font-size: 12px; }
+    th, td { padding: 6px 8px; }
+    .quiz-item { font-size: 13px; padding: .7rem .85rem; }
+  }
 
   /* SECCIONES */
   .section { background: white; border-radius: 10px; padding: 32px; margin-bottom: 32px; box-shadow: 0 2px 12px rgba(0,0,0,.08); }
